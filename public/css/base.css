@@ -1,0 +1,12 @@
+html,
+body {
+	font-family: Arial;
+}
+
+.container {
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	margin: 0 auto;
+	max-width: 640px;
+	width: 100%;
+}
