@@ -1,6 +1,10 @@
 html,
 body {
-	font-family: Arial;
+	font-family: Lato, Arial;
+}
+
+*, *::before, *::after {
+	box-sizing: border-box;
 }
 
 .container {
@@ -9,4 +13,59 @@ body {
 	margin: 0 auto;
 	max-width: 640px;
 	width: 100%;
+}
+
+header {
+	border-bottom: 1px solid #ccc;
+	height: 50px;
+	line-height: 50px;
+	position: relative;
+}
+
+header .header_back {
+	border-right: 1px solid #ccc;
+	cursor: pointer;
+	height: 100%;
+	left: 0;
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	width: 50px;
+}
+
+header .header_back::before {
+	border-left: 2px solid #000;
+	border-top: 2px solid #000;
+	content: '';
+	display: block;
+	height: 40%;
+	position: absolute;
+	transform: rotate(-45deg);
+	width: 40%;
+    left: 40%;
+    top: 28%;
+}
+
+header .header_title {
+	left: 50%;
+	position: absolute;
+	transform: translateX(-50%);
+}
+
+.page {
+	padding: 20px 10px;
+}
+
+.page_user .user_avatar {
+	background-image: url('../../images/fit-avatar.png');
+	background-size: 80%;
+	background-position: 50% bottom;
+	background-repeat: no-repeat;
+	border-radius: 100%;
+	box-shadow: inset 0 2px 2px 1px rgba(0,0,0,0.2);
+	border: 2px solid #4eafb3;
+	height: 120px;
+	width: 120px;
+	background-color: #ccc;
+	margin: 20px auto 40px;
 }
