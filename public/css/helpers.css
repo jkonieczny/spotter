@@ -1,0 +1,36 @@
+input {
+	border-radius: 2px;
+	border: 1px solid #ccc;
+	line-height: 50px;
+	margin: 4px 0 20px;
+	padding: 0 10px;
+	position: relative;
+	width: 100%;
+	-webkit-appearance: none;
+}
+
+input:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px #4eafb3;
+	z-index: 1;
+}
+
+.hide { display: none; }
+
+.searchbar {
+	border: 1px solid #ccc;
+	position: relative;
+	top: -20px;
+}
+
+.searchbar li {
+	border-bottom: 1px solid #ccc;
+	cursor: pointer;
+	line-height: 50px;
+	padding: 0 10px;
+}
+
+.searchbar li:last-child {
+	border-bottom: 0;
+}
+
