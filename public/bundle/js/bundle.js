@@ -23671,6 +23671,9 @@ var actions = {
 	products: {
 		add: function(payload) {
 			this.dispatch(CONSTANTS.PRODUCTS.ADD, { product: payload.product });
+		},
+		remove: function(id) {
+			this.dispatch(CONSTANTS.PRODUCTS.REMOVE, { id: id });
 		}
 	},
 	user: {
@@ -23768,20 +23771,28 @@ var React = require('react'),
 var cx = require('classnames');
 
 module.exports = React.createClass({displayName: "exports",
-	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
+	mixins: [FluxMixin],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
-		var state = this.getFlux().store('PageStore').getState();
 		return {};
 	},
     render: function() {
+        var item = this.props.item;
         return (
-            React.createElement("div", null, 
-                "Item"
+            React.createElement("div", {className: "item", onClick:  this.removeItem}, 
+                React.createElement("div", {className: "item_img", style: {backgroundImage: 'url(' + item.image + ')'}}), 
+                item.name, 
+                React.createElement("div", {className: "item_price"}, "£", item.price)
             )
         );
+    },
+    removeItem: function() {
+        var c = window.confirm('Do you want to remove ' + this.props.item.name + '?');
+        if (c === true) {
+            this.getFlux().actions.products.remove(this.props.item.id);
+        }
     }
 
 });
@@ -23799,6 +23810,11 @@ var React = require('react'),
 var cx = require('classnames');
 
 var SearchBar = require('./searchBar.jsx');
+
+var originalState = {
+	brand: null,
+	product: { name: '' }
+};
 
 module.exports = React.createClass({displayName: "exports",
 	mixins: [FluxMixin, StoreWatchMixin('ProductStore')],
@@ -23818,10 +23834,6 @@ module.exports = React.createClass({displayName: "exports",
 
 		if (this.state.productMatches) {
 			productMatches = (React.createElement(SearchBar, {keys: "name", matches:  this.state.productMatches, onSelectedAction: this.searchProductsSelected}))
-		}
-
-		if (this.state.selectedProducts.length > 0) {
-			console.log('selectedProducts!!!');
 		}
 
         return (
@@ -23844,7 +23856,7 @@ module.exports = React.createClass({displayName: "exports",
                 		React.createElement("input", {id: "product_search", type: "text", placeholder: "Search for a product", value: this.state.product.name, onChange: this.searchProducts, disabled: (!this.state.brand)}), 
                 		 productMatches 
                 	), 
-                	React.createElement("button", {type: "submit", onClick:  this.addItem, disabled: !(this.state.product && this.state.product.name.length > 0)}, "Add Item")
+                	React.createElement("button", {type: "submit", onClick:  this.addItem, disabled: !(this.state.product && this.state.product.id)}, "Add Item")
                 )
             )
         );
@@ -23859,6 +23871,8 @@ module.exports = React.createClass({displayName: "exports",
     	},0);
     },
     searchProducts: function(e) {
+    	console.log(e.currentTarget.value);
+    	var productMatches;
     	var value = e.currentTarget.value.toString().toLowerCase();
 
     	if (value.length > 0) {
@@ -23867,11 +23881,12 @@ module.exports = React.createClass({displayName: "exports",
 	    	var productMatches = products.filter(function(product) {
 	    		return (product.name.toLowerCase().indexOf(value) > -1);
 	    	});
-
-	    	this.setState({
-	    		productMatches: productMatches
-	    	});
 	    }
+
+    	this.setState({
+    		productMatches: productMatches,
+    		product: { name: e.currentTarget.value }
+    	});
     },
     searchProductsSelected: function(value) {
     	console.log('searchProductsSelected', value);
@@ -23880,13 +23895,34 @@ module.exports = React.createClass({displayName: "exports",
     		productMatches: null,
     		product: value.value
     	});
+
+    	setTimeout(function() {
+	    	document.activeElement.blur();
+    	}, 0);
     },
     addItem: function(e) {
     	e.preventDefault();
 
-    	this.getFlux().actions.products.add({
-    		product: this.state.product
+    	var productID = this.state.product.id;
+
+    	var dupeProducts = this.state.selectedProducts.filter(function(product) {
+    		return (productID === product.id);
     	});
+
+    	if (dupeProducts.length > 0) {
+    		alert('You already have added ' + this.state.product.name);
+    	} else {
+	    	this.getFlux().actions.products.add({
+	    		product: this.state.product
+	    	});
+	    }
+
+	    // Override a bug where React keeps the brand selected, but doesn't realise it
+	    // https://github.com/facebook/react/issues/4618
+	    var newState = JSON.parse(JSON.stringify(originalState));
+	    newState.brand = this.state.brand;
+
+    	this.setState(newState);
     }
 
 });
@@ -23909,13 +23945,15 @@ var Item = require('./item.jsx');
 var ItemSelect = require('./itemSelect.jsx');
 
 module.exports = React.createClass({displayName: "exports",
-	mixins: [FluxMixin, StoreWatchMixin('UserStore')],
+	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
+		var flux = this.getFlux();
 		return {
-			selectedUser: this.getFlux().store('UserStore').getState().client
+			selectedUser: flux.store('UserStore').getState().client,
+			selectedProducts: flux.store('ProductStore').getState().selectedProducts
 		};
 	},
     render: function() {
@@ -23929,10 +23967,23 @@ module.exports = React.createClass({displayName: "exports",
 			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
 		}
 
+		var selectedProducts = [];
+		if (this.state.selectedProducts.length > 0) {
+			this.state.selectedProducts.forEach(function(product) {
+				selectedProducts.push(
+					(React.createElement(Item, {key: product.id, item: product}))
+				);
+			});
+		}
+
         return (
             React.createElement("div", {className: "page page_product"}, 
                 React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
                 React.createElement("p", {className: "center"}, "Select your recommended products for ", this.state.selectedUser.name), 
+                React.createElement("hr", null), 
+                React.createElement("div", null, 
+                	selectedProducts
+                ), 
                 React.createElement("hr", null), 
                 React.createElement(ItemSelect, null)
             )
@@ -24180,6 +24231,7 @@ var constants = {
     PRODUCTS: {
         GET: 'PRODUCTS_GET',
         ADD: 'PRODUCTS_ADD',
+        REMOVE: 'PRODUCTS_REMOVE',
         SEARCH: 'PRODUCTS_SEARCH'
     },
     PAGE: {
@@ -24283,7 +24335,8 @@ var ProductStore = Fluxxor.createStore({
         };
 
         this.bindActions(
-            CONSTANTS.PRODUCTS.ADD, this.addProduct
+            CONSTANTS.PRODUCTS.ADD, this.addProduct,
+            CONSTANTS.PRODUCTS.REMOVE, this.removeProduct
         );
     },
     getState: function(){
@@ -24291,6 +24344,14 @@ var ProductStore = Fluxxor.createStore({
     },
     addProduct: function(payload) {
         this.state.selectedProducts.push(payload.product);
+        this.emit('change');
+    },
+    removeProduct: function(payload) {
+        console.log('removeProduct');
+        this.state.selectedProducts = this.state.selectedProducts.filter(function(product) {
+            return (payload.id !== product.id);
+        });
+
         this.emit('change');
     }
 });

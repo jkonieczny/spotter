@@ -86,3 +86,34 @@ header .header_avatar {
 .page {
 	padding: 20px 10px;
 }
+
+.item {
+	border-bottom: 1px solid #ccc;
+	min-height: 50px;
+	padding: 10px 70px 10px 60px;
+	position: relative;
+}
+
+.item:first-child {
+	border-top: 1px solid #ccc;
+}
+
+.item .item_img {
+	background-color: #ccc;
+	background-size: contain;
+	background-position: 50%;
+	background-position: center;
+	height: 50px;
+	left: 0;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 50px;
+}
+
+.item .item_price {
+	right: 0;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}

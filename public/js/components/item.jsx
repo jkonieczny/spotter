@@ -10,20 +10,28 @@ var React = require('react'),
 var cx = require('classnames');
 
 module.exports = React.createClass({
-	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
+	mixins: [FluxMixin],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
-		var state = this.getFlux().store('PageStore').getState();
 		return {};
 	},
     render: function() {
+        var item = this.props.item;
         return (
-            <div>
-                Item
+            <div className="item" onClick={ this.removeItem }>
+                <div className="item_img" style={{backgroundImage: 'url(' + item.image + ')'}}></div>
+                {item.name}
+                <div className="item_price">&pound;{item.price}</div>
             </div>
         );
+    },
+    removeItem: function() {
+        var c = window.confirm('Do you want to remove ' + this.props.item.name + '?');
+        if (c === true) {
+            this.getFlux().actions.products.remove(this.props.item.id);
+        }
     }
 
 });

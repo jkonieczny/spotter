@@ -8,6 +8,7 @@ var constants = {
     PRODUCTS: {
         GET: 'PRODUCTS_GET',
         ADD: 'PRODUCTS_ADD',
+        REMOVE: 'PRODUCTS_REMOVE',
         SEARCH: 'PRODUCTS_SEARCH'
     },
     PAGE: {

@@ -11,6 +11,11 @@ var cx = require('classnames');
 
 var SearchBar = require('./searchBar.jsx');
 
+var originalState = {
+	brand: null,
+	product: { name: '' }
+};
+
 module.exports = React.createClass({
 	mixins: [FluxMixin, StoreWatchMixin('ProductStore')],
 	getInitialState: function() {
@@ -29,10 +34,6 @@ module.exports = React.createClass({
 
 		if (this.state.productMatches) {
 			productMatches = (<SearchBar keys="name" matches={ this.state.productMatches } onSelectedAction={this.searchProductsSelected} />)
-		}
-
-		if (this.state.selectedProducts.length > 0) {
-			console.log('selectedProducts!!!');
 		}
 
         return (
@@ -55,7 +56,7 @@ module.exports = React.createClass({
                 		<input id="product_search" type="text" placeholder="Search for a product" value={this.state.product.name} onChange={this.searchProducts} disabled={(!this.state.brand)} />
                 		{ productMatches }
                 	</label>
-                	<button type="submit" onClick={ this.addItem } disabled={!(this.state.product && this.state.product.name.length > 0)}>Add Item</button>
+                	<button type="submit" onClick={ this.addItem } disabled={!(this.state.product && this.state.product.id)}>Add Item</button>
                 </form>
             </div>
         );
@@ -70,6 +71,8 @@ module.exports = React.createClass({
     	},0);
     },
     searchProducts: function(e) {
+    	console.log(e.currentTarget.value);
+    	var productMatches;
     	var value = e.currentTarget.value.toString().toLowerCase();
 
     	if (value.length > 0) {
@@ -78,11 +81,12 @@ module.exports = React.createClass({
 	    	var productMatches = products.filter(function(product) {
 	    		return (product.name.toLowerCase().indexOf(value) > -1);
 	    	});
-
-	    	this.setState({
-	    		productMatches: productMatches
-	    	});
 	    }
+
+    	this.setState({
+    		productMatches: productMatches,
+    		product: { name: e.currentTarget.value }
+    	});
     },
     searchProductsSelected: function(value) {
     	console.log('searchProductsSelected', value);
@@ -91,13 +95,34 @@ module.exports = React.createClass({
     		productMatches: null,
     		product: value.value
     	});
+
+    	setTimeout(function() {
+	    	document.activeElement.blur();
+    	}, 0);
     },
     addItem: function(e) {
     	e.preventDefault();
 
-    	this.getFlux().actions.products.add({
-    		product: this.state.product
+    	var productID = this.state.product.id;
+
+    	var dupeProducts = this.state.selectedProducts.filter(function(product) {
+    		return (productID === product.id);
     	});
+
+    	if (dupeProducts.length > 0) {
+    		alert('You already have added ' + this.state.product.name);
+    	} else {
+	    	this.getFlux().actions.products.add({
+	    		product: this.state.product
+	    	});
+	    }
+
+	    // Override a bug where React keeps the brand selected, but doesn't realise it
+	    // https://github.com/facebook/react/issues/4618
+	    var newState = JSON.parse(JSON.stringify(originalState));
+	    newState.brand = this.state.brand;
+
+    	this.setState(newState);
     }
 
 });

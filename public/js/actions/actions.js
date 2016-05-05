@@ -12,6 +12,9 @@ var actions = {
 	products: {
 		add: function(payload) {
 			this.dispatch(CONSTANTS.PRODUCTS.ADD, { product: payload.product });
+		},
+		remove: function(id) {
+			this.dispatch(CONSTANTS.PRODUCTS.REMOVE, { id: id });
 		}
 	},
 	user: {
