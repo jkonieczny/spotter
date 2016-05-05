@@ -44,23 +44,25 @@ module.exports = React.createClass({
 
 		if (this.state.selectedUser && this.state.selectedUser.avatar) {
 			avatarClasses.user_selected 	= true;
-			avatarInlineCSS.backgroundImage = 'url(/images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
+			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
 		}
 
         return (
             <div className="page page_user">
                 <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
+                <p className="center">Add your client</p>
+                <hr/>
                 <form>
                 	<label>
                 		Email
-	                	<input type="email" placeholder="Email" onChange={ this.updateEmail } value={this.state.selectedUser.email} />
+	                	<input type="email" placeholder="Email" onChange={ this.updateEmail } value={ this.state.selectedUser.email } />
 	                	{ matchedUsers }
 	                </label>
 	                <label>
 	                	Name
-	                	<input type="text" placeholder="Name" value={this.state.selectedUser.name} />
+	                	<input type="text" placeholder="Name" onChange={ this.updateName } value={ this.state.selectedUser.name } />
 	                </label>
-	                <button type="submit" onClick={this.proceed} disabled={(!this.state.selectedUser.email)}>Proceed</button>
+	                <button type="submit" onClick={this.proceed} disabled={ (!this.state.selectedUser.email) }>Proceed</button>
                 </form>
             </div>
         );
@@ -78,17 +80,31 @@ module.exports = React.createClass({
 			matchedUsers: (matchedUsers.length > 0) ? matchedUsers : []
 		});
     },
-
+	updateName: function(e) {
+		this.setState({
+			selectedUser: {
+				email: this.state.selectedUser.email,
+				name: e.currentTarget.value
+			}
+		});
+	},
     searchUsersSelected: function(value) {
     	this.setState({
     		selectedUser: value.value,
     		matchedUsers: null
     	});
+
+    	setTimeout(function() {
+	    	document.activeElement.blur();
+    	}, 0);
     },
     proceed: function(e) {
     	e.preventDefault();
     	this.getFlux().actions.page.update({
     		page: 'product'
+    	});
+    	this.getFlux().actions.user.update({
+    		user: this.state.selectedUser
     	});
     }
 

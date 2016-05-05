@@ -40,7 +40,7 @@ var UserStore = Fluxxor.createStore({
 
         this.bindActions(
             CONSTANTS.USERS.GET, this.getUser,
-            CONSTANTS.USER.SELECTED, this.selectedUser
+            CONSTANTS.USER.UPDATE, this.userUpdate
         );
     },
     getState: function(){
@@ -49,8 +49,8 @@ var UserStore = Fluxxor.createStore({
     getUser: function(payload) {
         this.emit('change');
     },
-    selectedUser: function(payload) {
-        this.state.selectedUser = payload.value;
+    userUpdate: function(payload) {
+        this.state.client = payload.user;
         this.emit('change');
     }
 });

@@ -3,10 +3,11 @@ var constants = {
         GET: 'USERS_GET'
     },
     USER: {
-        SELECTED: 'USER_SELECTED'
+        UPDATE: 'USER_UPDATE'
     },
     PRODUCTS: {
         GET: 'PRODUCTS_GET',
+        ADD: 'PRODUCTS_ADD',
         SEARCH: 'PRODUCTS_SEARCH'
     },
     PAGE: {

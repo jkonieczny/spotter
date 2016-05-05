@@ -1,5 +1,6 @@
 input,
-button {
+button,
+select {
 	border-radius: 2px;
 	border: 1px solid #ccc;
 	line-height: 50px;
@@ -11,7 +12,8 @@ button {
 }
 
 input:focus,
-button:focus {
+button:focus,
+select:focus {
 	outline: none;
 	box-shadow: 0 0 0 2px #4eafb3;
 	z-index: 1;
@@ -24,7 +26,13 @@ button {
 	font-size: 16px;
 }
 
+input:disabled,
+button:disabled {
+	opacity: 0.5;
+}
+
 .hide { display: none; }
+.center { text-align: center; }
 
 .searchbar {
 	border: 1px solid #ccc;

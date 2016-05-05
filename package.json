@@ -6,7 +6,7 @@
   "scripts": {
     "watch": "watchify app.js -o public/bundle/js/bundle.js -v",
     "watch-css": "catw public/css/*.css -o public/bundle/css/concat.css -c 'npm run build-css'",
-    "build-css": "cleancss -o public/bundle/css/bundle.css public/css/main.css",
+    "build-css": "cleancss -o public/bundle/css/bundle.css public/css/main.css --skip-rebase",
     "browserify": "browserify app.js | uglifyjs > public/bundle/js/bundle.js",
     "build": "npm run browserify",
     "start": "npm run watch & npm run watch-css & nodemon server.js"

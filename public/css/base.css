@@ -52,11 +52,19 @@ header .header_title {
 	transform: translateX(-50%);
 }
 
-.page {
-	padding: 20px 10px;
+header .header_avatar {
+	background-image: url('../../images/avatars/trainer.jpg');
+	background-size: cover;
+	background-position: 50%;
+	border-radius: 100%;
+	height: 30px;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	width: 30px;
 }
 
-.page_user .user_avatar {
+.user_avatar {
 	background-image: url('../../images/fit-avatar.png');
 	background-size: 80%;
 	background-position: 50% bottom;
@@ -70,7 +78,11 @@ header .header_title {
 	margin: 20px auto 40px;
 }
 
-.page_user .user_avatar.user_selected {
+.user_avatar.user_selected {
 	background-size: cover;
 	background-position: 50%;
+}
+
+.page {
+	padding: 20px 10px;
 }

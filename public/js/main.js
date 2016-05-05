@@ -9,11 +9,13 @@ var Fluxxor = require('fluxxor');
 var actions = require('./actions/actions.js');
 
 var UserStore = require('./stores/userStore.js'),
-	PageStore = require('./stores/pageStore.js');
+	PageStore = require('./stores/pageStore.js'),
+	ProductStore = require('./stores/productStore.js');
 
 var stores = {
   UserStore: new UserStore(),
-  PageStore: new PageStore()
+  PageStore: new PageStore(),
+  ProductStore: new ProductStore()
 };
 
 var flux = new Fluxxor.Flux(stores, actions);
