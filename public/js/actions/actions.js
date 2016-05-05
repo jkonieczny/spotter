@@ -15,6 +15,9 @@ var actions = {
 		},
 		remove: function(id) {
 			this.dispatch(CONSTANTS.PRODUCTS.REMOVE, { id: id });
+		},
+		reset: function() {
+			this.dispatch(CONSTANTS.PRODUCTS.RESET);
 		}
 	},
 	user: {

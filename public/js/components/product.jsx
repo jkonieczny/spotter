@@ -26,6 +26,9 @@ module.exports = React.createClass({
 			selectedProducts: flux.store('ProductStore').getState().selectedProducts
 		};
 	},
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
     render: function() {
 		var avatarClasses = {
 			user_avatar: true

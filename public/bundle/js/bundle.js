@@ -23674,6 +23674,9 @@ var actions = {
 		},
 		remove: function(id) {
 			this.dispatch(CONSTANTS.PRODUCTS.REMOVE, { id: id });
+		},
+		reset: function() {
+			this.dispatch(CONSTANTS.PRODUCTS.RESET);
 		}
 	},
 	user: {
@@ -23703,6 +23706,9 @@ module.exports = React.createClass({displayName: "exports",
 	},
 	getStateFromFlux: function() {
 		return {};
+	},
+	componentDidMount: function() {
+		window.scrollTo(0,0);
 	},
     render: function() {
         return (
@@ -23871,7 +23877,6 @@ module.exports = React.createClass({displayName: "exports",
     	},0);
     },
     searchProducts: function(e) {
-    	console.log(e.currentTarget.value);
     	var productMatches;
     	var value = e.currentTarget.value.toString().toLowerCase();
 
@@ -23889,8 +23894,6 @@ module.exports = React.createClass({displayName: "exports",
     	});
     },
     searchProductsSelected: function(value) {
-    	console.log('searchProductsSelected', value);
-
     	this.setState({
     		productMatches: null,
     		product: value.value
@@ -23955,6 +23958,9 @@ module.exports = React.createClass({displayName: "exports",
 			selectedUser: flux.store('UserStore').getState().client,
 			selectedProducts: flux.store('ProductStore').getState().selectedProducts
 		};
+	},
+	componentDidMount: function() {
+		window.scrollTo(0,0);
 	},
     render: function() {
 		var avatarClasses = {
@@ -24150,6 +24156,11 @@ module.exports = React.createClass({
 
 		return flux.store('UserStore').getState();
 	},
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+
+		this.getFlux().actions.products.reset();
+	},
     render: function() {
 		console.log(0, this.state.selectedUser);
 		var matchedUsers;
@@ -24243,6 +24254,7 @@ var constants = {
         GET: 'PRODUCTS_GET',
         ADD: 'PRODUCTS_ADD',
         REMOVE: 'PRODUCTS_REMOVE',
+        RESET: 'PRODUCTS_RESET',
         SEARCH: 'PRODUCTS_SEARCH'
     },
     PAGE: {
@@ -24347,7 +24359,8 @@ var ProductStore = Fluxxor.createStore({
 
         this.bindActions(
             CONSTANTS.PRODUCTS.ADD, this.addProduct,
-            CONSTANTS.PRODUCTS.REMOVE, this.removeProduct
+            CONSTANTS.PRODUCTS.REMOVE, this.removeProduct,
+            CONSTANTS.PRODUCTS.RESET, this.resetStore
         );
     },
     getState: function(){
@@ -24358,11 +24371,14 @@ var ProductStore = Fluxxor.createStore({
         this.emit('change');
     },
     removeProduct: function(payload) {
-        console.log('removeProduct');
         this.state.selectedProducts = this.state.selectedProducts.filter(function(product) {
             return (payload.id !== product.id);
         });
 
+        this.emit('change');
+    },
+    resetStore: function() {
+        this.state.selectedProducts = [];
         this.emit('change');
     }
 });

@@ -9,6 +9,7 @@ var constants = {
         GET: 'PRODUCTS_GET',
         ADD: 'PRODUCTS_ADD',
         REMOVE: 'PRODUCTS_REMOVE',
+        RESET: 'PRODUCTS_RESET',
         SEARCH: 'PRODUCTS_SEARCH'
     },
     PAGE: {

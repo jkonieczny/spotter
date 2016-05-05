@@ -71,7 +71,6 @@ module.exports = React.createClass({
     	},0);
     },
     searchProducts: function(e) {
-    	console.log(e.currentTarget.value);
     	var productMatches;
     	var value = e.currentTarget.value.toString().toLowerCase();
 
@@ -89,8 +88,6 @@ module.exports = React.createClass({
     	});
     },
     searchProductsSelected: function(value) {
-    	console.log('searchProductsSelected', value);
-
     	this.setState({
     		productMatches: null,
     		product: value.value

@@ -19,7 +19,8 @@ var ProductStore = Fluxxor.createStore({
 
         this.bindActions(
             CONSTANTS.PRODUCTS.ADD, this.addProduct,
-            CONSTANTS.PRODUCTS.REMOVE, this.removeProduct
+            CONSTANTS.PRODUCTS.REMOVE, this.removeProduct,
+            CONSTANTS.PRODUCTS.RESET, this.resetStore
         );
     },
     getState: function(){
@@ -34,6 +35,10 @@ var ProductStore = Fluxxor.createStore({
             return (payload.id !== product.id);
         });
 
+        this.emit('change');
+    },
+    resetStore: function() {
+        this.state.selectedProducts = [];
         this.emit('change');
     }
 });

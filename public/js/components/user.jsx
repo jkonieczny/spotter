@@ -29,6 +29,11 @@ module.exports = React.createClass({
 
 		return flux.store('UserStore').getState();
 	},
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+
+		this.getFlux().actions.products.reset();
+	},
     render: function() {
 		console.log(0, this.state.selectedUser);
 		var matchedUsers;

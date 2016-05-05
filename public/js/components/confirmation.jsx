@@ -15,6 +15,9 @@ module.exports = React.createClass({
 	getStateFromFlux: function() {
 		return {};
 	},
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
     render: function() {
         return (
             <div className="confirmation">
