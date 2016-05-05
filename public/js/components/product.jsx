@@ -37,13 +37,23 @@ module.exports = React.createClass({
 			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
 		}
 
+		var totalPrice, commisionPrice;
+
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
+			totalPrice 		= 0;
+			commisionPrice 	= 0;
+
 			this.state.selectedProducts.forEach(function(product) {
+				totalPrice 		+= product.price;
+				commisionPrice 	+= product.price * 0.1;
 				selectedProducts.push(
 					(<Item key={product.id} item={product} />)
 				);
 			});
+
+			commisionPrice 	= (<span>{(Math.round(commisionPrice * 100) / 100).toFixed(2)}</span>);
+			totalPrice 		= (<div className="product_price center">Total Price: &pound;{totalPrice} (&pound;{commisionPrice})</div>);
 		}
 
         return (
@@ -54,6 +64,7 @@ module.exports = React.createClass({
                 <div>
                 	{selectedProducts}
                 </div>
+                {totalPrice}
                 <hr/>
                 <ItemSelect />
             </div>

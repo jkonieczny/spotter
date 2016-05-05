@@ -23967,13 +23967,23 @@ module.exports = React.createClass({displayName: "exports",
 			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
 		}
 
+		var totalPrice, commisionPrice;
+
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
+			totalPrice 		= 0;
+			commisionPrice 	= 0;
+
 			this.state.selectedProducts.forEach(function(product) {
+				totalPrice 		+= product.price;
+				commisionPrice 	+= product.price * 0.1;
 				selectedProducts.push(
 					(React.createElement(Item, {key: product.id, item: product}))
 				);
 			});
+
+			commisionPrice 	= (React.createElement("span", null, (Math.round(commisionPrice * 100) / 100).toFixed(2)));
+			totalPrice 		= (React.createElement("div", {className: "product_price center"}, "Total Price: £", totalPrice, " (£", commisionPrice, ")"));
 		}
 
         return (
@@ -23984,6 +23994,7 @@ module.exports = React.createClass({displayName: "exports",
                 React.createElement("div", null, 
                 	selectedProducts
                 ), 
+                totalPrice, 
                 React.createElement("hr", null), 
                 React.createElement(ItemSelect, null)
             )
