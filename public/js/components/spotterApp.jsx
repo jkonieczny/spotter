@@ -7,31 +7,41 @@ var React = require('react'),
 	FluxMixin = Fluxxor.FluxMixin(React),
     StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
-var Header = require('./header.jsx');
-var User = require('./user.jsx');
-var Product = require('./product.jsx');
-var Confirmation = require('./confirmation.jsx');
+var Header = require('./header.jsx'),
+	User = require('./user.jsx'),
+	Product = require('./product.jsx'),
+	Confirmation = require('./confirmation.jsx');
 
 module.exports = React.createClass({
-	mixins: [FluxMixin, StoreWatchMixin('UserStore')],
+	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
 
-		console.log(1, flux.store('UserStore').getState());
 		return {
-			users: flux.store('UserStore').getState()
+			page: flux.store('PageStore').getState()
 		};
 	},
     render: function() {
+    	var page;
+
+		switch(this.state.page.currentPage) {
+		    case 'confirmation':
+		        page = (<Confirmation />);
+		        break;
+		    case 'product':
+		        page = (<Product />);
+		        break;
+		    default:
+		        page = (<User />);
+		}
+
         return (
             <div>
             	<Header />
-                <User />
-                <Product />
-                <Confirmation />
+            	{page}
             </div>
         );
     }

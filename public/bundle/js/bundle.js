@@ -23662,13 +23662,10 @@ module.exports = require('./lib/React');
 var CONSTANTS = require('../constants/constants');
 
 var actions = {
-	searchSelected: function(payload) {
-		console.log('searchSelected', payload);
-		this.dispatch(payload.constant, {value: payload.value});
-	},
-	users: {
-		selectedUser: function(payload) {
-			console.log('selectedUser', payload);
+	page: {
+		update: function(payload) {
+			console.log('update page', payload);
+			this.dispatch(CONSTANTS.PAGE.UPDATE, {page: payload.page});
 		}
 	}
 };
@@ -23786,8 +23783,6 @@ module.exports = React.createClass({displayName: "exports",
     		);
     	}.bind(this));
 
-    	console.log(results);
-
         return (
         	React.createElement("ul", {className: "searchbar"}, 
         		results
@@ -23819,10 +23814,16 @@ module.exports = React.createClass({displayName: "exports",
     },
 
     onSelected: function(e) {
+        console.log(this.props.onSelectedAction);
+        this.props.onSelectedAction({
+            value: this.props.result
+        });
+        /*
         this.getFlux().actions.searchSelected({
             constant: this.props.onSelectedAction,
             value: this.props.result
         });
+        */
     }
 
 });
@@ -23837,31 +23838,41 @@ var React = require('react'),
 	FluxMixin = Fluxxor.FluxMixin(React),
     StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
-var Header = require('./header.jsx');
-var User = require('./user.jsx');
-var Product = require('./product.jsx');
-var Confirmation = require('./confirmation.jsx');
+var Header = require('./header.jsx'),
+	User = require('./user.jsx'),
+	Product = require('./product.jsx'),
+	Confirmation = require('./confirmation.jsx');
 
 module.exports = React.createClass({displayName: "exports",
-	mixins: [FluxMixin, StoreWatchMixin('UserStore')],
+	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
 
-		console.log(1, flux.store('UserStore').getState());
 		return {
-			users: flux.store('UserStore').getState()
+			page: flux.store('PageStore').getState()
 		};
 	},
     render: function() {
+    	var page;
+
+		switch(this.state.page.currentPage) {
+		    case 'confirmation':
+		        page = (React.createElement(Confirmation, null));
+		        break;
+		    case 'product':
+		        page = (React.createElement(Product, null));
+		        break;
+		    default:
+		        page = (React.createElement(User, null));
+		}
+
         return (
             React.createElement("div", null, 
             	React.createElement(Header, null), 
-                React.createElement(User, null), 
-                React.createElement(Product, null), 
-                React.createElement(Confirmation, null)
+            	page
             )
         );
     }
@@ -23878,6 +23889,8 @@ var React = require('react'),
 	FluxMixin = Fluxxor.FluxMixin(React),
     StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
+var cx = require('classnames');
+
 var CONSTANTS = require('../constants/constants');
 
 var SearchBar = require('./searchBar.jsx');
@@ -23886,7 +23899,12 @@ module.exports = React.createClass({
 	displayName: 'user.jsx',
 	mixins: [FluxMixin, StoreWatchMixin('UserStore')],
 	getInitialState: function() {
-		return {};
+		return {
+			selectedUser: {
+				name: '',
+				email: ''
+			}
+		};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
@@ -23898,44 +23916,67 @@ module.exports = React.createClass({
 		var matchedUsers;
 
 		if (this.state.matchedUsers) {
-			matchedUsers = (React.createElement(SearchBar, {keys: "email", matches:  this.state.matchedUsers, onSelectedAction: CONSTANTS.USER.SELECTED}))
+			matchedUsers = (React.createElement(SearchBar, {keys: "email", matches:  this.state.matchedUsers, onSelectedAction: this.searchUsersSelected}))
+		}
+
+		var avatarClasses = {
+			user_avatar: true
+		};
+		var avatarInlineCSS = {};
+
+		if (this.state.selectedUser && this.state.selectedUser.avatar) {
+			avatarClasses.user_selected 	= true;
+			avatarInlineCSS.backgroundImage = 'url(/images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
 		}
 
         return (
             React.createElement("div", {className: "page page_user"}, 
-                React.createElement("div", {className: "user_avatar"}), 
+                React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
                 React.createElement("form", null, 
                 	React.createElement("label", null, 
                 		"Email", 
-	                	React.createElement("input", {type: "email", placeholder: "Email", onChange:  this.searchUsers, value: this.state.selectedUser}), 
+	                	React.createElement("input", {type: "email", placeholder: "Email", onChange:  this.updateEmail, value: this.state.selectedUser.email}), 
 	                	 matchedUsers 
 	                ), 
 	                React.createElement("label", null, 
 	                	"Name", 
-	                	React.createElement("input", {type: "text", placeholder: "Name"})
-	                )
+	                	React.createElement("input", {type: "text", placeholder: "Name", value: this.state.selectedUser.name})
+	                ), 
+	                React.createElement("button", {type: "submit", onClick: this.proceed, disabled: (!this.state.selectedUser.email)}, "Proceed")
                 )
             )
         );
     },
-
-    searchUsers: function(e) {
+    updateEmail: function(e) {
     	var matchedUsers = this.state.users.filter(function(user) {
     		return (user.email.search(e.currentTarget.value) > -1) ? user : false;
     	});
 
 		this.setState({
+			selectedUser: {
+				email: e.currentTarget.value,
+				name: this.state.selectedUser.name
+			},
 			matchedUsers: (matchedUsers.length > 0) ? matchedUsers : []
 		});
     },
 
-    searchUsersSelected: function(e) {
-    	console.log('searchUsersSelected', e.currentTarget);
+    searchUsersSelected: function(value) {
+    	this.setState({
+    		selectedUser: value.value,
+    		matchedUsers: null
+    	});
+    },
+    proceed: function(e) {
+    	e.preventDefault();
+    	this.getFlux().actions.page.update({
+    		page: 'product'
+    	});
     }
 
 });
 
-},{"../constants/constants":275,"./searchBar.jsx":271,"fluxxor":4,"react":266}],275:[function(require,module,exports){
+},{"../constants/constants":275,"./searchBar.jsx":271,"classnames":3,"fluxxor":4,"react":266}],275:[function(require,module,exports){
 var constants = {
     USERS: {
         GET: 'USERS_GET'
@@ -24017,6 +24058,7 @@ var PageStore = Fluxxor.createStore({
         return this.state;
     },
     updatePage: function(payload) {
+        console.log(payload);
         this.state.currentPage = payload.page;
         this.emit('change');
     }
@@ -24038,7 +24080,7 @@ var UserStore = Fluxxor.createStore({
                     name: 'Robert Daly',
                     id: 1,
                     trainer: 'Zeus',
-                    avatar: 'robert',
+                    avatar: 'rob',
                     email: 'robert@spotter.com'
                 },
                 {
@@ -24062,8 +24104,7 @@ var UserStore = Fluxxor.createStore({
                     avatar: 'arnold',
                     email: 'arnold@spotter.com'
                 }
-            ],
-            selectedUser: ''
+            ]
         };
 
         this.bindActions(

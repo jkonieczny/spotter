@@ -18,6 +18,7 @@ var PageStore = Fluxxor.createStore({
         return this.state;
     },
     updatePage: function(payload) {
+        console.log(payload);
         this.state.currentPage = payload.page;
         this.emit('change');
     }

@@ -11,7 +11,7 @@ var UserStore = Fluxxor.createStore({
                     name: 'Robert Daly',
                     id: 1,
                     trainer: 'Zeus',
-                    avatar: 'robert',
+                    avatar: 'rob',
                     email: 'robert@spotter.com'
                 },
                 {
@@ -35,8 +35,7 @@ var UserStore = Fluxxor.createStore({
                     avatar: 'arnold',
                     email: 'arnold@spotter.com'
                 }
-            ],
-            selectedUser: ''
+            ]
         };
 
         this.bindActions(

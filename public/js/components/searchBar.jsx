@@ -16,8 +16,6 @@ module.exports = React.createClass({
     		);
     	}.bind(this));
 
-    	console.log(results);
-
         return (
         	<ul className="searchbar">
         		{results}

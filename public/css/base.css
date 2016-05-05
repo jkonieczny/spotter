@@ -69,3 +69,8 @@ header .header_title {
 	background-color: #ccc;
 	margin: 20px auto 40px;
 }
+
+.page_user .user_avatar.user_selected {
+	background-size: cover;
+	background-position: 50%;
+}

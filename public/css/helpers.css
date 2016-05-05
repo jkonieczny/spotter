@@ -1,4 +1,5 @@
-input {
+input,
+button {
 	border-radius: 2px;
 	border: 1px solid #ccc;
 	line-height: 50px;
@@ -9,10 +10,18 @@ input {
 	-webkit-appearance: none;
 }
 
-input:focus {
+input:focus,
+button:focus {
 	outline: none;
 	box-shadow: 0 0 0 2px #4eafb3;
 	z-index: 1;
+}
+
+button {
+	background-color: #4eafb3;
+	border: 0;
+	color: #fff;
+	font-size: 16px;
 }
 
 .hide { display: none; }

@@ -19,10 +19,16 @@ module.exports = React.createClass({
     },
 
     onSelected: function(e) {
+        console.log(this.props.onSelectedAction);
+        this.props.onSelectedAction({
+            value: this.props.result
+        });
+        /*
         this.getFlux().actions.searchSelected({
             constant: this.props.onSelectedAction,
             value: this.props.result
         });
+        */
     }
 
 });
