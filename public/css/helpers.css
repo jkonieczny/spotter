@@ -44,7 +44,10 @@ button:disabled {
 	border-bottom: 1px solid #ccc;
 	cursor: pointer;
 	line-height: 50px;
+	overflow: hidden;
 	padding: 0 10px;
+	text-overflow: ellipsis;
+	white-space: nowrap;             
 }
 
 .searchbar li:last-child {

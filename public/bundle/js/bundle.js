@@ -23884,7 +23884,7 @@ module.exports = React.createClass({displayName: "exports",
 	    }
 
     	this.setState({
-    		productMatches: productMatches,
+    		productMatches: productMatches.slice(0,10),
     		product: { name: e.currentTarget.value }
     	});
     },
@@ -23983,7 +23983,7 @@ module.exports = React.createClass({displayName: "exports",
 			});
 
 			commisionPrice 	= (React.createElement("span", null, (Math.round(commisionPrice * 100) / 100).toFixed(2)));
-			totalPrice 		= (React.createElement("div", {className: "product_price center"}, "Total Price: £", totalPrice, " (£", commisionPrice, ")"));
+			totalPrice 		= (React.createElement("div", {className: "product_price center"}, "Total Price: £", totalPrice.toFixed(2), " (£", commisionPrice, ")"));
 		}
 
         return (

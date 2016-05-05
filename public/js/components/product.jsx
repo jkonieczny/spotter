@@ -53,7 +53,7 @@ module.exports = React.createClass({
 			});
 
 			commisionPrice 	= (<span>{(Math.round(commisionPrice * 100) / 100).toFixed(2)}</span>);
-			totalPrice 		= (<div className="product_price center">Total Price: &pound;{totalPrice} (&pound;{commisionPrice})</div>);
+			totalPrice 		= (<div className="product_price center">Total Price: &pound;{totalPrice.toFixed(2)} (&pound;{commisionPrice})</div>);
 		}
 
         return (

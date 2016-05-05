@@ -84,7 +84,7 @@ module.exports = React.createClass({
 	    }
 
     	this.setState({
-    		productMatches: productMatches,
+    		productMatches: productMatches.slice(0,10),
     		product: { name: e.currentTarget.value }
     	});
     },
