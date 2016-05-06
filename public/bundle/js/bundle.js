@@ -23761,15 +23761,15 @@ module.exports = React.createClass({
                 React.createElement("div", null, 
                 	React.createElement("p", null, "Items for ", this.state.selectedUser.name)
                 ), 
-                React.createElement("div", null, 
+                React.createElement("div", {className: "item_list"}, 
                 	selectedProducts
                 ), 
-                React.createElement("div", null, 
-                	React.createElement("p", null, React.createElement("a", {href: "#", onClick: this.viewEmail}, "View client email"))
+                React.createElement("div", {className: "right"}, 
+                	React.createElement("div", null, "Total Price: £", totalPrice), 
+                	React.createElement("div", null, "Commision: £", commisionPrice)
                 ), 
-                React.createElement("div", null, 
-                	React.createElement("p", null, "Total Price: £", totalPrice), 
-                	React.createElement("p", null, "Commision: £", commisionPrice)
+                React.createElement("div", {className: "right"}, 
+                	React.createElement("p", null, React.createElement("a", {href: "#", onClick: this.viewEmail}, "View client email"))
                 ), 
                 React.createElement("div", null, 
                 	React.createElement("p", {className: "center"}, "Click below to send ", this.state.selectedUser.name, " your recommendations"), 
@@ -23920,7 +23920,7 @@ module.exports = React.createClass({displayName: "exports",
         if (this.state.page === 'email') {
             page = 'confirmation';
         } else {
-            this.state.pages[this.state.pages.indexOf(this.state.page) - 1]
+            page = this.state.pages[this.state.pages.indexOf(this.state.page) - 1];
         }
 
     	this.getFlux().actions.page.update({
@@ -24154,8 +24154,12 @@ module.exports = React.createClass({displayName: "exports",
 				);
 			});
 
-			commisionPrice 	= (React.createElement("span", null, (Math.round(commisionPrice * 100) / 100).toFixed(2)));
-			totalPrice 		= (React.createElement("div", {className: "product_price center"}, "Total Price: £", totalPrice.toFixed(2), " (£", commisionPrice, ")"));
+			commisionPrice 	= 	(React.createElement("span", null, (Math.round(commisionPrice * 100) / 100).toFixed(2)));
+			totalPrice 		= 	(
+									React.createElement("div", {className: "product_price right"}, 
+										React.createElement("p", null, "Total Price: £", totalPrice.toFixed(2), " (£", commisionPrice, ")")
+									)
+								);
 
 			proceedButton = (React.createElement("button", {type: "submit", onClick: this.proceed}, "Proceed"));
 		}
@@ -24164,12 +24168,10 @@ module.exports = React.createClass({displayName: "exports",
             React.createElement("div", {className: "page page_product"}, 
                 React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
                 React.createElement("p", {className: "center"}, "Select your recommended products for ", this.state.selectedUser.name), 
-                React.createElement("hr", null), 
-                React.createElement("div", null, 
+                React.createElement("div", {className: "item_list"}, 
                 	selectedProducts
                 ), 
                 totalPrice, 
-                React.createElement("hr", null), 
                 React.createElement(ItemSelect, null), 
                  proceedButton 
             )
@@ -24453,7 +24455,7 @@ module.exports = React.createClass({
             React.createElement("div", {className: "page page_user"}, 
                 React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
                 React.createElement("p", {className: "center"}, "Add your client"), 
-                React.createElement("hr", null), 
+
                 React.createElement("form", null, 
                 	React.createElement("label", null, 
                 		"Email", 

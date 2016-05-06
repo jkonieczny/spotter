@@ -55,8 +55,12 @@ module.exports = React.createClass({
 				);
 			});
 
-			commisionPrice 	= (<span>{(Math.round(commisionPrice * 100) / 100).toFixed(2)}</span>);
-			totalPrice 		= (<div className="product_price center">Total Price: &pound;{totalPrice.toFixed(2)} (&pound;{commisionPrice})</div>);
+			commisionPrice 	= 	(<span>{(Math.round(commisionPrice * 100) / 100).toFixed(2)}</span>);
+			totalPrice 		= 	(
+									<div className="product_price right">
+										<p>Total Price: &pound;{totalPrice.toFixed(2)} (&pound;{commisionPrice})</p>
+									</div>
+								);
 
 			proceedButton = (<button type="submit" onClick={this.proceed}>Proceed</button>);
 		}
@@ -65,12 +69,10 @@ module.exports = React.createClass({
             <div className="page page_product">
                 <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
                 <p className="center">Select your recommended products for {this.state.selectedUser.name}</p>
-                <hr/>
-                <div>
+                <div className="item_list">
                 	{selectedProducts}
                 </div>
                 {totalPrice}
-                <hr/>
                 <ItemSelect />
                 { proceedButton }
             </div>

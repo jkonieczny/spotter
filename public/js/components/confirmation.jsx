@@ -69,15 +69,15 @@ module.exports = React.createClass({
                 <div>
                 	<p>Items for {this.state.selectedUser.name}</p>
                 </div>
-                <div>
+                <div className="item_list">
                 	{selectedProducts}
                 </div>
-                <div>
-                	<p><a href="#" onClick={this.viewEmail}>View client email</a></p>
+                <div className="right">
+                	<div>Total Price: &pound;{totalPrice}</div>
+                	<div>Commision: &pound;{commisionPrice}</div>
                 </div>
-                <div>
-                	<p>Total Price: &pound;{totalPrice}</p>
-                	<p>Commision: &pound;{commisionPrice}</p>
+                <div className="right">
+                	<p><a href="#" onClick={this.viewEmail}>View client email</a></p>
                 </div>
                 <div>
                 	<p className="center">Click below to send {this.state.selectedUser.name} your recommendations</p>

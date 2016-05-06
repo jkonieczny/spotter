@@ -37,7 +37,7 @@ module.exports = React.createClass({
         if (this.state.page === 'email') {
             page = 'confirmation';
         } else {
-            this.state.pages[this.state.pages.indexOf(this.state.page) - 1]
+            page = this.state.pages[this.state.pages.indexOf(this.state.page) - 1];
         }
 
     	this.getFlux().actions.page.update({

@@ -56,7 +56,7 @@ module.exports = React.createClass({
             <div className="page page_user">
                 <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
                 <p className="center">Add your client</p>
-                <hr/>
+
                 <form>
                 	<label>
                 		Email

@@ -36,8 +36,13 @@ a {
 	text-decoration: none;
 }
 
+p {
+	margin-bottom: 20px;
+}
+
 .hide { display: none; }
 .center { text-align: center; }
+.right { text-align: right; }
 
 .searchbar {
 	border: 1px solid #ccc;

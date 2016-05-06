@@ -87,6 +87,10 @@ header .header_avatar {
 	padding: 20px 10px;
 }
 
+.item_list {
+	margin-bottom: 20px;
+}
+
 .item {
 	border-bottom: 1px solid #ccc;
 	min-height: 50px;
