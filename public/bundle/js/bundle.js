@@ -23861,7 +23861,7 @@ module.exports = React.createClass({
             React.createElement("div", {className: "page page_success"}, 
                 React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
                 React.createElement("div", null, 
-                	React.createElement("p", null, "Success")
+                	React.createElement("p", null, "Email")
                 ), 
                 React.createElement("div", null, 
                 	selectedProducts

@@ -65,7 +65,7 @@ module.exports = React.createClass({
             <div className="page page_success">
                 <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
                 <div>
-                	<p>Success</p>
+                	<p>Email</p>
                 </div>
                 <div>
                 	{selectedProducts}
