@@ -53,7 +53,7 @@ module.exports = React.createClass({
                 	</label>
                 	<label>
                 		Select Product
-                		<input id="product_search" type="text" placeholder="Search for a product" value={this.state.product.name} onChange={this.searchProducts} disabled={(!this.state.brand)} />
+                		<input id="product_search" type="text" placeholder="Search for a product" value={this.state.product.name} onChange={this.searchProducts} disabled={(!this.state.brand)} autocomplete="off" autocorrect="off" autocapitalize="off" />
                 		{ productMatches }
                 	</label>
                 	<button type="submit" onClick={ this.addItem } disabled={!(this.state.product && this.state.product.id)}>Add Item</button>
