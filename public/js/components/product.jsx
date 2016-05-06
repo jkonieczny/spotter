@@ -40,7 +40,7 @@ module.exports = React.createClass({
 			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
 		}
 
-		var totalPrice, commisionPrice;
+		var totalPrice, commisionPrice, proceedButton;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
@@ -57,6 +57,8 @@ module.exports = React.createClass({
 
 			commisionPrice 	= (<span>{(Math.round(commisionPrice * 100) / 100).toFixed(2)}</span>);
 			totalPrice 		= (<div className="product_price center">Total Price: &pound;{totalPrice.toFixed(2)} (&pound;{commisionPrice})</div>);
+
+			proceedButton = (<button type="submit" onClick={this.proceed}>Proceed</button>);
 		}
 
         return (
@@ -70,8 +72,15 @@ module.exports = React.createClass({
                 {totalPrice}
                 <hr/>
                 <ItemSelect />
+                { proceedButton }
             </div>
         );
+    },
+    proceed: function(e) {
+    	e.preventDefault();
+    	this.getFlux().actions.page.update({
+    		page: 'confirmation'
+    	});
     }
 
 });

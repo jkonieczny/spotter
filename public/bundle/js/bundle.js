@@ -23699,28 +23699,78 @@ var React = require('react'),
 	FluxMixin = Fluxxor.FluxMixin(React),
     StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
-module.exports = React.createClass({displayName: "exports",
-	mixins: [FluxMixin, StoreWatchMixin('UserStore')],
+var cx = require('classnames');
+
+var CONSTANTS = require('../constants/constants');
+
+var Item = require('./item.jsx');
+
+module.exports = React.createClass({
+	displayName: 'confirmation.jsx',
+	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
-		return {};
+		console.log('wat');
+		var flux = this.getFlux();
+		return {
+			selectedUser: flux.store('UserStore').getState().client,
+			selectedProducts: flux.store('ProductStore').getState().selectedProducts
+		};
 	},
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
     render: function() {
+    	console.log(this.state);
+		var avatarClasses = {
+			user_avatar: true
+		};
+		var avatarInlineCSS = {};
+
+		if (this.state.selectedUser && this.state.selectedUser.avatar) {
+			avatarClasses.user_selected 	= true;
+			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
+		}
+
+		var totalPrice, commisionPrice, proceedButton;
+
+		var selectedProducts = [];
+		if (this.state.selectedProducts.length > 0) {
+			totalPrice 		= 0;
+			commisionPrice 	= 0;
+
+			this.state.selectedProducts.forEach(function(product) {
+				totalPrice 		+= product.price;
+				commisionPrice 	+= product.price * 0.1;
+				selectedProducts.push(
+					(React.createElement(Item, {key: product.id, item: product}))
+				);
+			});
+
+			commisionPrice 	= (React.createElement("span", null, (Math.round(commisionPrice * 100) / 100).toFixed(2)));
+			totalPrice 		= (React.createElement("div", {className: "product_price center"}, "Total Price: £", totalPrice.toFixed(2), " (£", commisionPrice, ")"));
+
+			proceedButton = (React.createElement("button", {type: "submit", onClick: this.proceed}, "Proceed"));
+		}
+
         return (
-            React.createElement("div", {className: "confirmation"}, 
-                "Confirmation"
+            React.createElement("div", {className: "page page_product"}, 
+                React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
+                React.createElement("div", null, 
+                	React.createElement("p", null, "Items for ", this.state.selectedUser.name)
+                ), 
+                React.createElement("div", null, 
+                	selectedProducts
+                )
             )
         );
     }
 
 });
 
-},{"fluxxor":4,"react":266}],269:[function(require,module,exports){
+},{"../constants/constants":277,"./item.jsx":270,"classnames":3,"fluxxor":4,"react":266}],269:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23973,7 +24023,7 @@ module.exports = React.createClass({displayName: "exports",
 			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
 		}
 
-		var totalPrice, commisionPrice;
+		var totalPrice, commisionPrice, proceedButton;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
@@ -23990,6 +24040,8 @@ module.exports = React.createClass({displayName: "exports",
 
 			commisionPrice 	= (React.createElement("span", null, (Math.round(commisionPrice * 100) / 100).toFixed(2)));
 			totalPrice 		= (React.createElement("div", {className: "product_price center"}, "Total Price: £", totalPrice.toFixed(2), " (£", commisionPrice, ")"));
+
+			proceedButton = (React.createElement("button", {type: "submit", onClick: this.proceed}, "Proceed"));
 		}
 
         return (
@@ -24002,9 +24054,16 @@ module.exports = React.createClass({displayName: "exports",
                 ), 
                 totalPrice, 
                 React.createElement("hr", null), 
-                React.createElement(ItemSelect, null)
+                React.createElement(ItemSelect, null), 
+                 proceedButton 
             )
         );
+    },
+    proceed: function(e) {
+    	e.preventDefault();
+    	this.getFlux().actions.page.update({
+    		page: 'confirmation'
+    	});
     }
 
 });
