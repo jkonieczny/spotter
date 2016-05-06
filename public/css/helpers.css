@@ -31,6 +31,11 @@ button:disabled {
 	opacity: 0.5;
 }
 
+a {
+	color: #4eafb3;
+	text-decoration: none;
+}
+
 .hide { display: none; }
 .center { text-align: center; }
 

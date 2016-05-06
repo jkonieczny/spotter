@@ -19,7 +19,7 @@ module.exports = React.createClass({
 		return {
 			pages: state.pages,
 			page: state.currentPage,
-			back: (state.currentPage !== 'user')
+			back: (state.currentPage !== 'user' && state.currentPage !== 'success')
 		};
 	},
     render: function() {
@@ -32,10 +32,16 @@ module.exports = React.createClass({
         );
     },
     goBack: function(e) {
-    	var index = this.state.pages.indexOf(this.state.page) - 1;
-    	console.log(this.state, index);
+        var page;
+
+        if (this.state.page === 'email') {
+            page = 'confirmation';
+        } else {
+            this.state.pages[this.state.pages.indexOf(this.state.page) - 1]
+        }
+
     	this.getFlux().actions.page.update({
-    		page: this.state.pages[index]
+    		page: page
     	});
     }
 

@@ -6,7 +6,7 @@ var CONSTANTS = require('../constants/constants');
 var PageStore = Fluxxor.createStore({
     initialize: function(params) {
         this.state = {
-            pages: ['user', 'product', 'confirmation'],
+            pages: ['user', 'product', 'confirmation', 'success'],
             currentPage: 'user'
         };
 

@@ -14,13 +14,12 @@ var CONSTANTS = require('../constants/constants');
 var Item = require('./item.jsx');
 
 module.exports = React.createClass({
-	displayName: 'confirmation.jsx',
+	displayName: 'email.jsx',
 	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
-		console.log('wat');
 		var flux = this.getFlux();
 		return {
 			selectedUser: flux.store('UserStore').getState().client,
@@ -31,7 +30,6 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-    	console.log(this.state);
 		var avatarClasses = {
 			user_avatar: true
 		};
@@ -64,39 +62,24 @@ module.exports = React.createClass({
 		}
 
         return (
-            <div className="page page_product">
+            <div className="page page_success">
                 <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
                 <div>
-                	<p>Items for {this.state.selectedUser.name}</p>
+                	<p>Success</p>
                 </div>
                 <div>
                 	{selectedProducts}
-                </div>
-                <div>
-                	<p><a href="#" onClick={this.viewEmail}>View client email</a></p>
-                </div>
-                <div>
-                	<p>Total Price: &pound;{totalPrice}</p>
-                	<p>Commision: &pound;{commisionPrice}</p>
-                </div>
-                <div>
-                	<p className="center">Click below to send {this.state.selectedUser.name} your recommendations</p>
-                	<button onClick={this.sendEmail}>Send Client Email</button>
                 </div>
             </div>
         );
     },
     viewEmail: function(e) {
     	e.preventDefault();
-    	this.getFlux().actions.page.update({
-    		page: 'email'
-    	});
+    	console.log('view email');
     },
     sendEmail: function(e) {
     	e.preventDefault();
-    	this.getFlux().actions.page.update({
-    		page: 'success'
-    	});
+    	console.log('send email');
     }
 
 });

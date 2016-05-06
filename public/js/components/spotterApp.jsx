@@ -10,7 +10,9 @@ var React = require('react'),
 var Header = require('./header.jsx'),
 	User = require('./user.jsx'),
 	Product = require('./product.jsx'),
-	Confirmation = require('./confirmation.jsx');
+	Confirmation = require('./confirmation.jsx'),
+	Success = require('./success.jsx'),
+	Email = require('./email.jsx');
 
 module.exports = React.createClass({
 	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
@@ -33,6 +35,12 @@ module.exports = React.createClass({
 		        break;
 		    case 'product':
 		        page = (<Product />);
+		        break;
+		    case 'success':
+		        page = (<Success />);
+		        break;
+		    case 'email':
+		        page = (<Email />);
 		        break;
 		    default:
 		        page = (<User />);

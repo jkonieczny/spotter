@@ -7,7 +7,7 @@ var App = require('./public/js/main.js');
 App.init();
 
 }).call(this,require('_process'))
-},{"./public/js/main.js":278,"_process":2}],2:[function(require,module,exports){
+},{"./public/js/main.js":280,"_process":2}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -23689,7 +23689,7 @@ var actions = {
 
 module.exports = actions;
 
-},{"../constants/constants":277}],268:[function(require,module,exports){
+},{"../constants/constants":279}],268:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23749,8 +23749,8 @@ module.exports = React.createClass({
 				);
 			});
 
-			commisionPrice 	= (React.createElement("span", null, (Math.round(commisionPrice * 100) / 100).toFixed(2)));
-			totalPrice 		= (React.createElement("div", {className: "product_price center"}, "Total Price: £", totalPrice.toFixed(2), " (£", commisionPrice, ")"));
+			commisionPrice 	= (Math.round(commisionPrice * 100) / 100).toFixed(2);
+			totalPrice 		= totalPrice.toFixed(2);
 
 			proceedButton = (React.createElement("button", {type: "submit", onClick: this.proceed}, "Proceed"));
 		}
@@ -23763,14 +23763,124 @@ module.exports = React.createClass({
                 ), 
                 React.createElement("div", null, 
                 	selectedProducts
+                ), 
+                React.createElement("div", null, 
+                	React.createElement("p", null, React.createElement("a", {href: "#", onClick: this.viewEmail}, "View client email"))
+                ), 
+                React.createElement("div", null, 
+                	React.createElement("p", null, "Total Price: £", totalPrice), 
+                	React.createElement("p", null, "Commision: £", commisionPrice)
+                ), 
+                React.createElement("div", null, 
+                	React.createElement("p", {className: "center"}, "Click below to send ", this.state.selectedUser.name, " your recommendations"), 
+                	React.createElement("button", {onClick: this.sendEmail}, "Send Client Email")
                 )
             )
         );
+    },
+    viewEmail: function(e) {
+    	e.preventDefault();
+    	this.getFlux().actions.page.update({
+    		page: 'email'
+    	});
+    },
+    sendEmail: function(e) {
+    	e.preventDefault();
+    	this.getFlux().actions.page.update({
+    		page: 'success'
+    	});
     }
 
 });
 
-},{"../constants/constants":277,"./item.jsx":270,"classnames":3,"fluxxor":4,"react":266}],269:[function(require,module,exports){
+},{"../constants/constants":279,"./item.jsx":271,"classnames":3,"fluxxor":4,"react":266}],269:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React = require('react'),
+	Fluxxor = require('fluxxor'),
+	FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+
+var cx = require('classnames');
+
+var CONSTANTS = require('../constants/constants');
+
+var Item = require('./item.jsx');
+
+module.exports = React.createClass({
+	displayName: 'email.jsx',
+	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
+	getInitialState: function() {
+		return {};
+	},
+	getStateFromFlux: function() {
+		var flux = this.getFlux();
+		return {
+			selectedUser: flux.store('UserStore').getState().client,
+			selectedProducts: flux.store('ProductStore').getState().selectedProducts
+		};
+	},
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
+    render: function() {
+		var avatarClasses = {
+			user_avatar: true
+		};
+		var avatarInlineCSS = {};
+
+		if (this.state.selectedUser && this.state.selectedUser.avatar) {
+			avatarClasses.user_selected 	= true;
+			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
+		}
+
+		var totalPrice, commisionPrice, proceedButton;
+
+		var selectedProducts = [];
+		if (this.state.selectedProducts.length > 0) {
+			totalPrice 		= 0;
+			commisionPrice 	= 0;
+
+			this.state.selectedProducts.forEach(function(product) {
+				totalPrice 		+= product.price;
+				commisionPrice 	+= product.price * 0.1;
+				selectedProducts.push(
+					(React.createElement(Item, {key: product.id, item: product}))
+				);
+			});
+
+			commisionPrice 	= (Math.round(commisionPrice * 100) / 100).toFixed(2);
+			totalPrice 		= totalPrice.toFixed(2);
+
+			proceedButton = (React.createElement("button", {type: "submit", onClick: this.proceed}, "Proceed"));
+		}
+
+        return (
+            React.createElement("div", {className: "page page_success"}, 
+                React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
+                React.createElement("div", null, 
+                	React.createElement("p", null, "Success")
+                ), 
+                React.createElement("div", null, 
+                	selectedProducts
+                )
+            )
+        );
+    },
+    viewEmail: function(e) {
+    	e.preventDefault();
+    	console.log('view email');
+    },
+    sendEmail: function(e) {
+    	e.preventDefault();
+    	console.log('send email');
+    }
+
+});
+
+},{"../constants/constants":279,"./item.jsx":271,"classnames":3,"fluxxor":4,"react":266}],270:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23792,7 +23902,7 @@ module.exports = React.createClass({displayName: "exports",
 		return {
 			pages: state.pages,
 			page: state.currentPage,
-			back: (state.currentPage !== 'user')
+			back: (state.currentPage !== 'user' && state.currentPage !== 'success')
 		};
 	},
     render: function() {
@@ -23805,16 +23915,22 @@ module.exports = React.createClass({displayName: "exports",
         );
     },
     goBack: function(e) {
-    	var index = this.state.pages.indexOf(this.state.page) - 1;
-    	console.log(this.state, index);
+        var page;
+
+        if (this.state.page === 'email') {
+            page = 'confirmation';
+        } else {
+            this.state.pages[this.state.pages.indexOf(this.state.page) - 1]
+        }
+
     	this.getFlux().actions.page.update({
-    		page: this.state.pages[index]
+    		page: page
     	});
     }
 
 });
 
-},{"classnames":3,"fluxxor":4,"react":266}],270:[function(require,module,exports){
+},{"classnames":3,"fluxxor":4,"react":266}],271:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23853,7 +23969,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"classnames":3,"fluxxor":4,"react":266}],271:[function(require,module,exports){
+},{"classnames":3,"fluxxor":4,"react":266}],272:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23980,7 +24096,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./searchBar.jsx":273,"classnames":3,"fluxxor":4,"react":266}],272:[function(require,module,exports){
+},{"./searchBar.jsx":274,"classnames":3,"fluxxor":4,"react":266}],273:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24068,7 +24184,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"../constants/constants":277,"./item.jsx":270,"./itemSelect.jsx":271,"classnames":3,"fluxxor":4,"react":266}],273:[function(require,module,exports){
+},{"../constants/constants":279,"./item.jsx":271,"./itemSelect.jsx":272,"classnames":3,"fluxxor":4,"react":266}],274:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24096,7 +24212,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./searchBarResult.jsx":274,"react":266}],274:[function(require,module,exports){
+},{"./searchBarResult.jsx":275,"react":266}],275:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24132,7 +24248,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"fluxxor":4,"react":266}],275:[function(require,module,exports){
+},{"fluxxor":4,"react":266}],276:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24145,7 +24261,9 @@ var React = require('react'),
 var Header = require('./header.jsx'),
 	User = require('./user.jsx'),
 	Product = require('./product.jsx'),
-	Confirmation = require('./confirmation.jsx');
+	Confirmation = require('./confirmation.jsx'),
+	Success = require('./success.jsx'),
+	Email = require('./email.jsx');
 
 module.exports = React.createClass({displayName: "exports",
 	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
@@ -24169,6 +24287,12 @@ module.exports = React.createClass({displayName: "exports",
 		    case 'product':
 		        page = (React.createElement(Product, null));
 		        break;
+		    case 'success':
+		        page = (React.createElement(Success, null));
+		        break;
+		    case 'email':
+		        page = (React.createElement(Email, null));
+		        break;
 		    default:
 		        page = (React.createElement(User, null));
 		}
@@ -24183,7 +24307,94 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./confirmation.jsx":268,"./header.jsx":269,"./product.jsx":272,"./user.jsx":276,"fluxxor":4,"react":266}],276:[function(require,module,exports){
+},{"./confirmation.jsx":268,"./email.jsx":269,"./header.jsx":270,"./product.jsx":273,"./success.jsx":277,"./user.jsx":278,"fluxxor":4,"react":266}],277:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React = require('react'),
+	Fluxxor = require('fluxxor'),
+	FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+
+var cx = require('classnames');
+
+var CONSTANTS = require('../constants/constants');
+
+var Item = require('./item.jsx');
+
+module.exports = React.createClass({
+	displayName: 'success.jsx',
+	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
+	getInitialState: function() {
+		return {};
+	},
+	getStateFromFlux: function() {
+		var flux = this.getFlux();
+		return {
+			selectedUser: flux.store('UserStore').getState().client,
+			selectedProducts: flux.store('ProductStore').getState().selectedProducts
+		};
+	},
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
+    render: function() {
+		var avatarClasses = {
+			user_avatar: true
+		};
+		var avatarInlineCSS = {};
+
+		if (this.state.selectedUser && this.state.selectedUser.avatar) {
+			avatarClasses.user_selected 	= true;
+			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
+		}
+
+		var totalPrice, commisionPrice, proceedButton;
+
+		var selectedProducts = [];
+		if (this.state.selectedProducts.length > 0) {
+			totalPrice 		= 0;
+			commisionPrice 	= 0;
+
+			this.state.selectedProducts.forEach(function(product) {
+				totalPrice 		+= product.price;
+				commisionPrice 	+= product.price * 0.1;
+				selectedProducts.push(
+					(React.createElement(Item, {key: product.id, item: product}))
+				);
+			});
+
+			commisionPrice 	= (Math.round(commisionPrice * 100) / 100).toFixed(2);
+			totalPrice 		= totalPrice.toFixed(2);
+
+			proceedButton = (React.createElement("button", {type: "submit", onClick: this.proceed}, "Proceed"));
+		}
+
+        return (
+            React.createElement("div", {className: "page page_success"}, 
+                React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
+                React.createElement("div", null, 
+                	React.createElement("p", null, "Success")
+                ), 
+                React.createElement("div", null, 
+                	selectedProducts
+                )
+            )
+        );
+    },
+    viewEmail: function(e) {
+    	e.preventDefault();
+    	console.log('view email');
+    },
+    sendEmail: function(e) {
+    	e.preventDefault();
+    	console.log('send email');
+    }
+
+});
+
+},{"../constants/constants":279,"./item.jsx":271,"classnames":3,"fluxxor":4,"react":266}],278:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24301,7 +24512,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":277,"./searchBar.jsx":273,"classnames":3,"fluxxor":4,"react":266}],277:[function(require,module,exports){
+},{"../constants/constants":279,"./searchBar.jsx":274,"classnames":3,"fluxxor":4,"react":266}],279:[function(require,module,exports){
 var constants = {
     USERS: {
         GET: 'USERS_GET'
@@ -24323,7 +24534,7 @@ var constants = {
 
 module.exports = constants;
 
-},{}],278:[function(require,module,exports){
+},{}],280:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24367,7 +24578,7 @@ var App = {
 
 module.exports = App;
 
-},{"./actions/actions.js":267,"./components/spotterApp.jsx":275,"./stores/pageStore.js":279,"./stores/productStore.js":280,"./stores/userStore.js":281,"fluxxor":4,"react":266,"react-dom":101}],279:[function(require,module,exports){
+},{"./actions/actions.js":267,"./components/spotterApp.jsx":276,"./stores/pageStore.js":281,"./stores/productStore.js":282,"./stores/userStore.js":283,"fluxxor":4,"react":266,"react-dom":101}],281:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -24376,7 +24587,7 @@ var CONSTANTS = require('../constants/constants');
 var PageStore = Fluxxor.createStore({
     initialize: function(params) {
         this.state = {
-            pages: ['user', 'product', 'confirmation'],
+            pages: ['user', 'product', 'confirmation', 'success'],
             currentPage: 'user'
         };
 
@@ -24396,7 +24607,7 @@ var PageStore = Fluxxor.createStore({
 
 module.exports = PageStore;
 
-},{"../constants/constants":277,"fluxxor":4}],280:[function(require,module,exports){
+},{"../constants/constants":279,"fluxxor":4}],282:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -24444,7 +24655,7 @@ var ProductStore = Fluxxor.createStore({
 
 module.exports = ProductStore;
 
-},{"../constants/constants":277,"fluxxor":4}],281:[function(require,module,exports){
+},{"../constants/constants":279,"fluxxor":4}],283:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -24504,4 +24715,4 @@ var UserStore = Fluxxor.createStore({
 
 module.exports = UserStore;
 
-},{"../constants/constants":277,"fluxxor":4}]},{},[1]);
+},{"../constants/constants":279,"fluxxor":4}]},{},[1]);
