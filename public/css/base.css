@@ -161,6 +161,11 @@ header .header_avatar {
 	border-right: none;
 }
 
+.item_grid_parent.item_grid_single .item_grid {
+	border: none;
+	width: 100%;
+}
+
 .item_grid .item_grid_img {
 	border-radius: 100%;
 	display: block;

@@ -24025,7 +24025,7 @@ module.exports = React.createClass({
         }
 
         return (
-            React.createElement("div", {className: "item_grid_parent"}, 
+            React.createElement("div", {className: cx({item_grid_parent: true, item_grid_single: (this.state.selectedProducts && this.state.selectedProducts.length === 1) })}, 
                  selectedProducts 
             )
         );

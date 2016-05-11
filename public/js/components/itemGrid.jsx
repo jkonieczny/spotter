@@ -69,7 +69,7 @@ module.exports = React.createClass({
         }
 
         return (
-            <div className="item_grid_parent">
+            <div className={cx({item_grid_parent: true, item_grid_single: (this.state.selectedProducts && this.state.selectedProducts.length === 1) })}>
                 { selectedProducts }
             </div>
         );
