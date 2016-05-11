@@ -1,6 +1,7 @@
 input,
 button,
 select {
+	background-color: #fff;
 	border-radius: 2px;
 	border: 1px solid #ccc;
 	line-height: 50px;
@@ -41,6 +42,7 @@ p {
 }
 
 .hide { display: none; }
+.left { text-align: left; }
 .center { text-align: center; }
 .right { text-align: right; }
 

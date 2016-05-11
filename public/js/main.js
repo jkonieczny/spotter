@@ -20,8 +20,6 @@ var stores = {
 
 var flux = new Fluxxor.Flux(stores, actions);
 
-console.log(1, flux);
-
 flux.on('dispatch', function(type, payload) {
 	console.log('[Dispatch]', type, payload);
 });

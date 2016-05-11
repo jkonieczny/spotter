@@ -40,7 +40,7 @@ module.exports = React.createClass({
 			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
 		}
 
-		var totalPrice, commisionPrice, proceedButton;
+		var totalPrice, commisionPrice;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
@@ -57,29 +57,33 @@ module.exports = React.createClass({
 
 			commisionPrice 	= (Math.round(commisionPrice * 100) / 100).toFixed(2);
 			totalPrice 		= totalPrice.toFixed(2);
-
-			proceedButton = (<button type="submit" onClick={this.proceed}>Proceed</button>);
 		}
 
         return (
             <div className="page page_success">
                 <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
                 <div>
-                	<p>Success</p>
+                	<p>Great! We’ve sent these products by email to {this.state.selectedUser.fname}. When he buys them, you’ll earn the reward shown below</p>
                 </div>
                 <div>
                 	{selectedProducts}
+                </div>
+                <div className="right">
+                	<p></p>
+                	<p><a href="#" onClick={this.viewEmail}>View email</a></p>
+                </div>
+                <div className="product_price right">
+	                <p></p>
+                	<h2>Total Price:<span>&pound;{totalPrice}</span></h2>
+                	<h2>You would earn:<span>&pound;{commisionPrice}</span></h2>
                 </div>
             </div>
         );
     },
     viewEmail: function(e) {
     	e.preventDefault();
-    	console.log('view email');
-    },
-    sendEmail: function(e) {
-    	e.preventDefault();
-    	console.log('send email');
+    	this.getFlux().actions.page.update({
+    		page: 'email'
+    	});
     }
-
 });

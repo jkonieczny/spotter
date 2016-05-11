@@ -1,11 +1,13 @@
 // Require our dependencies
 var express = require('express'),
-  http = require('http');
+	http	= require('http'),
+	slashes = require('connect-slashes');
 
 // Create an express instance and set a port variable
 var app = express();
 var port = process.env.PORT || 8080;
 
+app.use("/spotter", express.static(__dirname + "/public/index.html"));
 // Set /public as our static content dir
 app.use("/", express.static(__dirname + "/public/"));
 

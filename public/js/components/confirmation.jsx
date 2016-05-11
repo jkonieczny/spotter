@@ -20,7 +20,6 @@ module.exports = React.createClass({
 		return {};
 	},
 	getStateFromFlux: function() {
-		console.log('wat');
 		var flux = this.getFlux();
 		return {
 			selectedUser: flux.store('UserStore').getState().client,
@@ -31,7 +30,6 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-    	console.log(this.state);
 		var avatarClasses = {
 			user_avatar: true
 		};
@@ -66,22 +64,25 @@ module.exports = React.createClass({
         return (
             <div className="page page_product">
                 <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
-                <div>
-                	<p>Items for {this.state.selectedUser.name}</p>
+                <div className="center">
+                	<p>Your recommendations for {this.state.selectedUser.fname}</p>
                 </div>
                 <div className="item_list">
                 	{selectedProducts}
                 </div>
-                <div className="right">
-                	<div>Total Price: &pound;{totalPrice}</div>
-                	<div>Commision: &pound;{commisionPrice}</div>
+                <div className="product_price right">
+                	<h2>Total Price:<span>&pound;{totalPrice}</span></h2>
+                	<h2>You would earn:<span>&pound;{commisionPrice}</span></h2>
+                	<p></p>
                 </div>
                 <div className="right">
-                	<p><a href="#" onClick={this.viewEmail}>View client email</a></p>
+                	<p></p>
+                	<p><a href="#" onClick={this.viewEmail}>View email</a></p>
                 </div>
                 <div>
-                	<p className="center">Click below to send {this.state.selectedUser.name} your recommendations</p>
-                	<button onClick={this.sendEmail}>Send Client Email</button>
+                	<p className="center">
+                	Click below to send these recommendations to {this.state.selectedUser.fname}. If {this.state.selectedUser.fname} buys the products you've selected, you will earn the reward shown above</p>
+                	<button onClick={this.sendEmail}>Confirm & send recommendations by email</button>
                 </div>
             </div>
         );

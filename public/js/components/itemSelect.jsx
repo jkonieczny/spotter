@@ -18,6 +18,7 @@ var originalState = {
 
 module.exports = React.createClass({
 	mixins: [FluxMixin, StoreWatchMixin('ProductStore')],
+    displayName: 'itemSelect.jsx',
 	getInitialState: function() {
 		return {
 			brand: null,
@@ -33,16 +34,16 @@ module.exports = React.createClass({
 		var productMatches;
 
 		if (this.state.productMatches) {
-			productMatches = (<SearchBar keys="name" matches={ this.state.productMatches } onSelectedAction={this.searchProductsSelected} />)
+			productMatches = (<SearchBar reactKeys="id" keys="name" matches={ this.state.productMatches } onSelectedAction={this.searchProductsSelected} />)
 		}
 
         return (
             <div>
                 <form>
                 	<label>
-                		Select brand
+                        Brand
                 		<select defaultValue="select" defaultChecked="select" onChange={this.selectBrand}>
-	                		<option value="select" disabled>Select a brand</option>
+	                		<option value="select" disabled hidden>e.g. USN...</option>
                 			<option value="bulk_powders">Bulk Powders</option>
                 			<option value="maxinutrition">Maxinutrition</option>
                 			<option value="myprotein">MyProtein</option>
@@ -52,8 +53,8 @@ module.exports = React.createClass({
                 		</select>
                 	</label>
                 	<label>
-                		Select Product
-                		<input id="product_search" type="text" placeholder="Search for a product" value={this.state.product.name}  autoComplete="off" autoCorrect="off" autoCapitalize="off" onChange={this.searchProducts} disabled={(!this.state.brand)} />
+                		Product
+                		<input id="product_search" type="text" placeholder="e.g. Pure Protein GF-1..." value={this.state.product.name}  autoComplete="off" autoCorrect="off" autoCapitalize="off" onChange={this.searchProducts} disabled={(!this.state.brand)} />
                 		{ productMatches }
                 	</label>
                 	<button type="submit" onClick={ this.addItem } disabled={!(this.state.product && this.state.product.id)}>Add Item</button>
@@ -71,7 +72,7 @@ module.exports = React.createClass({
     	},0);
     },
     searchProducts: function(e) {
-    	var productMatches;
+    	var productMatches = [];
     	var value = e.currentTarget.value.toString().toLowerCase();
 
     	if (value.length > 0) {

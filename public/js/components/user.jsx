@@ -35,7 +35,6 @@ module.exports = React.createClass({
 		this.getFlux().actions.products.reset();
 	},
     render: function() {
-		console.log(0, this.state.selectedUser);
 		var matchedUsers;
 
 		if (this.state.matchedUsers) {

@@ -9,31 +9,39 @@ var UserStore = Fluxxor.createStore({
             users: [
                 {
                     name: 'Robert Daly',
+                    fname: 'Robert',
+                    lname: 'Daly',
                     id: 1,
                     trainer: 'Zeus',
                     avatar: 'rob',
-                    email: 'robert@spotter.com'
+                    email: 'robert@gmail.com'
                 },
                 {
                     name: 'Jan Konieczny',
+                    fname: 'Jan',
+                    lname: 'Konieczny',
                     id: 173829,
                     trainer: 'Zeus',
                     avatar: 'jan',
-                    email: 'jan@spotter.com'
+                    email: 'jan@hotmail.com'
                 },
                 {
                     name: 'Julia Stent',
+                    fname: 'Julia',
+                    lname: 'Stent',
                     id: 3,
                     trainer: 'Zeus',
                     avatar: 'julia',
-                    email: 'julia@spotter.com'
+                    email: 'julia@gmail.com'
                 },
                 {
                     name: 'Arnold Schwarzenegger',
+                    fname: 'Arnold',
+                    lname: 'Schwarzenegger',
                     id: 173830,
                     trainer: 'Zeus',
                     avatar: 'arnold',
-                    email: 'arnold@spotter.com'
+                    email: 'arnold@yahoo.com'
                 }
             ]
         };
@@ -50,6 +58,11 @@ var UserStore = Fluxxor.createStore({
         this.emit('change');
     },
     userUpdate: function(payload) {
+        if (!payload.user.fname) {
+            var name = payload.user.name.split(' ');
+            payload.user.fname = name[0];
+            payload.user.lname = name[name.length - 1];
+        }
         this.state.client = payload.user;
         this.emit('change');
     }

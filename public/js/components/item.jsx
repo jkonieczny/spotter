@@ -21,9 +21,9 @@ module.exports = React.createClass({
         var item = this.props.item;
         return (
             <div className="item" onClick={ this.removeItem }>
-                <div className="item_img" style={{backgroundImage: 'url(' + item.image + ')'}}></div>
+                <div className="item_img" style={{backgroundImage: 'url(' + item.image + '), url(images/icon.png)'}}></div>
                 {item.name}
-                <div className="item_price">&pound;{item.price}</div>
+                <div className="item_price">&pound;{item.price.toFixed(2)}</div>
             </div>
         );
     },

@@ -1,10 +1,16 @@
 html,
 body {
-	font-family: Lato, Arial;
+	font-family: 'AvenirNext-Regular', Lato, Arial;
 }
 
 *, *::before, *::after {
 	box-sizing: border-box;
+}
+
+html,
+body,
+.container {
+	min-height: 100vh;
 }
 
 .container {
@@ -47,6 +53,7 @@ header .header_back::before {
 }
 
 header .header_title {
+	font-weight: bold;
 	left: 50%;
 	position: absolute;
 	transform: translateX(-50%);
@@ -56,6 +63,7 @@ header .header_avatar {
 	background-image: url('../../images/avatars/trainer.jpg');
 	background-size: cover;
 	background-position: 50%;
+	border: 1px solid #ccc;
 	border-radius: 100%;
 	height: 30px;
 	position: absolute;
@@ -65,22 +73,23 @@ header .header_avatar {
 }
 
 .user_avatar {
-	background-image: url('../../images/fit-avatar.png');
-	background-size: 80%;
-	background-position: 50% bottom;
+	background-color: #fff;
+	background-image: url('../../images/icon.png');
+	background-position: calc(50% + 9px) 50%;
 	background-repeat: no-repeat;
+	background-size: 80%;
 	border-radius: 100%;
-	box-shadow: inset 0 2px 2px 1px rgba(0,0,0,0.2);
 	border: 2px solid #4eafb3;
+	box-shadow: inset 0 2px 2px 1px rgba(0,0,0,0.2);
 	height: 120px;
-	width: 120px;
-	background-color: #ccc;
 	margin: 20px auto 40px;
+	width: 120px;
 }
 
 .user_avatar.user_selected {
-	background-size: cover;
+	background-color: #ccc;
 	background-position: 50%;
+	background-size: cover;
 }
 
 .page {
@@ -93,7 +102,7 @@ header .header_avatar {
 
 .item {
 	border-bottom: 1px solid #ccc;
-	min-height: 50px;
+	min-height: 52px;
 	padding: 10px 70px 10px 60px;
 	position: relative;
 }
@@ -103,7 +112,8 @@ header .header_avatar {
 }
 
 .item .item_img {
-	background-color: #ccc;
+	background-image: url('../../images/icon.png');
+	background-color: #F8F8F8;
 	background-size: contain;
 	background-position: 50%;
 	background-position: center;
@@ -120,4 +130,108 @@ header .header_avatar {
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
+}
+
+.page_product h3 {
+	font-weight: bold;
+	margin: 20px 0;
+}
+
+.product_price span {
+	display: inline-block;
+	min-width: 66px;
+}
+
+.item_grid_parent {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.item_grid {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+	overflow: hidden;
+	width: 50%;
+    border-right: 1px solid #ccc;
+    padding: 10px;
+}
+
+.item_grid:nth-child(even) {
+	border-right: none;
+}
+
+.item_grid .item_grid_img {
+	border-radius: 100%;
+	display: block;
+	margin: 0 auto 20px;
+    background-color: #ccc;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 100%;
+    border: 2px solid #4eafb3;
+    box-shadow: inset 0 2px 2px 1px rgba(0,0,0,0.2);
+    height: 80px;
+    width: 80px;
+    position: relative;
+}
+
+.item_grid .item_grid_img .item_grid_saving {
+	box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;  
+    background-color: #4eafb3;
+    height: 30px;
+    color: #fff;
+    left: 60%;
+    padding: 4px;
+    position: absolute;
+    top: 4px;
+}
+
+.item_grid .item_grid_img .item_grid_saving::before {
+	content: 'save ';
+	font-size: 12px;
+}
+
+.item_grid .item_grid_others {
+	font-size: 12px;
+	position: relative;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;    
+}
+
+.item_grid .item_grid_others a {
+    display: block;
+    height: 22px;
+    line-height: 22px;
+    overflow: hidden;
+    position: relative;
+}
+
+.item_grid .item_grid_others a::before {
+	border-bottom: 2px dotted #4eafb3;
+	bottom: 6px;
+	content: '';
+	display: block;
+	height: 2px;
+	position: absolute;
+    width: 100%;
+}
+
+.item_grid .item_grid_others span {
+	background-color: #fff;
+	display: block;
+	float: left;
+	max-width: 50%;
+	overflow: hidden;
+	position: relative;
+}
+
+.item_grid .item_grid_others span:last-child {
+	text-align: right;
+	float: right;
 }

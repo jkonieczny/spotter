@@ -11,7 +11,7 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var Item = require('./item.jsx');
+var ItemGrid = require('./itemGrid.jsx');
 
 module.exports = React.createClass({
 	displayName: 'email.jsx',
@@ -37,49 +37,24 @@ module.exports = React.createClass({
 
 		if (this.state.selectedUser && this.state.selectedUser.avatar) {
 			avatarClasses.user_selected 	= true;
-			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
-		}
-
-		var totalPrice, commisionPrice, proceedButton;
-
-		var selectedProducts = [];
-		if (this.state.selectedProducts.length > 0) {
-			totalPrice 		= 0;
-			commisionPrice 	= 0;
-
-			this.state.selectedProducts.forEach(function(product) {
-				totalPrice 		+= product.price;
-				commisionPrice 	+= product.price * 0.1;
-				selectedProducts.push(
-					(<Item key={product.id} item={product} />)
-				);
-			});
-
-			commisionPrice 	= (Math.round(commisionPrice * 100) / 100).toFixed(2);
-			totalPrice 		= totalPrice.toFixed(2);
-
-			proceedButton = (<button type="submit" onClick={this.proceed}>Proceed</button>);
+			avatarInlineCSS.backgroundImage = 'url(images/avatars/trainer-large.jpg)';
 		}
 
         return (
-            <div className="page page_success">
+            <div className="page page_email">
                 <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
                 <div>
-                	<p>Email</p>
+                	<p>Hi {this.state.selectedUser.fname}</p>
+					<p>Your trainer Rob has chosen these products specifically for you through Spotter. These are Rob's recommendations for the best sports supplements to help you achieve your goals.</p>
+					<p>We know you're busy doing the hard work in the gym, so here at Spotter we've done the hard work of finding the very best sites for you to buy from. Just click the buttons below to purchase, and Rob will be notified that you followed his advice.</p>
                 </div>
                 <div>
-                	{selectedProducts}
+                	<ItemGrid />
                 </div>
+                <div>
+					<p>Spotter finds the best deals from the top supplements brands in the UK, so your personal trainer can recommend products to you knowing you’ll get a great price when you buy.</p>
+				</div>
             </div>
         );
-    },
-    viewEmail: function(e) {
-    	e.preventDefault();
-    	console.log('view email');
-    },
-    sendEmail: function(e) {
-    	e.preventDefault();
-    	console.log('send email');
     }
-
 });

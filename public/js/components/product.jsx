@@ -40,7 +40,7 @@ module.exports = React.createClass({
 			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
 		}
 
-		var totalPrice, commisionPrice, proceedButton;
+		var totalPrice, commisionPrice, proceedButton, recommendText;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
@@ -55,24 +55,26 @@ module.exports = React.createClass({
 				);
 			});
 
-			commisionPrice 	= 	(<span>{(Math.round(commisionPrice * 100) / 100).toFixed(2)}</span>);
 			totalPrice 		= 	(
 									<div className="product_price right">
-										<p>Total Price: &pound;{totalPrice.toFixed(2)} (&pound;{commisionPrice})</p>
+										<h2>Total Price: 	<span>&pound;{totalPrice.toFixed(2)}</span></h2>
+										<h2>You would earn: <span>&pound;{(Math.round(commisionPrice * 100) / 100).toFixed(2)}</span></h2>
 									</div>
 								);
 
-			proceedButton = (<button type="submit" onClick={this.proceed}>Proceed</button>);
+			proceedButton 	= (<button type="submit" onClick={this.proceed}>Proceed</button>);
+			recommendText 	= (<h3>Recommend another product?</h3>);
 		}
 
         return (
             <div className="page page_product">
                 <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
-                <p className="center">Select your recommended products for {this.state.selectedUser.name}</p>
+                <p className="center">What would you like to recommend to {this.state.selectedUser.fname}?</p>
                 <div className="item_list">
-                	{selectedProducts}
+                	{ selectedProducts }
                 </div>
-                {totalPrice}
+                { totalPrice }
+                { recommendText }
                 <ItemSelect />
                 { proceedButton }
             </div>
