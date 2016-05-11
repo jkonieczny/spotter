@@ -62,6 +62,16 @@ var UserStore = Fluxxor.createStore({
             var name = payload.user.name.split(' ');
             payload.user.fname = name[0];
             payload.user.lname = name[name.length - 1];
+
+            var leads = localStorage.getItem('leads');
+            if (!leads) {
+                leads = [payload.user];
+            } else {
+                leads = JSON.parse(leads);
+                leads.push(payload.user);
+            }
+
+            localStorage.setItem('leads', JSON.stringify(leads));
         }
         this.state.client = payload.user;
         this.emit('change');

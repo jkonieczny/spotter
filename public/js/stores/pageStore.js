@@ -7,7 +7,8 @@ var PageStore = Fluxxor.createStore({
     initialize: function(params) {
         this.state = {
             pages: ['user', 'product', 'confirmation', 'success'],
-            currentPage: 'user'
+            currentPage: 'user',
+            previousPage: null
         };
 
         this.bindActions(
@@ -18,6 +19,7 @@ var PageStore = Fluxxor.createStore({
         return this.state;
     },
     updatePage: function(payload) {
+        this.state.previousPage = this.state.currentPage;
         this.state.currentPage = payload.page;
         this.emit('change');
     }

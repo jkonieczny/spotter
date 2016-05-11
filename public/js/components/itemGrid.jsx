@@ -38,8 +38,10 @@ module.exports = React.createClass({
                                         <sup>%</sup>
                                     </div>
                                 </div>
-                                {product.name}
-                                <div className="item_price">&pound;{product.price.toFixed(2)}</div>
+                                <h4>
+                                    {product.name}
+                                    <div className="item_price">&pound;{product.price.toFixed(2)}</div>
+                                </h4>
                                 <button onClick={ this.proceedBuy }>Buy</button>
                                 <ul className="item_grid_others left">
                                     <li>

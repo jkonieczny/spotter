@@ -166,6 +166,10 @@ header .header_avatar {
 	width: 100%;
 }
 
+.item_grid h4 {
+	min-height: 104px;
+}
+
 .item_grid .item_grid_img {
 	border-radius: 100%;
 	display: block;

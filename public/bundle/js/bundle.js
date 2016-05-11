@@ -23884,16 +23884,17 @@ module.exports = React.createClass({displayName: "exports",
 	getStateFromFlux: function() {
 		var state = this.getFlux().store('PageStore').getState();
 		return {
-			pages: state.pages,
-			page: state.currentPage,
-			back: (state.currentPage !== 'user' && state.currentPage !== 'success')
+			pages:           state.pages,
+			page:            state.currentPage,
+            previousPage:   state.previousPage,
+			back:            (state.currentPage !== 'user' && state.currentPage !== 'success')
 		};
 	},
     render: function() {
         return (
             React.createElement("header", null, 
             	React.createElement("div", {className: cx( 'header_back', { 'hide' : (this.state.back === false) }), onClick: this.goBack}), 
-                React.createElement("h1", {className: "header_title"}, "Spotter"), 
+                React.createElement("h1", {className: "header_title"}, "spotter"), 
                 React.createElement("div", {className: "header_avatar"})
             )
         );
@@ -23902,7 +23903,7 @@ module.exports = React.createClass({displayName: "exports",
         var page;
 
         if (this.state.page === 'email') {
-            page = 'confirmation';
+            page = this.state.previousPage;
         } else {
             page = this.state.pages[this.state.pages.indexOf(this.state.page) - 1];
         }
@@ -23994,8 +23995,10 @@ module.exports = React.createClass({
                                         React.createElement("sup", null, "%")
                                     )
                                 ), 
-                                product.name, 
-                                React.createElement("div", {className: "item_price"}, "£", product.price.toFixed(2)), 
+                                React.createElement("h4", null, 
+                                    product.name, 
+                                    React.createElement("div", {className: "item_price"}, "£", product.price.toFixed(2))
+                                ), 
                                 React.createElement("button", {onClick:  this.proceedBuy}, "Buy"), 
                                 React.createElement("ul", {className: "item_grid_others left"}, 
                                     React.createElement("li", null, 
@@ -24655,7 +24658,8 @@ var PageStore = Fluxxor.createStore({
     initialize: function(params) {
         this.state = {
             pages: ['user', 'product', 'confirmation', 'success'],
-            currentPage: 'user'
+            currentPage: 'user',
+            previousPage: null
         };
 
         this.bindActions(
@@ -24666,6 +24670,7 @@ var PageStore = Fluxxor.createStore({
         return this.state;
     },
     updatePage: function(payload) {
+        this.state.previousPage = this.state.currentPage;
         this.state.currentPage = payload.page;
         this.emit('change');
     }
@@ -24779,6 +24784,16 @@ var UserStore = Fluxxor.createStore({
             var name = payload.user.name.split(' ');
             payload.user.fname = name[0];
             payload.user.lname = name[name.length - 1];
+
+            var leads = localStorage.getItem('leads');
+            if (!leads) {
+                leads = [payload.user];
+            } else {
+                leads = JSON.parse(leads);
+                leads.push(payload.user);
+            }
+
+            localStorage.setItem('leads', JSON.stringify(leads));
         }
         this.state.client = payload.user;
         this.emit('change');
