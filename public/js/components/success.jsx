@@ -68,14 +68,14 @@ module.exports = React.createClass({
                 <div>
                 	{selectedProducts}
                 </div>
-                <div className="right">
-                	<p></p>
-                	<p><a href="#" onClick={this.viewEmail}>View email</a></p>
-                </div>
                 <div className="product_price right">
 	                <p></p>
                 	<h2>Total Price:<span>&pound;{totalPrice}</span></h2>
                 	<h2>You would earn:<span>&pound;{commisionPrice}</span></h2>
+                </div>
+                <div className="right">
+                	<p></p>
+                	<p><a href="#" onClick={this.viewEmail}>View email</a></p>
                 </div>
             </div>
         );

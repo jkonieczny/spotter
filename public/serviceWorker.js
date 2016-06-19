@@ -1,4 +1,4 @@
-var CURRENT_CACHES = 'v1.0.11';
+var CURRENT_CACHES = 'v1.0.12';
 
 self.addEventListener('install', function(event) {
   console.log("SW installed", CURRENT_CACHES, self.registration.scope);

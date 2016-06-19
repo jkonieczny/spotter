@@ -3,6 +3,24 @@
 var CONSTANTS = require('../constants/constants');
 
 var actions = {
+	auth: {
+		autho: {
+			get: function() {
+				this.dispatch(CONSTANTS.AUTH.AUTHO.GET, {});
+			},
+			lock: function() {
+				this.dispatch(CONSTANTS.AUTH.AUTHO.LOCK, {});
+			},
+			show: function() {
+				this.dispatch(CONSTANTS.AUTH.AUTHO.SHOW, {});
+			}
+		},
+		spotter: {
+			get: function() {
+				this.dispatch(CONSTANTS.AUTH.SPOTTER.GET, {});
+			}
+		}
+	},
 	page: {
 		update: function(payload) {
 			console.log('update page', payload);

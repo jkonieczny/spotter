@@ -1,4 +1,14 @@
 var constants = {
+    AUTH: {
+        AUTHO: {
+            GET: 'AUTHO_GET',
+            LOCK: 'AUTHO_LOCK',
+            SHOW: 'AUTHO_SHOW'
+        },
+        SPOTTER: {
+            GET: 'SPOTTER_TRAINER_GET'
+        }
+    },
     USERS: {
         GET: 'USERS_GET'
     },

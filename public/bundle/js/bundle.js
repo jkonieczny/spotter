@@ -7,15 +7,17 @@ var App = require('./public/js/main.js');
 App.init();
 
 if ('serviceWorker' in navigator) {
+	/*
 	navigator.serviceWorker.register('./serviceWorker.js', {scope: './'}).then(function(reg) {
 		console.log('◕‿◕', reg);
 	}, function(err) {
 		console.log('ಠ_ಠ', err);
 	});
+	*/
 }
 
 }).call(this,require('_process'))
-},{"./public/js/main.js":281,"_process":2}],2:[function(require,module,exports){
+},{"./public/js/main.js":284,"_process":2}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -23670,6 +23672,24 @@ module.exports = require('./lib/React');
 var CONSTANTS = require('../constants/constants');
 
 var actions = {
+	auth: {
+		autho: {
+			get: function() {
+				this.dispatch(CONSTANTS.AUTH.AUTHO.GET, {});
+			},
+			lock: function() {
+				this.dispatch(CONSTANTS.AUTH.AUTHO.LOCK, {});
+			},
+			show: function() {
+				this.dispatch(CONSTANTS.AUTH.AUTHO.SHOW, {});
+			}
+		},
+		spotter: {
+			get: function() {
+				this.dispatch(CONSTANTS.AUTH.SPOTTER.GET, {});
+			}
+		}
+	},
 	page: {
 		update: function(payload) {
 			console.log('update page', payload);
@@ -23697,7 +23717,7 @@ var actions = {
 
 module.exports = actions;
 
-},{"../constants/constants":280}],268:[function(require,module,exports){
+},{"../constants/constants":282}],268:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23802,7 +23822,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":280,"./item.jsx":271,"classnames":3,"fluxxor":4,"react":266}],269:[function(require,module,exports){
+},{"../constants/constants":282,"./item.jsx":272,"classnames":3,"fluxxor":4,"react":266}],269:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23864,7 +23884,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":280,"./itemGrid.jsx":272,"classnames":3,"fluxxor":4,"react":266}],270:[function(require,module,exports){
+},{"../constants/constants":282,"./itemGrid.jsx":273,"classnames":3,"fluxxor":4,"react":266}],270:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23887,7 +23907,7 @@ module.exports = React.createClass({displayName: "exports",
 			pages:           state.pages,
 			page:            state.currentPage,
             previousPage:   state.previousPage,
-			back:            (state.currentPage !== 'user' && state.currentPage !== 'success')
+			back:            (state.currentPage !== 'user' && state.currentPage !== 'success' && state.currentPage !== 'signin')
 		};
 	},
     render: function() {
@@ -23895,7 +23915,7 @@ module.exports = React.createClass({displayName: "exports",
             React.createElement("header", null, 
             	React.createElement("div", {className: cx( 'header_back', { 'hide' : (this.state.back === false) }), onClick: this.goBack}), 
                 React.createElement("h1", {className: "header_title"}, "spotter"), 
-                React.createElement("div", {className: "header_avatar"})
+                React.createElement("div", {className: cx( { 'header_avatar' : (this.state.page !== 'signin') }) })
             )
         );
     },
@@ -23916,6 +23936,70 @@ module.exports = React.createClass({displayName: "exports",
 });
 
 },{"classnames":3,"fluxxor":4,"react":266}],271:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React = require('react'),
+	Fluxxor = require('fluxxor'),
+	FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+
+var cx = require('classnames');
+
+var CONSTANTS = require('../constants/constants');
+
+var SearchBar = require('./searchBar.jsx');
+
+module.exports = React.createClass({
+	displayName: 'signIn.jsx',
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
+    getInitialState: function() {
+        return {
+            trainer: {}
+        };
+    },
+    render: function() {
+        var avatarClasses = {
+            user_avatar: true
+        };
+        var avatarInlineCSS = {};
+
+        if (this.state.trainer && this.state.trainer.avatar) {
+            avatarClasses.user_selected     = true;
+            avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.trainer.avatar + '.jpg)';
+        }
+
+        return (
+            React.createElement("div", {className: "page signin"}, 
+	            React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
+                React.createElement("h2", null, "Homepage"), 
+                React.createElement("form", null, 
+                    React.createElement("label", null, 
+                        React.createElement("button", {type: "submit", onClick: this.proceed}, "Add Client")
+                    ), 
+                    React.createElement("label", null, 
+                        React.createElement("button", {type: "submit", onClick: this.proceed}, "View Clients")
+                    ), 
+	                React.createElement("label", null, 
+	                	React.createElement("button", {type: "submit", onClick: this.proceed}, "Settings")
+	                )
+                )
+            )
+        );
+    },
+    proceed: function(e) {
+    	e.preventDefault();
+    	this.getFlux().actions.page.update({
+    		page: 'product'
+    	});
+    }
+
+});
+
+},{"../constants/constants":282,"./searchBar.jsx":276,"classnames":3,"fluxxor":4,"react":266}],272:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23954,7 +24038,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"classnames":3,"fluxxor":4,"react":266}],272:[function(require,module,exports){
+},{"classnames":3,"fluxxor":4,"react":266}],273:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24040,7 +24124,7 @@ module.exports = React.createClass({
 
 });
 
-},{"classnames":3,"fluxxor":4,"react":266}],273:[function(require,module,exports){
+},{"classnames":3,"fluxxor":4,"react":266}],274:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24168,7 +24252,7 @@ module.exports = React.createClass({
 
 });
 
-},{"./searchBar.jsx":275,"classnames":3,"fluxxor":4,"react":266}],274:[function(require,module,exports){
+},{"./searchBar.jsx":276,"classnames":3,"fluxxor":4,"react":266}],275:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24260,7 +24344,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"../constants/constants":280,"./item.jsx":271,"./itemSelect.jsx":273,"classnames":3,"fluxxor":4,"react":266}],275:[function(require,module,exports){
+},{"../constants/constants":282,"./item.jsx":272,"./itemSelect.jsx":274,"classnames":3,"fluxxor":4,"react":266}],276:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24288,7 +24372,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./searchBarResult.jsx":276,"react":266}],276:[function(require,module,exports){
+},{"./searchBarResult.jsx":277,"react":266}],277:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24317,7 +24401,48 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"fluxxor":4,"react":266}],277:[function(require,module,exports){
+},{"fluxxor":4,"react":266}],278:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React = require('react'),
+	Fluxxor = require('fluxxor'),
+	FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+
+var cx = require('classnames');
+
+var CONSTANTS = require('../constants/constants');
+
+var SearchBar = require('./searchBar.jsx');
+
+module.exports = React.createClass({
+	displayName: 'signIn.jsx',
+	mixins: [FluxMixin],
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
+    render: function() {
+        return (
+            React.createElement("div", {className: "page signin"}, 
+	            React.createElement("div", {className: "user_avatar"}), 
+                React.createElement("form", null, 
+	                React.createElement("label", null, 
+	                	React.createElement("button", {type: "submit", onClick: this.proceed}, "Sign In")
+	                )
+                )
+            )
+        );
+    },
+    proceed: function(e) {
+    	e.preventDefault();
+    	this.getFlux().actions.auth.autho.show();
+    }
+
+});
+
+},{"../constants/constants":282,"./searchBar.jsx":276,"classnames":3,"fluxxor":4,"react":266}],279:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24332,7 +24457,9 @@ var Header = require('./header.jsx'),
 	Product = require('./product.jsx'),
 	Confirmation = require('./confirmation.jsx'),
 	Success = require('./success.jsx'),
-	Email = require('./email.jsx');
+	Email = require('./email.jsx'),
+	SignIn = require('./signIn.jsx'),
+	Home = require('./home.jsx');
 
 module.exports = React.createClass({displayName: "exports",
 	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
@@ -24346,8 +24473,16 @@ module.exports = React.createClass({displayName: "exports",
 			page: flux.store('PageStore').getState()
 		};
 	},
+	componentWillMount: function() {
+		console.log('componentWillMount');
+        this.getFlux().actions.auth.autho.lock();
+        this.getFlux().actions.auth.autho.get();
+	},
+	componentWillUpdate: function() {
+		console.log('componentWillUpdate');
+	},
     render: function() {
-    	var page;
+		var page;
 
 		switch(this.state.page.currentPage) {
 		    case 'confirmation':
@@ -24362,8 +24497,14 @@ module.exports = React.createClass({displayName: "exports",
 		    case 'email':
 		        page = (React.createElement(Email, null));
 		        break;
-		    default:
+		    case 'home':
+		        page = (React.createElement(Home, null));
+		        break;
+		    case 'user':
 		        page = (React.createElement(User, null));
+		        break;
+		    default:
+		        page = (React.createElement(SignIn, null));
 		}
 
         return (
@@ -24376,7 +24517,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./confirmation.jsx":268,"./email.jsx":269,"./header.jsx":270,"./product.jsx":274,"./success.jsx":278,"./user.jsx":279,"fluxxor":4,"react":266}],278:[function(require,module,exports){
+},{"./confirmation.jsx":268,"./email.jsx":269,"./header.jsx":270,"./home.jsx":271,"./product.jsx":275,"./signIn.jsx":278,"./success.jsx":280,"./user.jsx":281,"fluxxor":4,"react":266}],280:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24447,14 +24588,14 @@ module.exports = React.createClass({
                 React.createElement("div", null, 
                 	selectedProducts
                 ), 
-                React.createElement("div", {className: "right"}, 
-                	React.createElement("p", null), 
-                	React.createElement("p", null, React.createElement("a", {href: "#", onClick: this.viewEmail}, "View email"))
-                ), 
                 React.createElement("div", {className: "product_price right"}, 
 	                React.createElement("p", null), 
                 	React.createElement("h2", null, "Total Price:", React.createElement("span", null, "£", totalPrice)), 
                 	React.createElement("h2", null, "You would earn:", React.createElement("span", null, "£", commisionPrice))
+                ), 
+                React.createElement("div", {className: "right"}, 
+                	React.createElement("p", null), 
+                	React.createElement("p", null, React.createElement("a", {href: "#", onClick: this.viewEmail}, "View email"))
                 )
             )
         );
@@ -24467,7 +24608,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":280,"./item.jsx":271,"classnames":3,"fluxxor":4,"react":266}],279:[function(require,module,exports){
+},{"../constants/constants":282,"./item.jsx":272,"classnames":3,"fluxxor":4,"react":266}],281:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24584,8 +24725,18 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":280,"./searchBar.jsx":275,"classnames":3,"fluxxor":4,"react":266}],280:[function(require,module,exports){
+},{"../constants/constants":282,"./searchBar.jsx":276,"classnames":3,"fluxxor":4,"react":266}],282:[function(require,module,exports){
 var constants = {
+    AUTH: {
+        AUTHO: {
+            GET: 'AUTHO_GET',
+            LOCK: 'AUTHO_LOCK',
+            SHOW: 'AUTHO_SHOW'
+        },
+        SPOTTER: {
+            GET: 'SPOTTER_TRAINER_GET'
+        }
+    },
     USERS: {
         GET: 'USERS_GET'
     },
@@ -24606,7 +24757,36 @@ var constants = {
 
 module.exports = constants;
 
-},{}],281:[function(require,module,exports){
+},{}],283:[function(require,module,exports){
+'use strict';
+
+var baseURL = 'https://data.spotter.online/api/';
+var G = 'GET';
+var P = 'POST';
+
+var spotterAPI = {
+	getTrainer: function(cb) {
+		this.XHR('client/list', G, cb);
+	},
+	getProducts: function(cb) {
+		this.XHR('products', G, cb);
+	},
+	XHR: function(frag, method, cb) {
+	    var xhr = new XMLHttpRequest();
+	    xhr.addEventListener('load', function(data) {
+			cb(JSON.parse(data.currentTarget.responseText));
+	    });
+	    xhr.open(method, 'https://data.spotter.online/api/' + frag, true);
+	    xhr.setRequestHeader('Accept', 'application/json');
+	    xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.trainer.id_token);
+	    xhr.send();
+
+	}
+};
+
+module.exports = spotterAPI;
+
+},{}],284:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24619,12 +24799,14 @@ var actions = require('./actions/actions.js');
 
 var UserStore = require('./stores/userStore.js'),
 	PageStore = require('./stores/pageStore.js'),
-	ProductStore = require('./stores/productStore.js');
+	ProductStore = require('./stores/productStore.js'),
+	AuthStore = require('./stores/authStore.js');
 
 var stores = {
-  UserStore: new UserStore(),
-  PageStore: new PageStore(),
-  ProductStore: new ProductStore()
+	AuthStore: new AuthStore(),
+	UserStore: new UserStore(),
+	PageStore: new PageStore(),
+	ProductStore: new ProductStore()
 };
 
 var flux = new Fluxxor.Flux(stores, actions);
@@ -24648,7 +24830,72 @@ var App = {
 
 module.exports = App;
 
-},{"./actions/actions.js":267,"./components/spotterApp.jsx":277,"./stores/pageStore.js":282,"./stores/productStore.js":283,"./stores/userStore.js":284,"fluxxor":4,"react":266,"react-dom":101}],282:[function(require,module,exports){
+},{"./actions/actions.js":267,"./components/spotterApp.jsx":279,"./stores/authStore.js":285,"./stores/pageStore.js":286,"./stores/productStore.js":287,"./stores/userStore.js":288,"fluxxor":4,"react":266,"react-dom":101}],285:[function(require,module,exports){
+'use strict';
+
+var Fluxxor = require('fluxxor');
+var CONSTANTS = require('../constants/constants');
+
+var SpotterAPI = require('../lib/spotter');
+
+var AuthStore = Fluxxor.createStore({
+    initialize: function(params) {
+        this.state = {
+            trainer: null
+        };
+
+        this.bindActions(
+            CONSTANTS.AUTH.AUTHO.GET, this.autho.getTrainer,
+            CONSTANTS.AUTH.AUTHO.LOCK, this.autho.createLock,
+            CONSTANTS.AUTH.AUTHO.SHOW, this.autho.show,
+
+            CONSTANTS.AUTH.SPOTTER.GET, this.spotter.getTrainer
+        );
+    },
+    autho: {
+        createLock: function() {
+            this.state.lock = new Auth0Lock('eUxDYzocFp4M0gwKetW5gj5SjzULG9of', 'fitflow.eu.auth0.com');
+        },
+        show: function() {
+            this.state.lock.show();
+        },
+        getTrainer: function() {
+            var trainer = localStorage.getItem('trainer');
+
+            if (this.state.lock && this.state.lock.parseHash && window.location.hash.length > 0) {
+                this.state.trainer = this.state.lock.parseHash(window.location.hash);
+                localStorage.setItem('trainer' , JSON.stringify(this.state.trainer));
+            } else if (trainer) {
+                this.state.trainer = JSON.parse(trainer);
+            } else {
+                this.state.trainer = null;
+            }
+
+            console.log('this.state.trainer', this.state.trainer);
+
+            if (this.state.trainer) {
+                console.log(this.flux.actions);
+                setTimeout(function() {
+                    this.flux.actions.auth.spotter.get();
+                }.bind(this), 0);
+            }
+        }
+    },
+    spotter: {
+        getTrainer: function() {
+            SpotterAPI.getTrainer(function(data) {
+                console.log('getTrainer callback!', data);
+            });
+        }
+    },
+    getState: function(){
+        return this.state;
+    }
+});
+
+module.exports = AuthStore;
+
+},{"../constants/constants":282,"../lib/spotter":283,"fluxxor":4}],286:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -24657,8 +24904,8 @@ var CONSTANTS = require('../constants/constants');
 var PageStore = Fluxxor.createStore({
     initialize: function(params) {
         this.state = {
-            pages: ['user', 'product', 'confirmation', 'success'],
-            currentPage: 'user',
+            pages: ['signin', 'user', 'product', 'confirmation', 'success'],
+            currentPage: 'signin',
             previousPage: null
         };
 
@@ -24678,7 +24925,7 @@ var PageStore = Fluxxor.createStore({
 
 module.exports = PageStore;
 
-},{"../constants/constants":280,"fluxxor":4}],283:[function(require,module,exports){
+},{"../constants/constants":282,"fluxxor":4}],287:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -24719,7 +24966,7 @@ var ProductStore = Fluxxor.createStore({
 
 module.exports = ProductStore;
 
-},{"../constants/constants":280,"fluxxor":4}],284:[function(require,module,exports){
+},{"../constants/constants":282,"fluxxor":4}],288:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -24802,4 +25049,4 @@ var UserStore = Fluxxor.createStore({
 
 module.exports = UserStore;
 
-},{"../constants/constants":280,"fluxxor":4}]},{},[1]);
+},{"../constants/constants":282,"fluxxor":4}]},{},[1]);

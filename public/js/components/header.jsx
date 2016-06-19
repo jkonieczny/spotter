@@ -20,7 +20,7 @@ module.exports = React.createClass({
 			pages:           state.pages,
 			page:            state.currentPage,
             previousPage:   state.previousPage,
-			back:            (state.currentPage !== 'user' && state.currentPage !== 'success')
+			back:            (state.currentPage !== 'user' && state.currentPage !== 'success' && state.currentPage !== 'signin')
 		};
 	},
     render: function() {
@@ -28,7 +28,7 @@ module.exports = React.createClass({
             <header>
             	<div className={cx( 'header_back', { 'hide' : (this.state.back === false) } )} onClick={this.goBack}></div>
                 <h1 className="header_title">spotter</h1>
-                <div className="header_avatar"></div>
+                <div className={cx( { 'header_avatar' : (this.state.page !== 'signin') }) }></div>
             </header>
         );
     },
