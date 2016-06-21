@@ -23714,6 +23714,19 @@ var actions = {
 		}
 	},
 	client: {
+		add: function(payload) {
+			console.log('set add', payload);
+			this.dispatch(CONSTANTS.CLIENT.ADD, { client: payload.client });
+		},
+		image: {
+			add: function(payload) {
+				console.log('image add');
+				this.dispatch(CONSTANTS.CLIENT.IMAGE.ADD, payload);
+			},
+			uploaded: function(payload) {
+				this.dispatch(CONSTANTS.CLIENT.IMAGE.UPLOADED, payload);
+			}
+		},
 		set: function(payload) {
 			console.log('set client', payload);
 			this.dispatch(CONSTANTS.CLIENT.SET, { client: payload.client });
@@ -23773,6 +23786,15 @@ var CONSTANTS = require('../../constants/constants');
 module.exports = React.createClass({
 	displayName: 'trainerDetails.jsx',
 	mixins: [FluxMixin],
+    getInitialState: function() {
+        return {
+            client: {
+                fname: null,
+                lname: null,
+                email: null
+            }
+        };
+    },
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
@@ -23784,15 +23806,19 @@ module.exports = React.createClass({
                 React.createElement("form", null, 
                     React.createElement("label", null, 
                         "First Name", 
-                        React.createElement("input", {type: "text", placeholder: "First Name"})
+                        React.createElement("input", {type: "text", placeholder: "First Name", onChange: this.update.bind(this, 'fname')})
                     ), 
                     React.createElement("label", null, 
                         "Last Name", 
-                        React.createElement("input", {type: "text", placeholder: "Last Name"})
+                        React.createElement("input", {type: "text", placeholder: "Last Name", onChange: this.update.bind(this, 'lname')})
+                    ), 
+                    React.createElement("label", null, 
+                        "Email", 
+                        React.createElement("input", {type: "text", placeholder: "Email", onChange: this.update.bind(this, 'email')})
                     ), 
                     React.createElement("label", null, 
                         "Upload an image", 
-                        React.createElement("input", {type: "file", accept: "image/*", capture: "camera"})
+                        React.createElement("input", {ref: "file", type: "file", accept: "image/*", capture: "camera"})
                     ), 
 	                React.createElement("label", null, 
 	                	React.createElement("button", {type: "submit", onClick: this.proceed}, "Update client details")
@@ -23801,12 +23827,55 @@ module.exports = React.createClass({
             )
         );
     },
+    update: function(field, e) {
+        this.state.client[field] = e.currentTarget.value;
+    },
     proceed: function(e) {
         console.log('proceed');
     	e.preventDefault();
 
-        this.getFlux().actions.page.update({
-            page: 'clientView'
+        var flux = this.getFlux();
+
+        var missingValues = [];
+        var fieldNames = {
+            fname: 'first name',
+            lname: 'last name',
+            email: 'email'
+        }
+
+        var client = this.state.client;
+
+        Object.keys(client).forEach(function(key) {
+            if (!client[key] || client[key].length === 0) {
+                missingValues.push(fieldNames[key]);
+            }
+        });
+
+        if (missingValues.length > 0) {
+            alert('Please enter ' + missingValues.join(', '));
+            return;
+        }
+
+        var file = this.refs.file.files[0]
+        if (file) {
+            //alert('Your client image will upload in the background, you will be notified when it has finished');
+            flux.store('ClientStore').once('change:clientAdded', function() {
+                console.log('change:clientAdded');
+                flux.actions.client.image.add({
+                    file:   file,
+                    id:     this.getFlux().store('ClientStore').getState().lastAdded.id
+                });
+            }.bind(this));
+        }
+
+        flux.store('ClientStore').once('change:clientsGot', function() {
+            flux.actions.page.update({
+                page: 'clientView'
+            });
+        }.bind(this));
+
+        flux.actions.client.add({
+            client: client
         });
     }
 
@@ -23830,11 +23899,13 @@ var Avatar      = require('../avatar.jsx');
 
 module.exports = React.createClass({
 	displayName: 'trainerDetails.jsx',
-	mixins: [FluxMixin],
-    getInitialState: function() {
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore')],
+    getStateFromFlux: function() {
+        var flux = this.getFlux();
+
         return {
-            clients: this.getFlux().store('ClientStore').getState().clients,
-            trainer: this.getFlux().store('AuthStore').getState().trainer
+            clients: flux.store('ClientStore').getState().clients,
+            trainer: flux.store('AuthStore').getState().trainer
         };
     },
 	componentDidMount: function() {
@@ -25042,7 +25113,12 @@ var constants = {
         }
     },
     CLIENT: {
-        SET: 'CLIENT_SET'
+        ADD: 'CLIENT_ADD',
+        SET: 'CLIENT_SET',
+        IMAGE: {
+            ADD: 'CLIENT_IMAGE_ADD',
+            UPLOADED: 'CLIENT_IMAGE_UPLOADED'
+        }
     },
     CLIENTS: {
         GET: 'CLIENTS_GET'
@@ -25074,6 +25150,10 @@ var P = 'POST';
 var productQueue = [];
 
 var spotterAPI = {
+	addClient: function(data, cb) {
+		console.log('generateQueryString', JSON.stringify(data));
+		this.XHR('client/new', P, cb, JSON.stringify(data));
+	},
 	getClients: function(cb) {
 		this.XHR('client/list', G, cb);
 	},
@@ -25089,7 +25169,7 @@ var spotterAPI = {
 	getTrainer: function(cb) {
 		this.XHR('profile', G, cb);
 	},
-	XHR: function(frag, method, cb) {
+	XHR: function(frag, method, cb, data) {
 	    var xhr = new XMLHttpRequest();
 	    xhr.addEventListener('load', function(data) {
 			cb(JSON.parse(data.currentTarget.responseText));
@@ -25097,9 +25177,38 @@ var spotterAPI = {
 	    xhr.open(method, 'https://data.spotter.online/api/' + frag, true);
 	    xhr.setRequestHeader('Accept', 'application/json');
 	    xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.tokens.id_token);
-	    xhr.send();
+	    if (method === 'POST') {
+			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			xhr.send(data);
+	    } else {
+		    xhr.send();
+		}
 
 	    return xhr;
+	},
+	xhrImage: function(id, file, cb) {
+		var formData = new FormData();
+		formData.append('file', file);
+
+		var xhr = new XMLHttpRequest();
+
+		xhr.addEventListener('load', function(data){
+			cb(JSON.parse(data.currentTarget.responseText));
+		}, false);
+
+		xhr.open('POST', 'https://data.spotter.online/api/client/update-image/' + id);
+		xhr.setRequestHeader('Accept', 'application/json');
+		xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.tokens.id_token);
+
+		xhr.send(formData);
+	},
+	generateQueryString: function(obj) {
+		var str = [];
+		for(var p in obj)
+		if (obj.hasOwnProperty(p)) {
+			str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+		}
+		return str.join('&');
 	}
 };
 
@@ -25291,14 +25400,30 @@ var ClientStore = Fluxxor.createStore({
         */
 
         this.bindActions(
-            CONSTANTS.CLIENT.SET, this.clientsSet,
-            CONSTANTS.CLIENTS.GET, this.clientsGet
+            CONSTANTS.CLIENT.ADD,               this.clientsAdd,
+            CONSTANTS.CLIENT.IMAGE.ADD,         this.clientImageAdd,
+            CONSTANTS.CLIENT.IMAGE.UPLOADED,    this.clientImageUploaded,
+            CONSTANTS.CLIENT.SET,               this.clientsSet,
+            CONSTANTS.CLIENTS.GET,              this.clientsGet
         );
     },
     getState: function(){
         return this.state;
     },
-    clientsGet: function(payload) {
+    clientsAdd: function(payload) {
+        console.log('clientsAdd', payload);
+        payload.client.name = payload.client.name || payload.client.fname + ' ' + payload.client.lname;
+
+        SpotterAPI.addClient(payload.client, function(data) {
+            console.log('clientsAdd data', data);
+            this.state.lastAdded = data;
+            this.flux.actions.clients.get();
+
+            this.emit('change:clientAdded');
+            this.emit('change');
+        }.bind(this));
+    },
+    clientsGet: function() {
         console.log('clientsGet');
 
         SpotterAPI.getClients(function(data) {
@@ -25306,6 +25431,8 @@ var ClientStore = Fluxxor.createStore({
             if (data.total && data.total > 0) {
                 this.state.clients = data.data;
             }
+            this.emit('change:clientsGot');
+            this.emit('change');
         }.bind(this));
 
         this.emit('change');
@@ -25319,6 +25446,27 @@ var ClientStore = Fluxxor.createStore({
         this.state.client = payload.client;
 
         this.emit('change');
+    },
+    clientImageAdd: function(payload) {
+        console.log('clientImageAdd', payload);
+
+        SpotterAPI.xhrImage(payload.id, payload.file, function(data) {
+            this.flux.actions.client.image.uploaded({
+                id:     payload.id,
+                url:    data.url
+            });
+        }.bind(this));
+    },
+    clientImageUploaded: function(payload) {
+        this.state.clients.map(function(client) {
+            if (payload.id === client.id) {
+                client.picture = payload.url;
+            }
+        });
+
+        this.emit('change:clientImageUploaded');
+        this.emit('change');
+        console.log(payload, this.state);
     }
 });
 

@@ -10,7 +10,12 @@ var constants = {
         }
     },
     CLIENT: {
-        SET: 'CLIENT_SET'
+        ADD: 'CLIENT_ADD',
+        SET: 'CLIENT_SET',
+        IMAGE: {
+            ADD: 'CLIENT_IMAGE_ADD',
+            UPLOADED: 'CLIENT_IMAGE_UPLOADED'
+        }
     },
     CLIENTS: {
         GET: 'CLIENTS_GET'

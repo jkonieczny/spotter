@@ -15,11 +15,13 @@ var Avatar      = require('../avatar.jsx');
 
 module.exports = React.createClass({
 	displayName: 'trainerDetails.jsx',
-	mixins: [FluxMixin],
-    getInitialState: function() {
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore')],
+    getStateFromFlux: function() {
+        var flux = this.getFlux();
+
         return {
-            clients: this.getFlux().store('ClientStore').getState().clients,
-            trainer: this.getFlux().store('AuthStore').getState().trainer
+            clients: flux.store('ClientStore').getState().clients,
+            trainer: flux.store('AuthStore').getState().trainer
         };
     },
 	componentDidMount: function() {

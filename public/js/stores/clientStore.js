@@ -54,14 +54,30 @@ var ClientStore = Fluxxor.createStore({
         */
 
         this.bindActions(
-            CONSTANTS.CLIENT.SET, this.clientsSet,
-            CONSTANTS.CLIENTS.GET, this.clientsGet
+            CONSTANTS.CLIENT.ADD,               this.clientsAdd,
+            CONSTANTS.CLIENT.IMAGE.ADD,         this.clientImageAdd,
+            CONSTANTS.CLIENT.IMAGE.UPLOADED,    this.clientImageUploaded,
+            CONSTANTS.CLIENT.SET,               this.clientsSet,
+            CONSTANTS.CLIENTS.GET,              this.clientsGet
         );
     },
     getState: function(){
         return this.state;
     },
-    clientsGet: function(payload) {
+    clientsAdd: function(payload) {
+        console.log('clientsAdd', payload);
+        payload.client.name = payload.client.name || payload.client.fname + ' ' + payload.client.lname;
+
+        SpotterAPI.addClient(payload.client, function(data) {
+            console.log('clientsAdd data', data);
+            this.state.lastAdded = data;
+            this.flux.actions.clients.get();
+
+            this.emit('change:clientAdded');
+            this.emit('change');
+        }.bind(this));
+    },
+    clientsGet: function() {
         console.log('clientsGet');
 
         SpotterAPI.getClients(function(data) {
@@ -69,6 +85,8 @@ var ClientStore = Fluxxor.createStore({
             if (data.total && data.total > 0) {
                 this.state.clients = data.data;
             }
+            this.emit('change:clientsGot');
+            this.emit('change');
         }.bind(this));
 
         this.emit('change');
@@ -82,6 +100,27 @@ var ClientStore = Fluxxor.createStore({
         this.state.client = payload.client;
 
         this.emit('change');
+    },
+    clientImageAdd: function(payload) {
+        console.log('clientImageAdd', payload);
+
+        SpotterAPI.xhrImage(payload.id, payload.file, function(data) {
+            this.flux.actions.client.image.uploaded({
+                id:     payload.id,
+                url:    data.url
+            });
+        }.bind(this));
+    },
+    clientImageUploaded: function(payload) {
+        this.state.clients.map(function(client) {
+            if (payload.id === client.id) {
+                client.picture = payload.url;
+            }
+        });
+
+        this.emit('change:clientImageUploaded');
+        this.emit('change');
+        console.log(payload, this.state);
     }
 });
 

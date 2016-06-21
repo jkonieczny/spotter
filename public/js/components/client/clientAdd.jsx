@@ -14,6 +14,15 @@ var CONSTANTS = require('../../constants/constants');
 module.exports = React.createClass({
 	displayName: 'trainerDetails.jsx',
 	mixins: [FluxMixin],
+    getInitialState: function() {
+        return {
+            client: {
+                fname: null,
+                lname: null,
+                email: null
+            }
+        };
+    },
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
@@ -25,15 +34,19 @@ module.exports = React.createClass({
                 <form>
                     <label>
                         First Name
-                        <input type="text" placeholder="First Name" />
+                        <input type="text" placeholder="First Name" onChange={this.update.bind(this, 'fname')} />
                     </label>
                     <label>
                         Last Name
-                        <input type="text" placeholder="Last Name" />
+                        <input type="text" placeholder="Last Name" onChange={this.update.bind(this, 'lname')} />
+                    </label>
+                    <label>
+                        Email
+                        <input type="text" placeholder="Email" onChange={this.update.bind(this, 'email')} />
                     </label>
                     <label>
                         Upload an image
-                        <input type="file" accept="image/*" capture="camera" />
+                        <input ref="file" type="file" accept="image/*" capture="camera" />
                     </label>
 	                <label>
 	                	<button type="submit" onClick={this.proceed}>Update client details</button>
@@ -42,12 +55,55 @@ module.exports = React.createClass({
             </div>
         );
     },
+    update: function(field, e) {
+        this.state.client[field] = e.currentTarget.value;
+    },
     proceed: function(e) {
         console.log('proceed');
     	e.preventDefault();
 
-        this.getFlux().actions.page.update({
-            page: 'clientView'
+        var flux = this.getFlux();
+
+        var missingValues = [];
+        var fieldNames = {
+            fname: 'first name',
+            lname: 'last name',
+            email: 'email'
+        }
+
+        var client = this.state.client;
+
+        Object.keys(client).forEach(function(key) {
+            if (!client[key] || client[key].length === 0) {
+                missingValues.push(fieldNames[key]);
+            }
+        });
+
+        if (missingValues.length > 0) {
+            alert('Please enter ' + missingValues.join(', '));
+            return;
+        }
+
+        var file = this.refs.file.files[0]
+        if (file) {
+            //alert('Your client image will upload in the background, you will be notified when it has finished');
+            flux.store('ClientStore').once('change:clientAdded', function() {
+                console.log('change:clientAdded');
+                flux.actions.client.image.add({
+                    file:   file,
+                    id:     this.getFlux().store('ClientStore').getState().lastAdded.id
+                });
+            }.bind(this));
+        }
+
+        flux.store('ClientStore').once('change:clientsGot', function() {
+            flux.actions.page.update({
+                page: 'clientView'
+            });
+        }.bind(this));
+
+        flux.actions.client.add({
+            client: client
         });
     }
 

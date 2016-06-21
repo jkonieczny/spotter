@@ -45,6 +45,19 @@ var actions = {
 		}
 	},
 	client: {
+		add: function(payload) {
+			console.log('set add', payload);
+			this.dispatch(CONSTANTS.CLIENT.ADD, { client: payload.client });
+		},
+		image: {
+			add: function(payload) {
+				console.log('image add');
+				this.dispatch(CONSTANTS.CLIENT.IMAGE.ADD, payload);
+			},
+			uploaded: function(payload) {
+				this.dispatch(CONSTANTS.CLIENT.IMAGE.UPLOADED, payload);
+			}
+		},
 		set: function(payload) {
 			console.log('set client', payload);
 			this.dispatch(CONSTANTS.CLIENT.SET, { client: payload.client });
