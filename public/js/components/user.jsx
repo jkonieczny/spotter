@@ -15,7 +15,7 @@ var SearchBar = require('./searchBar.jsx');
 
 module.exports = React.createClass({
 	displayName: 'user.jsx',
-	mixins: [FluxMixin, StoreWatchMixin('UserStore')],
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore')],
 	getInitialState: function() {
 		return {
 			selectedUser: {
@@ -27,7 +27,7 @@ module.exports = React.createClass({
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
 
-		return flux.store('UserStore').getState();
+		return flux.store('ClientStore').getState();
 	},
 	componentDidMount: function() {
 		window.scrollTo(0,0);
@@ -107,8 +107,8 @@ module.exports = React.createClass({
     	this.getFlux().actions.page.update({
     		page: 'product'
     	});
-    	this.getFlux().actions.user.update({
-    		user: this.state.selectedUser
+    	this.getFlux().actions.client.update({
+    		client: this.state.selectedUser
     	});
     }
 

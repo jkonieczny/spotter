@@ -38,10 +38,15 @@ var actions = {
 			this.dispatch(CONSTANTS.PRODUCTS.RESET);
 		}
 	},
-	user: {
-		update: function(payload) {
-			console.log('update user', payload);
-			this.dispatch(CONSTANTS.USER.UPDATE, { user: payload.user });
+	client: {
+		set: function(payload) {
+			console.log('set client', payload);
+			this.dispatch(CONSTANTS.CLIENT.SET, { client: payload.client });
+		}
+	},
+	clients: {
+		get: function() {
+			this.dispatch(CONSTANTS.CLIENTS.GET);
 		}
 	}
 };

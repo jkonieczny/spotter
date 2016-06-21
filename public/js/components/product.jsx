@@ -15,14 +15,14 @@ var Item = require('./item.jsx');
 var ItemSelect = require('./itemSelect.jsx');
 
 module.exports = React.createClass({
-	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
 		return {
-			selectedUser: flux.store('UserStore').getState().client,
+			selectedUser: flux.store('ClientStore').getState().client,
 			selectedProducts: flux.store('ProductStore').getState().selectedProducts
 		};
 	},
@@ -69,7 +69,7 @@ module.exports = React.createClass({
         return (
             <div className="page page_product">
                 <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
-                <p className="center">What would you like to recommend to {this.state.selectedUser.fname}?</p>
+                <p className="center">What would you like to recommend to {this.state.selectedUser.name}?</p>
                 <div className="item_list">
                 	{ selectedProducts }
                 </div>

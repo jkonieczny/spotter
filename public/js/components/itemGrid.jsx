@@ -11,7 +11,7 @@ var cx = require('classnames');
 
 module.exports = React.createClass({
     displayName: 'itemGrid.jsx',
-	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},

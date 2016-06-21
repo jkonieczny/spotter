@@ -9,11 +9,14 @@ var constants = {
             GET: 'SPOTTER_TRAINER_GET'
         }
     },
-    USERS: {
-        GET: 'USERS_GET'
+    CLIENT: {
+        SET: 'CLIENT_SET'
     },
-    USER: {
-        UPDATE: 'USER_UPDATE'
+    CLIENTS: {
+        GET: 'CLIENTS_GET'
+    },
+    TRAINER: {
+        UPDATE: 'TRAINER_UPDATE'
     },
     PRODUCTS: {
         GET: 'PRODUCTS_GET',

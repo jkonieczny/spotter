@@ -5,7 +5,7 @@
 var React = require('react'),
 	Fluxxor = require('fluxxor'),
 	FluxMixin = Fluxxor.FluxMixin(React),
-    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+	StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
 var cx = require('classnames');
 
@@ -15,35 +15,49 @@ module.exports = React.createClass({
 		return {};
 	},
 	getStateFromFlux: function() {
-		var state = this.getFlux().store('PageStore').getState();
+		var flux	= this.getFlux();
+		var state	= flux.store('PageStore').getState();
+		var auth	= flux.store('AuthStore').getState();
+
 		return {
-			pages:           state.pages,
-			page:            state.currentPage,
-            previousPage:   state.previousPage,
-			back:            (state.currentPage !== 'user' && state.currentPage !== 'success' && state.currentPage !== 'signin')
+			pages:				state.pages,
+			page:				state.currentPage,
+			previousPage:		state.previousPage,
+			back:				(state.currentPage !== 'user' && state.currentPage !== 'success' && state.currentPage !== 'signin'),
+			trainer:			auth.trainer
 		};
 	},
-    render: function() {
-        return (
-            <header>
-            	<div className={cx( 'header_back', { 'hide' : (this.state.back === false) } )} onClick={this.goBack}></div>
-                <h1 className="header_title">spotter</h1>
-                <div className={cx( { 'header_avatar' : (this.state.page !== 'signin') }) }></div>
-            </header>
-        );
-    },
-    goBack: function(e) {
-        var page;
+	render: function() {
+		var avatar, background;
 
-        if (this.state.page === 'email') {
-            page = this.state.previousPage;
-        } else {
-            page = this.state.pages[this.state.pages.indexOf(this.state.page) - 1];
-        }
+		if (this.state.trainer && this.state.trainer.picture) {
+			background = {
+				backgroundImage: 'url(' + this.state.trainer.picture + ')'
+			}
+		}
 
-    	this.getFlux().actions.page.update({
-    		page: page
-    	});
-    }
+		avatar = (<div className="header_avatar" style={background}></div>);
+
+		return (
+			<header>
+				<div className={cx( 'header_back', { 'hide' : (this.state.back === false) } )} onClick={this.goBack}></div>
+				<h1 className="header_title">spotter</h1>
+				{avatar}
+			</header>
+		);
+	},
+	goBack: function(e) {
+		var page;
+
+		if (this.state.page === 'email') {
+			page = this.state.previousPage;
+		} else {
+			page = this.state.pages[this.state.pages.indexOf(this.state.page) - 1];
+		}
+
+		this.getFlux().actions.page.update({
+			page: page
+		});
+	}
 
 });

@@ -8,14 +8,14 @@ var Fluxxor = require('fluxxor');
 
 var actions = require('./actions/actions.js');
 
-var UserStore = require('./stores/userStore.js'),
+var ClientStore = require('./stores/clientStore.js'),
 	PageStore = require('./stores/pageStore.js'),
 	ProductStore = require('./stores/productStore.js'),
 	AuthStore = require('./stores/authStore.js');
 
 var stores = {
 	AuthStore: new AuthStore(),
-	UserStore: new UserStore(),
+	ClientStore: new ClientStore(),
 	PageStore: new PageStore(),
 	ProductStore: new ProductStore()
 };

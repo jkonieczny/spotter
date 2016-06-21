@@ -3,10 +3,16 @@
 var Fluxxor = require('fluxxor');
 var CONSTANTS = require('../constants/constants');
 
-var UserStore = Fluxxor.createStore({
+var SpotterAPI = require('../lib/spotter');
+
+var ClientStore = Fluxxor.createStore({
     initialize: function(params) {
         this.state = {
-            users: [
+            clients: []
+        };
+        /*
+        this.state = {
+            clients: [
                 {
                     name: 'Robert Daly',
                     fname: 'Robert',
@@ -45,37 +51,34 @@ var UserStore = Fluxxor.createStore({
                 }
             ]
         };
+        */
 
         this.bindActions(
-            CONSTANTS.USERS.GET, this.getUser,
-            CONSTANTS.USER.UPDATE, this.userUpdate
+            CONSTANTS.CLIENT.SET, this.clientsSet,
+            CONSTANTS.CLIENTS.GET, this.clientsGet
         );
     },
     getState: function(){
         return this.state;
     },
-    getUser: function(payload) {
+    clientsGet: function(payload) {
+        console.log('clientsGet');
+
+        SpotterAPI.getClients(function(data) {
+            console.log('GOT CLIENTS', data);
+            if (data.total && data.total > 0) {
+                this.state.clients = data.data;
+            }
+        }.bind(this));
+
         this.emit('change');
     },
-    userUpdate: function(payload) {
-        if (!payload.user.fname) {
-            var name = payload.user.name.split(' ');
-            payload.user.fname = name[0];
-            payload.user.lname = name[name.length - 1];
+    clientsSet: function(payload) {
+        console.log('clientsSet', payload);
+        this.state.client = payload.client;
 
-            var leads = localStorage.getItem('leads');
-            if (!leads) {
-                leads = [payload.user];
-            } else {
-                leads = JSON.parse(leads);
-                leads.push(payload.user);
-            }
-
-            localStorage.setItem('leads', JSON.stringify(leads));
-        }
-        this.state.client = payload.user;
         this.emit('change');
     }
 });
 
-module.exports = UserStore;
+module.exports = ClientStore;

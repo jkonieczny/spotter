@@ -17,7 +17,7 @@ if ('serviceWorker' in navigator) {
 }
 
 }).call(this,require('_process'))
-},{"./public/js/main.js":284,"_process":2}],2:[function(require,module,exports){
+},{"./public/js/main.js":289,"_process":2}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -23707,17 +23707,175 @@ var actions = {
 			this.dispatch(CONSTANTS.PRODUCTS.RESET);
 		}
 	},
-	user: {
-		update: function(payload) {
-			console.log('update user', payload);
-			this.dispatch(CONSTANTS.USER.UPDATE, { user: payload.user });
+	client: {
+		set: function(payload) {
+			console.log('set client', payload);
+			this.dispatch(CONSTANTS.CLIENT.SET, { client: payload.client });
+		}
+	},
+	clients: {
+		get: function() {
+			this.dispatch(CONSTANTS.CLIENTS.GET);
 		}
 	}
 };
 
 module.exports = actions;
 
-},{"../constants/constants":282}],268:[function(require,module,exports){
+},{"../constants/constants":287}],268:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React 	= require('react');
+var cx 		= require('classnames');
+
+
+module.exports = React.createClass({
+	displayName: 'avatar.jsx',
+    render: function() {
+		var avatarClasses = {
+			user_avatar: true
+		};
+		var avatarInlineCSS = {};
+
+		if (this.props.person && this.props.person.picture) {
+			avatarClasses.user_selected		= true;
+			avatarInlineCSS.backgroundImage = 'url(' + this.props.person.picture + ')';
+		}
+
+        return (
+	        React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS})
+        );
+    }
+});
+
+},{"classnames":3,"react":266}],269:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React = require('react'),
+	Fluxxor = require('fluxxor'),
+	FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+
+var cx = require('classnames');
+
+var CONSTANTS = require('../../constants/constants');
+
+module.exports = React.createClass({
+	displayName: 'trainerDetails.jsx',
+	mixins: [FluxMixin],
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
+    render: function() {
+        return (
+            React.createElement("div", {className: "page signin"}, 
+	            React.createElement("div", {className: "user_avatar"}), 
+                "Add a client", 
+                React.createElement("form", null, 
+                    React.createElement("label", null, 
+                        "First Name", 
+                        React.createElement("input", {type: "text", placeholder: "First Name"})
+                    ), 
+                    React.createElement("label", null, 
+                        "Last Name", 
+                        React.createElement("input", {type: "text", placeholder: "Last Name"})
+                    ), 
+                    React.createElement("label", null, 
+                        "Upload an image", 
+                        React.createElement("input", {type: "file", accept: "image/*", capture: "camera"})
+                    ), 
+	                React.createElement("label", null, 
+	                	React.createElement("button", {type: "submit", onClick: this.proceed}, "Update client details")
+	                )
+                )
+            )
+        );
+    },
+    proceed: function(e) {
+        console.log('proceed');
+    	e.preventDefault();
+
+        this.getFlux().actions.page.update({
+            page: 'clientView'
+        });
+    }
+
+});
+
+},{"../../constants/constants":287,"classnames":3,"fluxxor":4,"react":266}],270:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React = require('react'),
+	Fluxxor = require('fluxxor'),
+	FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+
+var cx          = require('classnames');
+
+var CONSTANTS   = require('../../constants/constants');
+
+var Avatar      = require('../avatar.jsx');
+
+module.exports = React.createClass({
+	displayName: 'trainerDetails.jsx',
+	mixins: [FluxMixin],
+    getInitialState: function() {
+        return {
+            clients: this.getFlux().store('ClientStore').getState().clients,
+            trainer: this.getFlux().store('AuthStore').getState().trainer
+        };
+    },
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
+    render: function() {
+        var clients = (React.createElement("li", null, "You currently have no clients"));
+
+        if (this.state.clients) {
+            console.log(this.state.clients);
+            clients = [];
+
+            this.state.clients.forEach(function(client) {
+                clients.push(
+                    React.createElement("li", {key: client.id, className: "client_list_client", onClick: this.selectClient.bind(this, client)}, 
+                        React.createElement("img", {src: client.picture}), 
+                        client.name
+                    )
+                );
+            }.bind(this));
+        }
+
+        return (
+            React.createElement("div", {className: "page signin"}, 
+	            React.createElement(Avatar, {person: this.state.trainer}), 
+                React.createElement("h2", {className: "center"}, this.state.trainer.name, "'s clients"), 
+                React.createElement("p", null), 
+                React.createElement("ul", null, 
+                    clients
+                )
+            )
+        );
+    },
+    selectClient: function(client, e) {
+        console.log('selectClient', e);
+    	e.preventDefault();
+        this.getFlux().actions.client.set({
+            client: client
+        });
+        this.getFlux().actions.page.update({
+            page: 'product'
+        });
+    }
+
+});
+
+},{"../../constants/constants":287,"../avatar.jsx":268,"classnames":3,"fluxxor":4,"react":266}],271:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23735,14 +23893,14 @@ var Item = require('./item.jsx');
 
 module.exports = React.createClass({
 	displayName: 'confirmation.jsx',
-	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
 		return {
-			selectedUser: flux.store('UserStore').getState().client,
+			selectedUser: flux.store('ClientStore').getState().client,
 			selectedProducts: flux.store('ProductStore').getState().selectedProducts
 		};
 	},
@@ -23822,7 +23980,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":282,"./item.jsx":272,"classnames":3,"fluxxor":4,"react":266}],269:[function(require,module,exports){
+},{"../constants/constants":287,"./item.jsx":275,"classnames":3,"fluxxor":4,"react":266}],272:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23840,14 +23998,14 @@ var ItemGrid = require('./itemGrid.jsx');
 
 module.exports = React.createClass({
 	displayName: 'email.jsx',
-	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
 		return {
-			selectedUser: flux.store('UserStore').getState().client,
+			selectedUser: flux.store('ClientStore').getState().client,
 			selectedProducts: flux.store('ProductStore').getState().selectedProducts
 		};
 	},
@@ -23884,7 +24042,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":282,"./itemGrid.jsx":273,"classnames":3,"fluxxor":4,"react":266}],270:[function(require,module,exports){
+},{"../constants/constants":287,"./itemGrid.jsx":276,"classnames":3,"fluxxor":4,"react":266}],273:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23892,7 +24050,7 @@ module.exports = React.createClass({
 var React = require('react'),
 	Fluxxor = require('fluxxor'),
 	FluxMixin = Fluxxor.FluxMixin(React),
-    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+	StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
 var cx = require('classnames');
 
@@ -23902,40 +24060,54 @@ module.exports = React.createClass({displayName: "exports",
 		return {};
 	},
 	getStateFromFlux: function() {
-		var state = this.getFlux().store('PageStore').getState();
+		var flux	= this.getFlux();
+		var state	= flux.store('PageStore').getState();
+		var auth	= flux.store('AuthStore').getState();
+
 		return {
-			pages:           state.pages,
-			page:            state.currentPage,
-            previousPage:   state.previousPage,
-			back:            (state.currentPage !== 'user' && state.currentPage !== 'success' && state.currentPage !== 'signin')
+			pages:				state.pages,
+			page:				state.currentPage,
+			previousPage:		state.previousPage,
+			back:				(state.currentPage !== 'user' && state.currentPage !== 'success' && state.currentPage !== 'signin'),
+			trainer:			auth.trainer
 		};
 	},
-    render: function() {
-        return (
-            React.createElement("header", null, 
-            	React.createElement("div", {className: cx( 'header_back', { 'hide' : (this.state.back === false) }), onClick: this.goBack}), 
-                React.createElement("h1", {className: "header_title"}, "spotter"), 
-                React.createElement("div", {className: cx( { 'header_avatar' : (this.state.page !== 'signin') }) })
-            )
-        );
-    },
-    goBack: function(e) {
-        var page;
+	render: function() {
+		var avatar, background;
 
-        if (this.state.page === 'email') {
-            page = this.state.previousPage;
-        } else {
-            page = this.state.pages[this.state.pages.indexOf(this.state.page) - 1];
-        }
+		if (this.state.trainer && this.state.trainer.picture) {
+			background = {
+				backgroundImage: 'url(' + this.state.trainer.picture + ')'
+			}
+		}
 
-    	this.getFlux().actions.page.update({
-    		page: page
-    	});
-    }
+		avatar = (React.createElement("div", {className: "header_avatar", style: background}));
+
+		return (
+			React.createElement("header", null, 
+				React.createElement("div", {className: cx( 'header_back', { 'hide' : (this.state.back === false) }), onClick: this.goBack}), 
+				React.createElement("h1", {className: "header_title"}, "spotter"), 
+				avatar
+			)
+		);
+	},
+	goBack: function(e) {
+		var page;
+
+		if (this.state.page === 'email') {
+			page = this.state.previousPage;
+		} else {
+			page = this.state.pages[this.state.pages.indexOf(this.state.page) - 1];
+		}
+
+		this.getFlux().actions.page.update({
+			page: page
+		});
+	}
 
 });
 
-},{"classnames":3,"fluxxor":4,"react":266}],271:[function(require,module,exports){
+},{"classnames":3,"fluxxor":4,"react":266}],274:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23949,57 +24121,62 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var SearchBar = require('./searchBar.jsx');
+var Avatar      = require('./avatar.jsx');
+var SearchBar   = require('./searchBar.jsx');
 
 module.exports = React.createClass({
-	displayName: 'signIn.jsx',
+    mixins: [FluxMixin],
+	displayName: 'home.jsx',
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
     getInitialState: function() {
         return {
-            trainer: {}
+            trainer: this.getFlux().store('AuthStore').getState().trainer
         };
     },
     render: function() {
-        var avatarClasses = {
-            user_avatar: true
-        };
-        var avatarInlineCSS = {};
-
-        if (this.state.trainer && this.state.trainer.avatar) {
-            avatarClasses.user_selected     = true;
-            avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.trainer.avatar + '.jpg)';
-        }
-
         return (
             React.createElement("div", {className: "page signin"}, 
-	            React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
-                React.createElement("h2", null, "Homepage"), 
+                React.createElement(Avatar, {person: this.state.trainer}), 
+                React.createElement("h2", {className: "center"}, "Welcome back ", this.state.trainer.name), 
+                React.createElement("p", null), 
                 React.createElement("form", null, 
                     React.createElement("label", null, 
-                        React.createElement("button", {type: "submit", onClick: this.proceed}, "Add Client")
+                        React.createElement("button", {type: "submit", onClick: this.proceedAddClient}, "Add Client")
                     ), 
                     React.createElement("label", null, 
-                        React.createElement("button", {type: "submit", onClick: this.proceed}, "View Clients")
+                        React.createElement("button", {type: "submit", onClick: this.proceedViewClients}, "View Clients")
                     ), 
 	                React.createElement("label", null, 
-	                	React.createElement("button", {type: "submit", onClick: this.proceed}, "Settings")
+	                	React.createElement("button", {type: "submit", onClick: this.proceedSettings}, "Settings")
 	                )
                 )
             )
         );
     },
-    proceed: function(e) {
+    proceedAddClient: function(e) {
     	e.preventDefault();
     	this.getFlux().actions.page.update({
-    		page: 'product'
+    		page: 'clientAdd'
     	});
-    }
+    },
+    proceedViewClients: function(e) {
+        e.preventDefault();
+        this.getFlux().actions.page.update({
+            page: 'clientView'
+        });
+    },
+    proceedSettings: function(e) {
+        e.preventDefault();
+        this.getFlux().actions.page.update({
+            page: 'settings'
+        });
+    },
 
 });
 
-},{"../constants/constants":282,"./searchBar.jsx":276,"classnames":3,"fluxxor":4,"react":266}],272:[function(require,module,exports){
+},{"../constants/constants":287,"./avatar.jsx":268,"./searchBar.jsx":279,"classnames":3,"fluxxor":4,"react":266}],275:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24038,7 +24215,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"classnames":3,"fluxxor":4,"react":266}],273:[function(require,module,exports){
+},{"classnames":3,"fluxxor":4,"react":266}],276:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24052,7 +24229,7 @@ var cx = require('classnames');
 
 module.exports = React.createClass({
     displayName: 'itemGrid.jsx',
-	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
@@ -24124,7 +24301,7 @@ module.exports = React.createClass({
 
 });
 
-},{"classnames":3,"fluxxor":4,"react":266}],274:[function(require,module,exports){
+},{"classnames":3,"fluxxor":4,"react":266}],277:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24252,7 +24429,7 @@ module.exports = React.createClass({
 
 });
 
-},{"./searchBar.jsx":276,"classnames":3,"fluxxor":4,"react":266}],275:[function(require,module,exports){
+},{"./searchBar.jsx":279,"classnames":3,"fluxxor":4,"react":266}],278:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24270,14 +24447,14 @@ var Item = require('./item.jsx');
 var ItemSelect = require('./itemSelect.jsx');
 
 module.exports = React.createClass({displayName: "exports",
-	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
 		return {
-			selectedUser: flux.store('UserStore').getState().client,
+			selectedUser: flux.store('ClientStore').getState().client,
 			selectedProducts: flux.store('ProductStore').getState().selectedProducts
 		};
 	},
@@ -24324,7 +24501,7 @@ module.exports = React.createClass({displayName: "exports",
         return (
             React.createElement("div", {className: "page page_product"}, 
                 React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
-                React.createElement("p", {className: "center"}, "What would you like to recommend to ", this.state.selectedUser.fname, "?"), 
+                React.createElement("p", {className: "center"}, "What would you like to recommend to ", this.state.selectedUser.name, "?"), 
                 React.createElement("div", {className: "item_list"}, 
                 	 selectedProducts 
                 ), 
@@ -24344,7 +24521,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"../constants/constants":282,"./item.jsx":272,"./itemSelect.jsx":274,"classnames":3,"fluxxor":4,"react":266}],276:[function(require,module,exports){
+},{"../constants/constants":287,"./item.jsx":275,"./itemSelect.jsx":277,"classnames":3,"fluxxor":4,"react":266}],279:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24372,7 +24549,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./searchBarResult.jsx":277,"react":266}],277:[function(require,module,exports){
+},{"./searchBarResult.jsx":280,"react":266}],280:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24401,7 +24578,63 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"fluxxor":4,"react":266}],278:[function(require,module,exports){
+},{"fluxxor":4,"react":266}],281:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React = require('react'),
+	Fluxxor = require('fluxxor'),
+	FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+
+var cx = require('classnames');
+
+var CONSTANTS = require('../constants/constants');
+
+module.exports = React.createClass({
+	displayName: 'trainerDetails.jsx',
+	mixins: [FluxMixin],
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
+    render: function() {
+        return (
+            React.createElement("div", {className: "page signin"}, 
+	            React.createElement("div", {className: "user_avatar"}), 
+                "Settings", 
+                React.createElement("form", null, 
+                    React.createElement("label", null, 
+                        "First Name", 
+                        React.createElement("input", {type: "text", placeholder: "First Name"})
+                    ), 
+                    React.createElement("label", null, 
+                        "Last Name", 
+                        React.createElement("input", {type: "text", placeholder: "Last Name"})
+                    ), 
+                    React.createElement("label", null, 
+                        "Upload an image", 
+                        React.createElement("input", {type: "file", accept: "image/*", capture: "camera"})
+                    ), 
+                    React.createElement("label", null, 
+                        React.createElement("button", {type: "submit", onClick: this.proceed}, "Update details")
+                    )
+                )
+            )
+        );
+    },
+    proceed: function(e) {
+        console.log('proceed');
+    	e.preventDefault();
+
+        this.getFlux().actions.page.update({
+            page: 'home'
+        });
+    }
+
+});
+
+},{"../constants/constants":287,"classnames":3,"fluxxor":4,"react":266}],282:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24438,28 +24671,37 @@ module.exports = React.createClass({
     proceed: function(e) {
     	e.preventDefault();
     	this.getFlux().actions.auth.autho.show();
+    	/*
+    	this.getFlux().actions.page.update({
+    		page: 'trainerDetails'
+    	});
+    	*/
     }
 
 });
 
-},{"../constants/constants":282,"./searchBar.jsx":276,"classnames":3,"fluxxor":4,"react":266}],279:[function(require,module,exports){
+},{"../constants/constants":287,"./searchBar.jsx":279,"classnames":3,"fluxxor":4,"react":266}],283:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
 
-var React = require('react'),
-	Fluxxor = require('fluxxor'),
-	FluxMixin = Fluxxor.FluxMixin(React),
-    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+var React				= require('react'),
+	Fluxxor				= require('fluxxor'),
+	FluxMixin			= Fluxxor.FluxMixin(React),
+    StoreWatchMixin		= Fluxxor.StoreWatchMixin;
 
-var Header = require('./header.jsx'),
-	User = require('./user.jsx'),
-	Product = require('./product.jsx'),
-	Confirmation = require('./confirmation.jsx'),
-	Success = require('./success.jsx'),
-	Email = require('./email.jsx'),
-	SignIn = require('./signIn.jsx'),
-	Home = require('./home.jsx');
+var ClientAdd			= require('./client/clientAdd.jsx'),
+	ClientsView			= require('./client/clientsView.jsx'),
+	Confirmation		= require('./confirmation.jsx'),
+	Email				= require('./email.jsx'),
+	Header				= require('./header.jsx'),
+	Home				= require('./home.jsx'),
+	Product				= require('./product.jsx'),
+	SignIn				= require('./signIn.jsx'),
+	Settings 			= require('./settings.jsx'),
+	Success				= require('./success.jsx'),
+	TrainerDetails		= require('./trainerDetails.jsx'),
+	User				= require('./user.jsx');
 
 module.exports = React.createClass({displayName: "exports",
 	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
@@ -24485,20 +24727,32 @@ module.exports = React.createClass({displayName: "exports",
 		var page;
 
 		switch(this.state.page.currentPage) {
+		    case 'clientAdd':
+		        page = (React.createElement(ClientAdd, null));
+		        break;
+		    case 'clientView':
+		        page = (React.createElement(ClientsView, null));
+		        break;
 		    case 'confirmation':
 		        page = (React.createElement(Confirmation, null));
-		        break;
-		    case 'product':
-		        page = (React.createElement(Product, null));
-		        break;
-		    case 'success':
-		        page = (React.createElement(Success, null));
 		        break;
 		    case 'email':
 		        page = (React.createElement(Email, null));
 		        break;
 		    case 'home':
 		        page = (React.createElement(Home, null));
+		        break;
+		    case 'product':
+		        page = (React.createElement(Product, null));
+		        break;
+		    case 'settings':
+		        page = (React.createElement(Settings, null));
+		        break;
+		    case 'success':
+		        page = (React.createElement(Success, null));
+		        break;
+		    case 'trainerDetails':
+		        page = (React.createElement(TrainerDetails, null));
 		        break;
 		    case 'user':
 		        page = (React.createElement(User, null));
@@ -24517,7 +24771,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./confirmation.jsx":268,"./email.jsx":269,"./header.jsx":270,"./home.jsx":271,"./product.jsx":275,"./signIn.jsx":278,"./success.jsx":280,"./user.jsx":281,"fluxxor":4,"react":266}],280:[function(require,module,exports){
+},{"./client/clientAdd.jsx":269,"./client/clientsView.jsx":270,"./confirmation.jsx":271,"./email.jsx":272,"./header.jsx":273,"./home.jsx":274,"./product.jsx":278,"./settings.jsx":281,"./signIn.jsx":282,"./success.jsx":284,"./trainerDetails.jsx":285,"./user.jsx":286,"fluxxor":4,"react":266}],284:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24535,14 +24789,14 @@ var Item = require('./item.jsx');
 
 module.exports = React.createClass({
 	displayName: 'success.jsx',
-	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
 		return {
-			selectedUser: flux.store('UserStore').getState().client,
+			selectedUser: flux.store('ClientStore').getState().client,
 			selectedProducts: flux.store('ProductStore').getState().selectedProducts
 		};
 	},
@@ -24608,7 +24862,63 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":282,"./item.jsx":272,"classnames":3,"fluxxor":4,"react":266}],281:[function(require,module,exports){
+},{"../constants/constants":287,"./item.jsx":275,"classnames":3,"fluxxor":4,"react":266}],285:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React = require('react'),
+	Fluxxor = require('fluxxor'),
+	FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+
+var cx = require('classnames');
+
+var CONSTANTS = require('../constants/constants');
+
+module.exports = React.createClass({
+	displayName: 'trainerDetails.jsx',
+	mixins: [FluxMixin],
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
+    render: function() {
+        return (
+            React.createElement("div", {className: "page signin"}, 
+	            React.createElement("div", {className: "user_avatar"}), 
+                "Trainer Details", 
+                React.createElement("form", null, 
+                    React.createElement("label", null, 
+                        "First Name", 
+                        React.createElement("input", {type: "text", placeholder: "First Name"})
+                    ), 
+                    React.createElement("label", null, 
+                        "Last Name", 
+                        React.createElement("input", {type: "text", placeholder: "Last Name"})
+                    ), 
+                    React.createElement("label", null, 
+                        "Upload an image", 
+                        React.createElement("input", {type: "file", accept: "image/*", capture: "camera"})
+                    ), 
+	                React.createElement("label", null, 
+	                	React.createElement("button", {type: "submit", onClick: this.proceed}, "Update your details")
+	                )
+                )
+            )
+        );
+    },
+    proceed: function(e) {
+        console.log('proceed');
+    	e.preventDefault();
+
+        this.getFlux().actions.page.update({
+            page: 'home'
+        });
+    }
+
+});
+
+},{"../constants/constants":287,"classnames":3,"fluxxor":4,"react":266}],286:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24626,7 +24936,7 @@ var SearchBar = require('./searchBar.jsx');
 
 module.exports = React.createClass({
 	displayName: 'user.jsx',
-	mixins: [FluxMixin, StoreWatchMixin('UserStore')],
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore')],
 	getInitialState: function() {
 		return {
 			selectedUser: {
@@ -24638,7 +24948,7 @@ module.exports = React.createClass({
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
 
-		return flux.store('UserStore').getState();
+		return flux.store('ClientStore').getState();
 	},
 	componentDidMount: function() {
 		window.scrollTo(0,0);
@@ -24718,14 +25028,14 @@ module.exports = React.createClass({
     	this.getFlux().actions.page.update({
     		page: 'product'
     	});
-    	this.getFlux().actions.user.update({
-    		user: this.state.selectedUser
+    	this.getFlux().actions.client.update({
+    		client: this.state.selectedUser
     	});
     }
 
 });
 
-},{"../constants/constants":282,"./searchBar.jsx":276,"classnames":3,"fluxxor":4,"react":266}],282:[function(require,module,exports){
+},{"../constants/constants":287,"./searchBar.jsx":279,"classnames":3,"fluxxor":4,"react":266}],287:[function(require,module,exports){
 var constants = {
     AUTH: {
         AUTHO: {
@@ -24737,11 +25047,14 @@ var constants = {
             GET: 'SPOTTER_TRAINER_GET'
         }
     },
-    USERS: {
-        GET: 'USERS_GET'
+    CLIENT: {
+        SET: 'CLIENT_SET'
     },
-    USER: {
-        UPDATE: 'USER_UPDATE'
+    CLIENTS: {
+        GET: 'CLIENTS_GET'
+    },
+    TRAINER: {
+        UPDATE: 'TRAINER_UPDATE'
     },
     PRODUCTS: {
         GET: 'PRODUCTS_GET',
@@ -24757,7 +25070,7 @@ var constants = {
 
 module.exports = constants;
 
-},{}],283:[function(require,module,exports){
+},{}],288:[function(require,module,exports){
 'use strict';
 
 var baseURL = 'https://data.spotter.online/api/';
@@ -24765,11 +25078,14 @@ var G = 'GET';
 var P = 'POST';
 
 var spotterAPI = {
-	getTrainer: function(cb) {
+	getClients: function(cb) {
 		this.XHR('client/list', G, cb);
 	},
 	getProducts: function(cb) {
 		this.XHR('products', G, cb);
+	},
+	getTrainer: function(cb) {
+		this.XHR('profile', G, cb);
 	},
 	XHR: function(frag, method, cb) {
 	    var xhr = new XMLHttpRequest();
@@ -24778,15 +25094,16 @@ var spotterAPI = {
 	    });
 	    xhr.open(method, 'https://data.spotter.online/api/' + frag, true);
 	    xhr.setRequestHeader('Accept', 'application/json');
-	    xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.trainer.id_token);
+	    xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.tokens.id_token);
 	    xhr.send();
 
+	    return xhr;
 	}
 };
 
 module.exports = spotterAPI;
 
-},{}],284:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24797,14 +25114,14 @@ var Fluxxor = require('fluxxor');
 
 var actions = require('./actions/actions.js');
 
-var UserStore = require('./stores/userStore.js'),
+var ClientStore = require('./stores/clientStore.js'),
 	PageStore = require('./stores/pageStore.js'),
 	ProductStore = require('./stores/productStore.js'),
 	AuthStore = require('./stores/authStore.js');
 
 var stores = {
 	AuthStore: new AuthStore(),
-	UserStore: new UserStore(),
+	ClientStore: new ClientStore(),
 	PageStore: new PageStore(),
 	ProductStore: new ProductStore()
 };
@@ -24830,7 +25147,7 @@ var App = {
 
 module.exports = App;
 
-},{"./actions/actions.js":267,"./components/spotterApp.jsx":279,"./stores/authStore.js":285,"./stores/pageStore.js":286,"./stores/productStore.js":287,"./stores/userStore.js":288,"fluxxor":4,"react":266,"react-dom":101}],285:[function(require,module,exports){
+},{"./actions/actions.js":267,"./components/spotterApp.jsx":283,"./stores/authStore.js":290,"./stores/clientStore.js":291,"./stores/pageStore.js":292,"./stores/productStore.js":293,"fluxxor":4,"react":266,"react-dom":101}],290:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -24841,7 +25158,8 @@ var SpotterAPI = require('../lib/spotter');
 var AuthStore = Fluxxor.createStore({
     initialize: function(params) {
         this.state = {
-            trainer: null
+            tokens:     null,
+            trainer:    null
         };
 
         this.bindActions(
@@ -24854,27 +25172,26 @@ var AuthStore = Fluxxor.createStore({
     },
     autho: {
         createLock: function() {
-            this.state.lock = new Auth0Lock('eUxDYzocFp4M0gwKetW5gj5SjzULG9of', 'fitflow.eu.auth0.com');
+            this.state.lock = new Auth0Lock('YDvRFV8XQoX3fuF1X65l8RqMSmCKHGOg', 'fitflow.eu.auth0.com');
         },
         show: function() {
             this.state.lock.show();
         },
         getTrainer: function() {
-            var trainer = localStorage.getItem('trainer');
+            var tokens = localStorage.getItem('tokens');
 
             if (this.state.lock && this.state.lock.parseHash && window.location.hash.length > 0) {
-                this.state.trainer = this.state.lock.parseHash(window.location.hash);
-                localStorage.setItem('trainer' , JSON.stringify(this.state.trainer));
-            } else if (trainer) {
-                this.state.trainer = JSON.parse(trainer);
+                this.state.tokens = this.state.lock.parseHash(window.location.hash);
+                localStorage.setItem('tokens' , JSON.stringify(this.state.tokens));
+            } else if (tokens) {
+                this.state.tokens = JSON.parse(tokens);
             } else {
-                this.state.trainer = null;
+                this.signOut();
             }
 
             console.log('this.state.trainer', this.state.trainer);
 
-            if (this.state.trainer) {
-                console.log(this.flux.actions);
+            if (this.state.tokens) {
                 setTimeout(function() {
                     this.flux.actions.auth.spotter.get();
                 }.bind(this), 0);
@@ -24885,8 +25202,28 @@ var AuthStore = Fluxxor.createStore({
         getTrainer: function() {
             SpotterAPI.getTrainer(function(data) {
                 console.log('getTrainer callback!', data);
-            });
+                if (data.id) {
+                    this.state.trainer = data;
+
+                    this.flux.actions.page.update({
+                        page: 'home'
+                    });
+
+                    this.flux.actions.clients.get();
+
+                } else if (data.code && data.description) {
+                    alert(data.description);
+                } else {
+                    alert('Sorry, something has gone wrong!');
+                }
+            }.bind(this));
         }
+    },
+    signOut: function() {
+        localStorage.clear();
+
+        this.state.tokens   = null;
+        this.state.trainer  = null;
     },
     getState: function(){
         return this.state;
@@ -24895,7 +25232,93 @@ var AuthStore = Fluxxor.createStore({
 
 module.exports = AuthStore;
 
-},{"../constants/constants":282,"../lib/spotter":283,"fluxxor":4}],286:[function(require,module,exports){
+},{"../constants/constants":287,"../lib/spotter":288,"fluxxor":4}],291:[function(require,module,exports){
+'use strict';
+
+var Fluxxor = require('fluxxor');
+var CONSTANTS = require('../constants/constants');
+
+var SpotterAPI = require('../lib/spotter');
+
+var ClientStore = Fluxxor.createStore({
+    initialize: function(params) {
+        this.state = {
+            clients: []
+        };
+        /*
+        this.state = {
+            clients: [
+                {
+                    name: 'Robert Daly',
+                    fname: 'Robert',
+                    lname: 'Daly',
+                    id: 1,
+                    trainer: 'Zeus',
+                    avatar: 'rob',
+                    email: 'robert@gmail.com'
+                },
+                {
+                    name: 'Jan Konieczny',
+                    fname: 'Jan',
+                    lname: 'Konieczny',
+                    id: 173829,
+                    trainer: 'Zeus',
+                    avatar: 'jan',
+                    email: 'jan@hotmail.com'
+                },
+                {
+                    name: 'Julia Stent',
+                    fname: 'Julia',
+                    lname: 'Stent',
+                    id: 3,
+                    trainer: 'Zeus',
+                    avatar: 'julia',
+                    email: 'julia@gmail.com'
+                },
+                {
+                    name: 'Arnold Schwarzenegger',
+                    fname: 'Arnold',
+                    lname: 'Schwarzenegger',
+                    id: 173830,
+                    trainer: 'Zeus',
+                    avatar: 'arnold',
+                    email: 'arnold@yahoo.com'
+                }
+            ]
+        };
+        */
+
+        this.bindActions(
+            CONSTANTS.CLIENT.SET, this.clientsSet,
+            CONSTANTS.CLIENTS.GET, this.clientsGet
+        );
+    },
+    getState: function(){
+        return this.state;
+    },
+    clientsGet: function(payload) {
+        console.log('clientsGet');
+
+        SpotterAPI.getClients(function(data) {
+            console.log('GOT CLIENTS', data);
+            if (data.total && data.total > 0) {
+                this.state.clients = data.data;
+            }
+        }.bind(this));
+
+        this.emit('change');
+    },
+    clientsSet: function(payload) {
+        console.log('clientsSet', payload);
+        this.state.client = payload.client;
+
+        this.emit('change');
+    }
+});
+
+module.exports = ClientStore;
+
+},{"../constants/constants":287,"../lib/spotter":288,"fluxxor":4}],292:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -24925,7 +25348,7 @@ var PageStore = Fluxxor.createStore({
 
 module.exports = PageStore;
 
-},{"../constants/constants":282,"fluxxor":4}],287:[function(require,module,exports){
+},{"../constants/constants":287,"fluxxor":4}],293:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -24966,87 +25389,4 @@ var ProductStore = Fluxxor.createStore({
 
 module.exports = ProductStore;
 
-},{"../constants/constants":282,"fluxxor":4}],288:[function(require,module,exports){
-'use strict';
-
-var Fluxxor = require('fluxxor');
-var CONSTANTS = require('../constants/constants');
-
-var UserStore = Fluxxor.createStore({
-    initialize: function(params) {
-        this.state = {
-            users: [
-                {
-                    name: 'Robert Daly',
-                    fname: 'Robert',
-                    lname: 'Daly',
-                    id: 1,
-                    trainer: 'Zeus',
-                    avatar: 'rob',
-                    email: 'robert@gmail.com'
-                },
-                {
-                    name: 'Jan Konieczny',
-                    fname: 'Jan',
-                    lname: 'Konieczny',
-                    id: 173829,
-                    trainer: 'Zeus',
-                    avatar: 'jan',
-                    email: 'jan@hotmail.com'
-                },
-                {
-                    name: 'Julia Stent',
-                    fname: 'Julia',
-                    lname: 'Stent',
-                    id: 3,
-                    trainer: 'Zeus',
-                    avatar: 'julia',
-                    email: 'julia@gmail.com'
-                },
-                {
-                    name: 'Arnold Schwarzenegger',
-                    fname: 'Arnold',
-                    lname: 'Schwarzenegger',
-                    id: 173830,
-                    trainer: 'Zeus',
-                    avatar: 'arnold',
-                    email: 'arnold@yahoo.com'
-                }
-            ]
-        };
-
-        this.bindActions(
-            CONSTANTS.USERS.GET, this.getUser,
-            CONSTANTS.USER.UPDATE, this.userUpdate
-        );
-    },
-    getState: function(){
-        return this.state;
-    },
-    getUser: function(payload) {
-        this.emit('change');
-    },
-    userUpdate: function(payload) {
-        if (!payload.user.fname) {
-            var name = payload.user.name.split(' ');
-            payload.user.fname = name[0];
-            payload.user.lname = name[name.length - 1];
-
-            var leads = localStorage.getItem('leads');
-            if (!leads) {
-                leads = [payload.user];
-            } else {
-                leads = JSON.parse(leads);
-                leads.push(payload.user);
-            }
-
-            localStorage.setItem('leads', JSON.stringify(leads));
-        }
-        this.state.client = payload.user;
-        this.emit('change');
-    }
-});
-
-module.exports = UserStore;
-
-},{"../constants/constants":282,"fluxxor":4}]},{},[1]);
+},{"../constants/constants":287,"fluxxor":4}]},{},[1]);

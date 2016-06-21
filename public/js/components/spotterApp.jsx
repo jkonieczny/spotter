@@ -2,19 +2,23 @@
 
 'use strict';
 
-var React = require('react'),
-	Fluxxor = require('fluxxor'),
-	FluxMixin = Fluxxor.FluxMixin(React),
-    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+var React				= require('react'),
+	Fluxxor				= require('fluxxor'),
+	FluxMixin			= Fluxxor.FluxMixin(React),
+    StoreWatchMixin		= Fluxxor.StoreWatchMixin;
 
-var Header = require('./header.jsx'),
-	User = require('./user.jsx'),
-	Product = require('./product.jsx'),
-	Confirmation = require('./confirmation.jsx'),
-	Success = require('./success.jsx'),
-	Email = require('./email.jsx'),
-	SignIn = require('./signIn.jsx'),
-	Home = require('./home.jsx');
+var ClientAdd			= require('./client/clientAdd.jsx'),
+	ClientsView			= require('./client/clientsView.jsx'),
+	Confirmation		= require('./confirmation.jsx'),
+	Email				= require('./email.jsx'),
+	Header				= require('./header.jsx'),
+	Home				= require('./home.jsx'),
+	Product				= require('./product.jsx'),
+	SignIn				= require('./signIn.jsx'),
+	Settings 			= require('./settings.jsx'),
+	Success				= require('./success.jsx'),
+	TrainerDetails		= require('./trainerDetails.jsx'),
+	User				= require('./user.jsx');
 
 module.exports = React.createClass({
 	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
@@ -40,20 +44,32 @@ module.exports = React.createClass({
 		var page;
 
 		switch(this.state.page.currentPage) {
+		    case 'clientAdd':
+		        page = (<ClientAdd />);
+		        break;
+		    case 'clientView':
+		        page = (<ClientsView />);
+		        break;
 		    case 'confirmation':
 		        page = (<Confirmation />);
-		        break;
-		    case 'product':
-		        page = (<Product />);
-		        break;
-		    case 'success':
-		        page = (<Success />);
 		        break;
 		    case 'email':
 		        page = (<Email />);
 		        break;
 		    case 'home':
 		        page = (<Home />);
+		        break;
+		    case 'product':
+		        page = (<Product />);
+		        break;
+		    case 'settings':
+		        page = (<Settings />);
+		        break;
+		    case 'success':
+		        page = (<Success />);
+		        break;
+		    case 'trainerDetails':
+		        page = (<TrainerDetails />);
 		        break;
 		    case 'user':
 		        page = (<User />);

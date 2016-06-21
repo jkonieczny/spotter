@@ -15,14 +15,14 @@ var Item = require('./item.jsx');
 
 module.exports = React.createClass({
 	displayName: 'confirmation.jsx',
-	mixins: [FluxMixin, StoreWatchMixin('UserStore', 'ProductStore')],
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
 		return {
-			selectedUser: flux.store('UserStore').getState().client,
+			selectedUser: flux.store('ClientStore').getState().client,
 			selectedProducts: flux.store('ProductStore').getState().selectedProducts
 		};
 	},

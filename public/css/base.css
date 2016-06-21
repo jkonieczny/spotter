@@ -60,7 +60,6 @@ header .header_title {
 }
 
 header .header_avatar {
-	background-image: url('../../images/avatars/trainer.jpg');
 	background-size: cover;
 	background-position: 50%;
 	border: 1px solid #ccc;

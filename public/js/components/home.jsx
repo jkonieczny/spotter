@@ -11,52 +11,57 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var SearchBar = require('./searchBar.jsx');
+var Avatar      = require('./avatar.jsx');
+var SearchBar   = require('./searchBar.jsx');
 
 module.exports = React.createClass({
-	displayName: 'signIn.jsx',
+    mixins: [FluxMixin],
+	displayName: 'home.jsx',
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
     getInitialState: function() {
         return {
-            trainer: {}
+            trainer: this.getFlux().store('AuthStore').getState().trainer
         };
     },
     render: function() {
-        var avatarClasses = {
-            user_avatar: true
-        };
-        var avatarInlineCSS = {};
-
-        if (this.state.trainer && this.state.trainer.avatar) {
-            avatarClasses.user_selected     = true;
-            avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.trainer.avatar + '.jpg)';
-        }
-
         return (
             <div className="page signin">
-	            <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
-                <h2>Homepage</h2>
+                <Avatar person={this.state.trainer} />
+                <h2 className="center">Welcome back {this.state.trainer.name}</h2>
+                <p/>
                 <form>
                     <label>
-                        <button type="submit" onClick={this.proceed}>Add Client</button>
+                        <button type="submit" onClick={this.proceedAddClient}>Add Client</button>
                     </label>
                     <label>
-                        <button type="submit" onClick={this.proceed}>View Clients</button>
+                        <button type="submit" onClick={this.proceedViewClients}>View Clients</button>
                     </label>
 	                <label>
-	                	<button type="submit" onClick={this.proceed}>Settings</button>
+	                	<button type="submit" onClick={this.proceedSettings}>Settings</button>
 	                </label>
                 </form>
             </div>
         );
     },
-    proceed: function(e) {
+    proceedAddClient: function(e) {
     	e.preventDefault();
     	this.getFlux().actions.page.update({
-    		page: 'product'
+    		page: 'clientAdd'
     	});
-    }
+    },
+    proceedViewClients: function(e) {
+        e.preventDefault();
+        this.getFlux().actions.page.update({
+            page: 'clientView'
+        });
+    },
+    proceedSettings: function(e) {
+        e.preventDefault();
+        this.getFlux().actions.page.update({
+            page: 'settings'
+        });
+    },
 
 });

@@ -34,6 +34,11 @@ module.exports = React.createClass({
     proceed: function(e) {
     	e.preventDefault();
     	this.getFlux().actions.auth.autho.show();
+    	/*
+    	this.getFlux().actions.page.update({
+    		page: 'trainerDetails'
+    	});
+    	*/
     }
 
 });
