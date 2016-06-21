@@ -30,6 +30,9 @@ module.exports = React.createClass({
 			selectedProducts: this.getFlux().store('ProductStore').getState().selectedProducts
 		};
 	},
+    componentDidMount: function() {
+        this.getFlux().store('ProductStore').on('change:updateProduct', this.updateProductList);
+    },
     render: function() {
 		var productMatches;
 
@@ -44,12 +47,12 @@ module.exports = React.createClass({
                         Brand
                 		<select defaultValue="select" defaultChecked="select" onChange={this.selectBrand}>
 	                		<option value="select" disabled hidden>e.g. USN...</option>
-                			<option value="bulk_powders">Bulk Powders</option>
-                			<option value="maxinutrition">Maxinutrition</option>
-                			<option value="myprotein">MyProtein</option>
-                			<option value="optimum_nutrition">Optimum Nutrition</option>
-                			<option value="phd">PHD</option>
-                			<option value="usn">USN</option>
+                			<option value="1227">Bulk Powders</option>
+                			<option value="972">Maxinutrition</option>
+                			<option value="1165">MyProtein</option>
+                			<option value="1192">Optimum Nutrition</option>
+                			<option value="994">PHD</option>
+                			<option value="1078">USN</option>
                 		</select>
                 	</label>
                 	<label>
@@ -67,6 +70,13 @@ module.exports = React.createClass({
     		brand: e.currentTarget.value
     	});
 
+        if (this.state.product.name.length > 0) {
+            this.getFlux().actions.products.search({
+                brand_id:       this.state.brand,
+                search_term:    this.state.product.name
+            });
+        }
+
     	setTimeout(function() {
     		document.getElementById('product_search').focus();
     	},0);
@@ -76,17 +86,27 @@ module.exports = React.createClass({
     	var value = e.currentTarget.value.toString().toLowerCase();
 
     	if (value.length > 0) {
+            this.getFlux().actions.products.search({
+                brand_id:       this.state.brand,
+                search_term:    value
+            });
+            /*
 	    	var products = this.getFlux().store('ProductStore').getState().products[this.state.brand];
 
 	    	var productMatches = products.filter(function(product) {
 	    		return (product.name.toLowerCase().indexOf(value) > -1);
 	    	});
+            */
 	    }
 
     	this.setState({
-    		productMatches: productMatches.slice(0,10),
     		product: { name: e.currentTarget.value }
     	});
+    },
+    updateProductList: function() {
+        this.setState({
+            productMatches: this.getFlux().store('ProductStore').getState().products
+        });
     },
     searchProductsSelected: function(value) {
     	this.setState({

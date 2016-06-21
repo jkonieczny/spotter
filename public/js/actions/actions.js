@@ -31,6 +31,12 @@ var actions = {
 		add: function(payload) {
 			this.dispatch(CONSTANTS.PRODUCTS.ADD, { product: payload.product });
 		},
+		search: function(payload) {
+			this.dispatch(CONSTANTS.PRODUCTS.SEARCH, {
+				brand: payload.brand_id,
+				value: payload.search_term
+			});
+		},
 		remove: function(id) {
 			this.dispatch(CONSTANTS.PRODUCTS.REMOVE, { id: id });
 		},

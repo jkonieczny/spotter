@@ -75,6 +75,10 @@ var ClientStore = Fluxxor.createStore({
     },
     clientsSet: function(payload) {
         console.log('clientsSet', payload);
+        var name = payload.client.name.split(' ');
+        payload.client.fname = name.shift();
+        payload.client.lname = name;
+
         this.state.client = payload.client;
 
         this.emit('change');

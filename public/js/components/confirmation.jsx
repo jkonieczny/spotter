@@ -11,7 +11,8 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var Item = require('./item.jsx');
+var Avatar	= require('./avatar.jsx');
+var Item	= require('./item.jsx');
 
 module.exports = React.createClass({
 	displayName: 'confirmation.jsx',
@@ -30,15 +31,6 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-		var avatarClasses = {
-			user_avatar: true
-		};
-		var avatarInlineCSS = {};
-
-		if (this.state.selectedUser && this.state.selectedUser.avatar) {
-			avatarClasses.user_selected 	= true;
-			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
-		}
 
 		var totalPrice, commisionPrice, proceedButton;
 
@@ -63,7 +55,7 @@ module.exports = React.createClass({
 
         return (
             <div className="page page_product">
-                <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
+                <Avatar person={this.state.selectedUser} />
                 <div className="center">
                 	<p>Your recommendations for {this.state.selectedUser.fname}</p>
                 </div>

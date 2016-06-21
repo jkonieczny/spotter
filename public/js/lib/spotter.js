@@ -4,12 +4,20 @@ var baseURL = 'https://data.spotter.online/api/';
 var G = 'GET';
 var P = 'POST';
 
+var productQueue = [];
+
 var spotterAPI = {
 	getClients: function(cb) {
 		this.XHR('client/list', G, cb);
 	},
-	getProducts: function(cb) {
-		this.XHR('products', G, cb);
+	getProducts: function(query, cb) {
+		console.log(productQueue);
+		productQueue.forEach(function(xhr) {
+			xhr.abort();
+		});
+		productQueue = [];
+
+		productQueue.push(this.XHR('products' + query, G, cb));
 	},
 	getTrainer: function(cb) {
 		this.XHR('profile', G, cb);

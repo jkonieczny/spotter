@@ -11,7 +11,8 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var ItemGrid = require('./itemGrid.jsx');
+var Avatar		= require('./avatar.jsx');
+var ItemGrid 	= require('./itemGrid.jsx');
 
 module.exports = React.createClass({
 	displayName: 'email.jsx',
@@ -22,27 +23,18 @@ module.exports = React.createClass({
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
 		return {
-			selectedUser: flux.store('ClientStore').getState().client,
-			selectedProducts: flux.store('ProductStore').getState().selectedProducts
+			trainer:			flux.store('AuthStore').getState().trainer,
+			selectedUser:		flux.store('ClientStore').getState().client,
+			selectedProducts:	flux.store('ProductStore').getState().selectedProducts
 		};
 	},
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
     render: function() {
-		var avatarClasses = {
-			user_avatar: true
-		};
-		var avatarInlineCSS = {};
-
-		if (this.state.selectedUser && this.state.selectedUser.avatar) {
-			avatarClasses.user_selected 	= true;
-			avatarInlineCSS.backgroundImage = 'url(images/avatars/trainer-large.jpg)';
-		}
-
         return (
             <div className="page page_email">
-                <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
+                <Avatar person={this.state.trainer} />
                 <div>
                 	<p>Hi {this.state.selectedUser.fname}</p>
 					<p>Your trainer Rob has chosen these products specifically for you through Spotter. These are Rob's recommendations for the best sports supplements to help you achieve your goals.</p>

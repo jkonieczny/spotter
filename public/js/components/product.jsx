@@ -11,8 +11,9 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var Item = require('./item.jsx');
-var ItemSelect = require('./itemSelect.jsx');
+var Avatar		= require('./avatar.jsx');
+var Item		= require('./item.jsx');
+var ItemSelect	= require('./itemSelect.jsx');
 
 module.exports = React.createClass({
 	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
@@ -30,26 +31,17 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-		var avatarClasses = {
-			user_avatar: true
-		};
-		var avatarInlineCSS = {};
-
-		if (this.state.selectedUser && this.state.selectedUser.avatar) {
-			avatarClasses.user_selected 	= true;
-			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
-		}
 
 		var totalPrice, commisionPrice, proceedButton, recommendText;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
-			totalPrice 		= 0;
-			commisionPrice 	= 0;
+			totalPrice		= 0;
+			commisionPrice	= 0;
 
 			this.state.selectedProducts.forEach(function(product) {
-				totalPrice 		+= product.price;
-				commisionPrice 	+= product.price * 0.1;
+				totalPrice		+= product.price;
+				commisionPrice	+= product.price * 0.1;
 				selectedProducts.push(
 					(<Item key={product.id} item={product} />)
 				);
@@ -68,8 +60,8 @@ module.exports = React.createClass({
 
         return (
             <div className="page page_product">
-                <div className={cx(avatarClasses)} style={avatarInlineCSS}></div>
-                <p className="center">What would you like to recommend to {this.state.selectedUser.name}?</p>
+            	<Avatar person={this.state.selectedUser} />
+                <p className="center">What would you like to recommend to {this.state.selectedUser.fname}?</p>
                 <div className="item_list">
                 	{ selectedProducts }
                 </div>
