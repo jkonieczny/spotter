@@ -36,9 +36,11 @@ module.exports = React.createClass({
             clients = [];
 
             this.state.clients.forEach(function(client) {
+                var picture = (client.picture) ? { backgroundImage:'url(' + client.picture  + ')' } : {};
+
                 clients.push(
                     <li key={client.id} className="client_list_client" onClick={this.selectClient.bind(this, client)}>
-                        <span style={ { backgroundImage:'url(' + client.picture + ')' } } />
+                        <span style={ picture } />
                         {client.name}
                     </li>
                 );
