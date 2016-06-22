@@ -20,6 +20,9 @@ var constants = {
     CLIENTS: {
         GET: 'CLIENTS_GET'
     },
+    EMAIL: {
+        SEND: 'EMAIL_SEND'
+    },
     TRAINER: {
         UPDATE: 'TRAINER_UPDATE'
     },
@@ -31,6 +34,7 @@ var constants = {
         SEARCH: 'PRODUCTS_SEARCH'
     },
     PAGE: {
+        GOBACK: 'PAGE_BACK',
         UPDATE: 'PAGE_UPDATE'
     }
 };

@@ -87,6 +87,8 @@ module.exports = React.createClass({
     },
     sendEmail: function(e) {
     	e.preventDefault();
+        this.getFlux().actions.email.send();
+
     	this.getFlux().actions.page.update({
     		page: 'success'
     	});

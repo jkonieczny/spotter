@@ -8,14 +8,12 @@ var productQueue = [];
 
 var spotterAPI = {
 	addClient: function(data, cb) {
-		console.log('generateQueryString', JSON.stringify(data));
 		this.XHR('client/new', P, cb, JSON.stringify(data));
 	},
 	getClients: function(cb) {
 		this.XHR('client/list', G, cb);
 	},
 	getProducts: function(query, cb) {
-		console.log(productQueue);
 		productQueue.forEach(function(xhr) {
 			xhr.abort();
 		});
@@ -25,6 +23,9 @@ var spotterAPI = {
 	},
 	getTrainer: function(cb) {
 		this.XHR('profile', G, cb);
+	},
+	sendClientEmail: function(data, cb) {
+		this.XHR('recommend/new', P, cb, JSON.stringify(data));
 	},
 	XHR: function(frag, method, cb, data) {
 	    var xhr = new XMLHttpRequest();

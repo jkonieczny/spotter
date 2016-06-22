@@ -11,9 +11,13 @@
 	border-bottom: 1px solid #ccc;
 }
 
-.client_list_client img {
+.client_list_client span {
 	background-color: #ccc;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: 50%;
 	border-radius: 100%;
+	display: block;
 	height: 30px;
 	left: 10px;
 	position: absolute;

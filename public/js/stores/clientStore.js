@@ -58,7 +58,9 @@ var ClientStore = Fluxxor.createStore({
             CONSTANTS.CLIENT.IMAGE.ADD,         this.clientImageAdd,
             CONSTANTS.CLIENT.IMAGE.UPLOADED,    this.clientImageUploaded,
             CONSTANTS.CLIENT.SET,               this.clientsSet,
-            CONSTANTS.CLIENTS.GET,              this.clientsGet
+            CONSTANTS.CLIENTS.GET,              this.clientsGet,
+
+            CONSTANTS.EMAIL.SEND,               this.clientSendEmail
         );
     },
     getState: function(){
@@ -120,7 +122,25 @@ var ClientStore = Fluxxor.createStore({
 
         this.emit('change:clientImageUploaded');
         this.emit('change');
-        console.log(payload, this.state);
+    },
+    clientSendEmail: function() {
+        var flux        =   this.flux;
+        var client_id   =   flux.store('ClientStore').getState().client.id;
+        var products    =   flux.store('ProductStore').getState().selectedProducts.map(function(product){
+                                return product.id;
+                            });
+        console.log('send email', client_id, products);
+        var data = {
+            client_id: client_id,
+            products: products
+        };
+
+        SpotterAPI.sendClientEmail(data, function() {
+            console.log('EMAIL SENT');
+        });
+
+        this.emit('change:clientEmailSending');
+        this.emit('change');
     }
 });
 

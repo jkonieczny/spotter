@@ -21,9 +21,16 @@ var actions = {
 			}
 		}
 	},
+	email: {
+		send: function() {
+			this.dispatch(CONSTANTS.EMAIL.SEND, {});
+		}
+	},
 	page: {
+		goBack: function() {
+			this.dispatch(CONSTANTS.PAGE.GOBACK, {});
+		},
 		update: function(payload) {
-			console.log('update page', payload);
 			this.dispatch(CONSTANTS.PAGE.UPDATE, { page: payload.page });
 		}
 	},

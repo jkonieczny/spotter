@@ -23690,9 +23690,16 @@ var actions = {
 			}
 		}
 	},
+	email: {
+		send: function() {
+			this.dispatch(CONSTANTS.EMAIL.SEND, {});
+		}
+	},
 	page: {
+		goBack: function() {
+			this.dispatch(CONSTANTS.PAGE.GOBACK, {});
+		},
 		update: function(payload) {
-			console.log('update page', payload);
 			this.dispatch(CONSTANTS.PAGE.UPDATE, { page: payload.page });
 		}
 	},
@@ -23814,7 +23821,7 @@ module.exports = React.createClass({
                     ), 
                     React.createElement("label", null, 
                         "Email", 
-                        React.createElement("input", {type: "text", placeholder: "Email", onChange: this.update.bind(this, 'email')})
+                        React.createElement("input", {type: "email", placeholder: "Email", onChange: this.update.bind(this, 'email')})
                     ), 
                     React.createElement("label", null, 
                         "Upload an image", 
@@ -23921,7 +23928,7 @@ module.exports = React.createClass({
             this.state.clients.forEach(function(client) {
                 clients.push(
                     React.createElement("li", {key: client.id, className: "client_list_client", onClick: this.selectClient.bind(this, client)}, 
-                        React.createElement("img", {src: client.picture}), 
+                        React.createElement("span", {style:  { backgroundImage:'url(' + client.picture + ')'} }), 
                         client.name
                     )
                 );
@@ -24042,6 +24049,8 @@ module.exports = React.createClass({
     },
     sendEmail: function(e) {
     	e.preventDefault();
+        this.getFlux().actions.email.send();
+
     	this.getFlux().actions.page.update({
     		page: 'success'
     	});
@@ -24128,8 +24137,7 @@ module.exports = React.createClass({displayName: "exports",
 		return {
 			pages:				state.pages,
 			page:				state.currentPage,
-			previousPage:		state.previousPage,
-			back:				(state.currentPage !== 'user' && state.currentPage !== 'success' && state.currentPage !== 'signin'),
+			back:				(state.currentPage !== 'home' && state.currentPage !== 'success' && state.currentPage !== 'signin'),
 			trainer:			auth.trainer
 		};
 	},
@@ -24153,17 +24161,7 @@ module.exports = React.createClass({displayName: "exports",
 		);
 	},
 	goBack: function(e) {
-		var page;
-
-		if (this.state.page === 'email') {
-			page = this.state.previousPage;
-		} else {
-			page = this.state.pages[this.state.pages.indexOf(this.state.page) - 1];
-		}
-
-		this.getFlux().actions.page.update({
-			page: page
-		});
+		this.getFlux().actions.page.goBack();
 	}
 
 });
@@ -24397,6 +24395,9 @@ module.exports = React.createClass({
 	},
     componentDidMount: function() {
         this.getFlux().store('ProductStore').on('change:updateProduct', this.updateProductList);
+    },
+    componentWillUnmount: function() {
+        this.getFlux().store('ProductStore').off('change:updateProduct', this.updateProductList);
     },
     render: function() {
 		var productMatches;
@@ -24771,7 +24772,7 @@ var ClientAdd			= require('./client/clientAdd.jsx'),
 	Home				= require('./home.jsx'),
 	Product				= require('./product.jsx'),
 	SignIn				= require('./signIn.jsx'),
-	Settings 			= require('./settings.jsx'),
+	Settings			= require('./settings.jsx'),
 	Success				= require('./success.jsx'),
 	TrainerDetails		= require('./trainerDetails.jsx'),
 	User				= require('./user.jsx');
@@ -25123,6 +25124,9 @@ var constants = {
     CLIENTS: {
         GET: 'CLIENTS_GET'
     },
+    EMAIL: {
+        SEND: 'EMAIL_SEND'
+    },
     TRAINER: {
         UPDATE: 'TRAINER_UPDATE'
     },
@@ -25134,6 +25138,7 @@ var constants = {
         SEARCH: 'PRODUCTS_SEARCH'
     },
     PAGE: {
+        GOBACK: 'PAGE_BACK',
         UPDATE: 'PAGE_UPDATE'
     }
 };
@@ -25151,14 +25156,12 @@ var productQueue = [];
 
 var spotterAPI = {
 	addClient: function(data, cb) {
-		console.log('generateQueryString', JSON.stringify(data));
 		this.XHR('client/new', P, cb, JSON.stringify(data));
 	},
 	getClients: function(cb) {
 		this.XHR('client/list', G, cb);
 	},
 	getProducts: function(query, cb) {
-		console.log(productQueue);
 		productQueue.forEach(function(xhr) {
 			xhr.abort();
 		});
@@ -25168,6 +25171,9 @@ var spotterAPI = {
 	},
 	getTrainer: function(cb) {
 		this.XHR('profile', G, cb);
+	},
+	sendClientEmail: function(data, cb) {
+		this.XHR('recommend/new', P, cb, JSON.stringify(data));
 	},
 	XHR: function(frag, method, cb, data) {
 	    var xhr = new XMLHttpRequest();
@@ -25293,7 +25299,11 @@ var AuthStore = Fluxxor.createStore({
 
             if (this.state.lock && this.state.lock.parseHash && window.location.hash.length > 0) {
                 this.state.tokens = this.state.lock.parseHash(window.location.hash);
-                localStorage.setItem('tokens' , JSON.stringify(this.state.tokens));
+
+                // Safari Porno mode will break localStorage
+                try {
+                    localStorage.setItem('tokens' , JSON.stringify(this.state.tokens));
+                } catch (e) {}
             } else if (tokens) {
                 this.state.tokens = JSON.parse(tokens);
             } else {
@@ -25404,7 +25414,9 @@ var ClientStore = Fluxxor.createStore({
             CONSTANTS.CLIENT.IMAGE.ADD,         this.clientImageAdd,
             CONSTANTS.CLIENT.IMAGE.UPLOADED,    this.clientImageUploaded,
             CONSTANTS.CLIENT.SET,               this.clientsSet,
-            CONSTANTS.CLIENTS.GET,              this.clientsGet
+            CONSTANTS.CLIENTS.GET,              this.clientsGet,
+
+            CONSTANTS.EMAIL.SEND,               this.clientSendEmail
         );
     },
     getState: function(){
@@ -25466,7 +25478,25 @@ var ClientStore = Fluxxor.createStore({
 
         this.emit('change:clientImageUploaded');
         this.emit('change');
-        console.log(payload, this.state);
+    },
+    clientSendEmail: function() {
+        var flux        =   this.flux;
+        var client_id   =   flux.store('ClientStore').getState().client.id;
+        var products    =   flux.store('ProductStore').getState().selectedProducts.map(function(product){
+                                return product.id;
+                            });
+        console.log('send email', client_id, products);
+        var data = {
+            client_id: client_id,
+            products: products
+        };
+
+        SpotterAPI.sendClientEmail(data, function() {
+            console.log('EMAIL SENT');
+        });
+
+        this.emit('change:clientEmailSending');
+        this.emit('change');
     }
 });
 
@@ -25481,12 +25511,13 @@ var CONSTANTS = require('../constants/constants');
 var PageStore = Fluxxor.createStore({
     initialize: function(params) {
         this.state = {
-            pages: ['signin', 'user', 'product', 'confirmation', 'success'],
-            currentPage: 'signin',
-            previousPage: null
+            currentPage:    'signin',
+            history:        [],
+            pages:          ['signin', 'user', 'product', 'confirmation', 'success']
         };
 
         this.bindActions(
+            CONSTANTS.PAGE.GOBACK, this.goBack,
             CONSTANTS.PAGE.UPDATE, this.updatePage
         );
     },
@@ -25494,8 +25525,20 @@ var PageStore = Fluxxor.createStore({
         return this.state;
     },
     updatePage: function(payload) {
-        this.state.previousPage = this.state.currentPage;
+        console.log('updatePage', payload);
+        this.state.history.push(payload.page);
+
         this.state.currentPage = payload.page;
+
+        this.emit('change');
+    },
+    goBack: function() {
+        var newPage = this.state.history[this.state.history.length - 2];
+        console.log('newPage', newPage);
+        this.state.currentPage = (newPage) ? newPage : 'home';
+
+        this.state.history = this.state.history.slice(0, this.state.history.length - 2);
+
         this.emit('change');
     }
 });

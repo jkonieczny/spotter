@@ -33,6 +33,9 @@ module.exports = React.createClass({
     componentDidMount: function() {
         this.getFlux().store('ProductStore').on('change:updateProduct', this.updateProductList);
     },
+    componentWillUnmount: function() {
+        this.getFlux().store('ProductStore').off('change:updateProduct', this.updateProductList);
+    },
     render: function() {
 		var productMatches;
 

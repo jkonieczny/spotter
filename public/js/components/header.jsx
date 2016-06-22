@@ -22,8 +22,7 @@ module.exports = React.createClass({
 		return {
 			pages:				state.pages,
 			page:				state.currentPage,
-			previousPage:		state.previousPage,
-			back:				(state.currentPage !== 'user' && state.currentPage !== 'success' && state.currentPage !== 'signin'),
+			back:				(state.currentPage !== 'home' && state.currentPage !== 'success' && state.currentPage !== 'signin'),
 			trainer:			auth.trainer
 		};
 	},
@@ -47,17 +46,7 @@ module.exports = React.createClass({
 		);
 	},
 	goBack: function(e) {
-		var page;
-
-		if (this.state.page === 'email') {
-			page = this.state.previousPage;
-		} else {
-			page = this.state.pages[this.state.pages.indexOf(this.state.page) - 1];
-		}
-
-		this.getFlux().actions.page.update({
-			page: page
-		});
+		this.getFlux().actions.page.goBack();
 	}
 
 });

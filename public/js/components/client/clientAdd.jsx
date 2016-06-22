@@ -42,7 +42,7 @@ module.exports = React.createClass({
                     </label>
                     <label>
                         Email
-                        <input type="text" placeholder="Email" onChange={this.update.bind(this, 'email')} />
+                        <input type="email" placeholder="Email" onChange={this.update.bind(this, 'email')} />
                     </label>
                     <label>
                         Upload an image

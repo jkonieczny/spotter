@@ -32,7 +32,11 @@ var AuthStore = Fluxxor.createStore({
 
             if (this.state.lock && this.state.lock.parseHash && window.location.hash.length > 0) {
                 this.state.tokens = this.state.lock.parseHash(window.location.hash);
-                localStorage.setItem('tokens' , JSON.stringify(this.state.tokens));
+
+                // Safari Porno mode will break localStorage
+                try {
+                    localStorage.setItem('tokens' , JSON.stringify(this.state.tokens));
+                } catch (e) {}
             } else if (tokens) {
                 this.state.tokens = JSON.parse(tokens);
             } else {
