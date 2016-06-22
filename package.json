@@ -20,6 +20,8 @@
     "classnames": "^2.2.5",
     "express": "^4.13.4",
     "fluxxor": "^1.7.3",
+    "html-minifier": "^2.1.5",
+    "inline-css": "^2.2.2",
     "node-jsx": "^0.13.3",
     "react": "^15.0.2",
     "react-dom": "^15.0.2"
