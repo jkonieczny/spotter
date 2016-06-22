@@ -53,8 +53,10 @@ var actions = {
 	},
 	client: {
 		add: function(payload) {
-			console.log('set add', payload);
 			this.dispatch(CONSTANTS.CLIENT.ADD, { client: payload.client });
+		},
+		delete: function(payload) {
+			this.dispatch(CONSTANTS.CLIENT.DELETE, { client: payload.client });
 		},
 		image: {
 			add: function(payload) {
@@ -68,6 +70,9 @@ var actions = {
 		set: function(payload) {
 			console.log('set client', payload);
 			this.dispatch(CONSTANTS.CLIENT.SET, { client: payload.client });
+		},
+		update: function(payload) {
+			this.dispatch(CONSTANTS.CLIENT.UPDATE, { client: payload.client });
 		}
 	},
 	clients: {

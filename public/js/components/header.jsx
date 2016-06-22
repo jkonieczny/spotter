@@ -33,9 +33,9 @@ module.exports = React.createClass({
 			background = {
 				backgroundImage: 'url(' + this.state.trainer.picture + ')'
 			}
-		}
 
-		avatar = (<div className="header_avatar" style={background}></div>);
+			avatar = (<div className="header_avatar" style={background}></div>);
+		}
 
 		return (
 			<header>

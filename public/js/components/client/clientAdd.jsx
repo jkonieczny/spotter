@@ -12,16 +12,29 @@ var cx = require('classnames');
 var CONSTANTS = require('../../constants/constants');
 
 module.exports = React.createClass({
-	displayName: 'trainerDetails.jsx',
+	displayName: 'clientAdd.jsx',
 	mixins: [FluxMixin],
     getInitialState: function() {
-        return {
+        var state = {
             client: {
-                fname: null,
-                lname: null,
-                email: null
-            }
+                fname: '',
+                lname: '',
+                email: ''
+            },
+            action: (this.getFlux().store('PageStore').getState().currentPage === 'clientEdit') ? 'update' : 'add'
         };
+
+        if (state.action === 'update') {
+            state.client = this.getFlux().store('ClientStore').getState().client;
+
+            if (!state.client.fname) {
+                var name = payload.client.name.split(' ');
+                state.client.fname = name.shift();
+                state.client.lname = name.splice(1).join(' ');
+            }
+        }
+
+        return state;
     },
 	componentDidMount: function() {
 		window.scrollTo(0,0);
@@ -34,15 +47,15 @@ module.exports = React.createClass({
                 <form>
                     <label>
                         First Name
-                        <input type="text" placeholder="First Name" onChange={this.update.bind(this, 'fname')} />
+                        <input type="text" placeholder="First Name" onChange={this.update.bind(this, 'fname')} value={this.state.client.fname} />
                     </label>
                     <label>
                         Last Name
-                        <input type="text" placeholder="Last Name" onChange={this.update.bind(this, 'lname')} />
+                        <input type="text" placeholder="Last Name" onChange={this.update.bind(this, 'lname')} value={this.state.client.lname} />
                     </label>
                     <label>
                         Email
-                        <input type="email" placeholder="Email" onChange={this.update.bind(this, 'email')} />
+                        <input type="email" placeholder="Email" onChange={this.update.bind(this, 'email')} value={this.state.client.email} />
                     </label>
                     <label>
                         Upload an image
@@ -56,7 +69,10 @@ module.exports = React.createClass({
         );
     },
     update: function(field, e) {
-        this.state.client[field] = e.currentTarget.value;
+        var state = this.state;
+        state.client[field] = e.currentTarget.value;
+
+        this.setState(state);
     },
     proceed: function(e) {
         console.log('proceed');
@@ -74,8 +90,10 @@ module.exports = React.createClass({
         var client = this.state.client;
 
         Object.keys(client).forEach(function(key) {
-            if (!client[key] || client[key].length === 0) {
-                missingValues.push(fieldNames[key]);
+            if (fieldNames[key]) {
+                if (!client[key] || client[key].length === 0) {
+                    missingValues.push(fieldNames[key]);
+                }
             }
         });
 
@@ -84,16 +102,24 @@ module.exports = React.createClass({
             return;
         }
 
-        var file = this.refs.file.files[0]
+        var file = this.refs.file.files[0];
+
         if (file) {
             //alert('Your client image will upload in the background, you will be notified when it has finished');
-            flux.store('ClientStore').once('change:clientAdded', function() {
-                console.log('change:clientAdded');
+            if (this.state.action === 'update') {
                 flux.actions.client.image.add({
                     file:   file,
-                    id:     this.getFlux().store('ClientStore').getState().lastAdded.id
+                    id:     this.state.client.id
                 });
-            }.bind(this));
+            } else {
+                flux.store('ClientStore').once('change:clientAdded', function() {
+                    flux.actions.client.image.add({
+                        file:   file,
+                        id:     this.getFlux().store('ClientStore').getState().lastAdded.id
+                    });
+                }.bind(this));
+            }
+
         }
 
         flux.store('ClientStore').once('change:clientsGot', function() {
@@ -102,7 +128,11 @@ module.exports = React.createClass({
             });
         }.bind(this));
 
-        flux.actions.client.add({
+        if (this.state.action === 'update') {
+            client.name = client.fname + ' ' + client.lname;
+        }
+
+        flux.actions.client[this.state.action]({
             client: client
         });
     }

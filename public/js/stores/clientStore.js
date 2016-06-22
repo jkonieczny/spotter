@@ -54,7 +54,9 @@ var ClientStore = Fluxxor.createStore({
         */
 
         this.bindActions(
-            CONSTANTS.CLIENT.ADD,               this.clientsAdd,
+            CONSTANTS.CLIENT.ADD,               this.clientAdd,
+            CONSTANTS.CLIENT.DELETE,            this.clientDelete,
+            CONSTANTS.CLIENT.UPDATE,            this.clientUpdate,
             CONSTANTS.CLIENT.IMAGE.ADD,         this.clientImageAdd,
             CONSTANTS.CLIENT.IMAGE.UPLOADED,    this.clientImageUploaded,
             CONSTANTS.CLIENT.SET,               this.clientsSet,
@@ -66,16 +68,35 @@ var ClientStore = Fluxxor.createStore({
     getState: function(){
         return this.state;
     },
-    clientsAdd: function(payload) {
-        console.log('clientsAdd', payload);
+    clientAdd: function(payload) {
         payload.client.name = payload.client.name || payload.client.fname + ' ' + payload.client.lname;
 
         SpotterAPI.addClient(payload.client, function(data) {
-            console.log('clientsAdd data', data);
             this.state.lastAdded = data;
             this.flux.actions.clients.get();
 
             this.emit('change:clientAdded');
+            this.emit('change');
+        }.bind(this));
+    },
+    clientDelete: function(payload) {
+        this.state.clients = this.state.clients.filter(function(client) {
+            return (client.id !== payload.client.id);
+        });
+
+        SpotterAPI.deleteClient(payload.client, function(data) {
+            console.log(data);
+        });
+
+        this.emit('change');
+    },
+    clientUpdate: function(payload) {
+        payload.client.name = payload.client.name || payload.client.fname + ' ' + payload.client.lname;
+
+        SpotterAPI.updateClient(payload.client, function(data) {
+            this.flux.actions.clients.get();
+
+            this.emit('change:clientUpdated');
             this.emit('change');
         }.bind(this));
     },
@@ -97,7 +118,7 @@ var ClientStore = Fluxxor.createStore({
         console.log('clientsSet', payload);
         var name = payload.client.name.split(' ');
         payload.client.fname = name.shift();
-        payload.client.lname = name;
+        payload.client.lname = name.join(' ');
 
         this.state.client = payload.client;
 

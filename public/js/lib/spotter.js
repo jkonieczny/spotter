@@ -10,6 +10,12 @@ var spotterAPI = {
 	addClient: function(data, cb) {
 		this.XHR('client/new', P, cb, JSON.stringify(data));
 	},
+	deleteClient: function(data, cb) {
+		this.XHR('client/delete/' + data.id, P, cb);
+	},
+	updateClient: function(data, cb) {
+		this.XHR('client/update/' + data.id, P, cb, JSON.stringify(data));
+	},
 	getClients: function(cb) {
 		this.XHR('client/list', G, cb);
 	},

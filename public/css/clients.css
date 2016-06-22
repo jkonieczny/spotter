@@ -5,6 +5,9 @@
 	line-height: 50px;
 	padding-left: 50px;
 	position: relative;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 }
 
 .client_list_client:last-child {
@@ -23,4 +26,37 @@
 	position: absolute;
 	top: 10px;
 	width: 30px;
+}
+
+.edit .client_list_client::after {
+	border-right: 2px solid #000;
+    border-top: 2px solid #000;
+    content: '';
+    display: block;
+    height: 16px;
+    width: 16px;
+    position: absolute;
+    right: 10px;
+    top: 16px;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+.delete .client_list_client::before,
+.delete .client_list_client::after {
+	background-color: red;
+    content: '';
+    display: block;
+    height: 16px;
+    width: 2px;
+    position: absolute;
+    right: 10px;
+    top: 16px;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+.delete .client_list_client::before {
+	-webkit-transform: rotate(-45deg);
+	transform: rotate(-45deg);
 }

@@ -47,6 +47,9 @@ module.exports = React.createClass({
 		    case 'clientAdd':
 		        page = (<ClientAdd />);
 		        break;
+		    case 'clientEdit':
+		        page = (<ClientAdd />);
+		        break;
 		    case 'clientView':
 		        page = (<ClientsView />);
 		        break;

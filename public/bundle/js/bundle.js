@@ -23722,8 +23722,10 @@ var actions = {
 	},
 	client: {
 		add: function(payload) {
-			console.log('set add', payload);
 			this.dispatch(CONSTANTS.CLIENT.ADD, { client: payload.client });
+		},
+		delete: function(payload) {
+			this.dispatch(CONSTANTS.CLIENT.DELETE, { client: payload.client });
 		},
 		image: {
 			add: function(payload) {
@@ -23737,6 +23739,9 @@ var actions = {
 		set: function(payload) {
 			console.log('set client', payload);
 			this.dispatch(CONSTANTS.CLIENT.SET, { client: payload.client });
+		},
+		update: function(payload) {
+			this.dispatch(CONSTANTS.CLIENT.UPDATE, { client: payload.client });
 		}
 	},
 	clients: {
@@ -23791,16 +23796,29 @@ var cx = require('classnames');
 var CONSTANTS = require('../../constants/constants');
 
 module.exports = React.createClass({
-	displayName: 'trainerDetails.jsx',
+	displayName: 'clientAdd.jsx',
 	mixins: [FluxMixin],
     getInitialState: function() {
-        return {
+        var state = {
             client: {
-                fname: null,
-                lname: null,
-                email: null
-            }
+                fname: '',
+                lname: '',
+                email: ''
+            },
+            action: (this.getFlux().store('PageStore').getState().currentPage === 'clientEdit') ? 'update' : 'add'
         };
+
+        if (state.action === 'update') {
+            state.client = this.getFlux().store('ClientStore').getState().client;
+
+            if (!state.client.fname) {
+                var name = payload.client.name.split(' ');
+                state.client.fname = name.shift();
+                state.client.lname = name.splice(1).join(' ');
+            }
+        }
+
+        return state;
     },
 	componentDidMount: function() {
 		window.scrollTo(0,0);
@@ -23813,15 +23831,15 @@ module.exports = React.createClass({
                 React.createElement("form", null, 
                     React.createElement("label", null, 
                         "First Name", 
-                        React.createElement("input", {type: "text", placeholder: "First Name", onChange: this.update.bind(this, 'fname')})
+                        React.createElement("input", {type: "text", placeholder: "First Name", onChange: this.update.bind(this, 'fname'), value: this.state.client.fname})
                     ), 
                     React.createElement("label", null, 
                         "Last Name", 
-                        React.createElement("input", {type: "text", placeholder: "Last Name", onChange: this.update.bind(this, 'lname')})
+                        React.createElement("input", {type: "text", placeholder: "Last Name", onChange: this.update.bind(this, 'lname'), value: this.state.client.lname})
                     ), 
                     React.createElement("label", null, 
                         "Email", 
-                        React.createElement("input", {type: "email", placeholder: "Email", onChange: this.update.bind(this, 'email')})
+                        React.createElement("input", {type: "email", placeholder: "Email", onChange: this.update.bind(this, 'email'), value: this.state.client.email})
                     ), 
                     React.createElement("label", null, 
                         "Upload an image", 
@@ -23835,7 +23853,10 @@ module.exports = React.createClass({
         );
     },
     update: function(field, e) {
-        this.state.client[field] = e.currentTarget.value;
+        var state = this.state;
+        state.client[field] = e.currentTarget.value;
+
+        this.setState(state);
     },
     proceed: function(e) {
         console.log('proceed');
@@ -23853,8 +23874,10 @@ module.exports = React.createClass({
         var client = this.state.client;
 
         Object.keys(client).forEach(function(key) {
-            if (!client[key] || client[key].length === 0) {
-                missingValues.push(fieldNames[key]);
+            if (fieldNames[key]) {
+                if (!client[key] || client[key].length === 0) {
+                    missingValues.push(fieldNames[key]);
+                }
             }
         });
 
@@ -23863,16 +23886,24 @@ module.exports = React.createClass({
             return;
         }
 
-        var file = this.refs.file.files[0]
+        var file = this.refs.file.files[0];
+
         if (file) {
             //alert('Your client image will upload in the background, you will be notified when it has finished');
-            flux.store('ClientStore').once('change:clientAdded', function() {
-                console.log('change:clientAdded');
+            if (this.state.action === 'update') {
                 flux.actions.client.image.add({
                     file:   file,
-                    id:     this.getFlux().store('ClientStore').getState().lastAdded.id
+                    id:     this.state.client.id
                 });
-            }.bind(this));
+            } else {
+                flux.store('ClientStore').once('change:clientAdded', function() {
+                    flux.actions.client.image.add({
+                        file:   file,
+                        id:     this.getFlux().store('ClientStore').getState().lastAdded.id
+                    });
+                }.bind(this));
+            }
+
         }
 
         flux.store('ClientStore').once('change:clientsGot', function() {
@@ -23881,7 +23912,11 @@ module.exports = React.createClass({
             });
         }.bind(this));
 
-        flux.actions.client.add({
+        if (this.state.action === 'update') {
+            client.name = client.fname + ' ' + client.lname;
+        }
+
+        flux.actions.client[this.state.action]({
             client: client
         });
     }
@@ -23911,8 +23946,9 @@ module.exports = React.createClass({
         var flux = this.getFlux();
 
         return {
-            clients: flux.store('ClientStore').getState().clients,
-            trainer: flux.store('AuthStore').getState().trainer
+            clients:    flux.store('ClientStore').getState().clients,
+            trainer:    flux.store('AuthStore').getState().trainer,
+            mode:       null
         };
     },
 	componentDidMount: function() {
@@ -23935,25 +23971,87 @@ module.exports = React.createClass({
             }.bind(this));
         }
 
+        var pageClasses = {
+            page: true,
+            signin: true
+        };
+
+        var buttons = (
+            React.createElement("div", null, 
+                React.createElement("a", {href: "#", onClick: this.editClients}, "Edit clients"), 
+                React.createElement("p", null), 
+                React.createElement("a", {href: "#", onClick: this.deleteClients}, "Select and delete clients")
+            )
+        );
+
+        if (this.state.mode) {
+            pageClasses[this.state.mode] = true;
+            buttons = (
+                React.createElement("div", null, 
+                    React.createElement("button", {onClick: this.modeClear}, "Done")
+                )
+            )
+        }
+
         return (
-            React.createElement("div", {className: "page signin"}, 
+            React.createElement("div", {className: cx(pageClasses)}, 
 	            React.createElement(Avatar, {person: this.state.trainer}), 
                 React.createElement("h2", {className: "center"}, this.state.trainer.name, "'s clients"), 
                 React.createElement("p", null), 
                 React.createElement("ul", null, 
                     clients
-                )
+                ), 
+                React.createElement("p", null), 
+                buttons
             )
         );
     },
     selectClient: function(client, e) {
         console.log('selectClient', e);
     	e.preventDefault();
-        this.getFlux().actions.client.set({
-            client: client
+
+        if (this.state.mode === 'delete') {
+            if (window.confirm('Are you sure you want to delete ' + client.name + '?')) {
+                this.getFlux().actions.client.delete({
+                    client: client
+                });
+            }
+        } else if (this.state.mode === 'edit') {
+            this.getFlux().actions.client.set({
+                client: client
+            });
+
+            this.getFlux().actions.page.update({
+                page: 'clientEdit'
+            });
+        } else {
+            this.getFlux().actions.client.set({
+                client: client
+            });
+            this.getFlux().actions.page.update({
+                page: 'product'
+            });
+        }
+    },
+    editClients: function(e) {
+        e.preventDefault();
+
+        this.setState({
+            mode: 'edit'
         });
-        this.getFlux().actions.page.update({
-            page: 'product'
+    },
+    deleteClients: function(e) {
+        e.preventDefault();
+
+        this.setState({
+            mode: 'delete'
+        });
+    },
+    modeClear: function(e) {
+        e.preventDefault();
+
+        this.setState({
+            mode: null
         });
     }
 
@@ -24148,9 +24246,9 @@ module.exports = React.createClass({displayName: "exports",
 			background = {
 				backgroundImage: 'url(' + this.state.trainer.picture + ')'
 			}
-		}
 
-		avatar = (React.createElement("div", {className: "header_avatar", style: background}));
+			avatar = (React.createElement("div", {className: "header_avatar", style: background}));
+		}
 
 		return (
 			React.createElement("header", null, 
@@ -24804,6 +24902,9 @@ module.exports = React.createClass({displayName: "exports",
 		    case 'clientAdd':
 		        page = (React.createElement(ClientAdd, null));
 		        break;
+		    case 'clientEdit':
+		        page = (React.createElement(ClientAdd, null));
+		        break;
 		    case 'clientView':
 		        page = (React.createElement(ClientsView, null));
 		        break;
@@ -25115,11 +25216,13 @@ var constants = {
     },
     CLIENT: {
         ADD: 'CLIENT_ADD',
+        DELETE: 'CLIENT_DELETE',
         SET: 'CLIENT_SET',
         IMAGE: {
             ADD: 'CLIENT_IMAGE_ADD',
             UPLOADED: 'CLIENT_IMAGE_UPLOADED'
-        }
+        },
+        UPDATE: 'CLIENT_UPDATE'
     },
     CLIENTS: {
         GET: 'CLIENTS_GET'
@@ -25157,6 +25260,12 @@ var productQueue = [];
 var spotterAPI = {
 	addClient: function(data, cb) {
 		this.XHR('client/new', P, cb, JSON.stringify(data));
+	},
+	deleteClient: function(data, cb) {
+		this.XHR('client/delete/' + data.id, P, cb);
+	},
+	updateClient: function(data, cb) {
+		this.XHR('client/update/' + data.id, P, cb, JSON.stringify(data));
 	},
 	getClients: function(cb) {
 		this.XHR('client/list', G, cb);
@@ -25410,7 +25519,9 @@ var ClientStore = Fluxxor.createStore({
         */
 
         this.bindActions(
-            CONSTANTS.CLIENT.ADD,               this.clientsAdd,
+            CONSTANTS.CLIENT.ADD,               this.clientAdd,
+            CONSTANTS.CLIENT.DELETE,            this.clientDelete,
+            CONSTANTS.CLIENT.UPDATE,            this.clientUpdate,
             CONSTANTS.CLIENT.IMAGE.ADD,         this.clientImageAdd,
             CONSTANTS.CLIENT.IMAGE.UPLOADED,    this.clientImageUploaded,
             CONSTANTS.CLIENT.SET,               this.clientsSet,
@@ -25422,16 +25533,35 @@ var ClientStore = Fluxxor.createStore({
     getState: function(){
         return this.state;
     },
-    clientsAdd: function(payload) {
-        console.log('clientsAdd', payload);
+    clientAdd: function(payload) {
         payload.client.name = payload.client.name || payload.client.fname + ' ' + payload.client.lname;
 
         SpotterAPI.addClient(payload.client, function(data) {
-            console.log('clientsAdd data', data);
             this.state.lastAdded = data;
             this.flux.actions.clients.get();
 
             this.emit('change:clientAdded');
+            this.emit('change');
+        }.bind(this));
+    },
+    clientDelete: function(payload) {
+        this.state.clients = this.state.clients.filter(function(client) {
+            return (client.id !== payload.client.id);
+        });
+
+        SpotterAPI.deleteClient(payload.client, function(data) {
+            console.log(data);
+        });
+
+        this.emit('change');
+    },
+    clientUpdate: function(payload) {
+        payload.client.name = payload.client.name || payload.client.fname + ' ' + payload.client.lname;
+
+        SpotterAPI.updateClient(payload.client, function(data) {
+            this.flux.actions.clients.get();
+
+            this.emit('change:clientUpdated');
             this.emit('change');
         }.bind(this));
     },
@@ -25453,7 +25583,7 @@ var ClientStore = Fluxxor.createStore({
         console.log('clientsSet', payload);
         var name = payload.client.name.split(' ');
         payload.client.fname = name.shift();
-        payload.client.lname = name;
+        payload.client.lname = name.join(' ');
 
         this.state.client = payload.client;
 
