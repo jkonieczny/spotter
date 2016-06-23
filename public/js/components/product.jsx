@@ -32,7 +32,7 @@ module.exports = React.createClass({
 	},
     render: function() {
 
-		var totalPrice, commisionPrice, proceedButton, recommendText;
+		var totalPrice, commisionPrice, proceedButton, recommendText, removeText;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
@@ -41,7 +41,7 @@ module.exports = React.createClass({
 
 			this.state.selectedProducts.forEach(function(product) {
 				totalPrice		+= product.price;
-				commisionPrice	+= product.price * 0.1;
+				commisionPrice	+= product.expected_commission;
 				selectedProducts.push(
 					(<Item key={product.id} item={product} />)
 				);
@@ -56,6 +56,11 @@ module.exports = React.createClass({
 
 			proceedButton 	= (<button type="submit" onClick={this.proceed}>Proceed</button>);
 			recommendText 	= (<h3>Recommend another product?</h3>);
+			removeText 		= (
+                <p className="right">
+	                <small>Tap a product to remove</small>
+	            </p>
+			);
 		}
 
         return (
@@ -65,6 +70,8 @@ module.exports = React.createClass({
                 <div className="item_list">
                 	{ selectedProducts }
                 </div>
+                {removeText}
+
                 { totalPrice }
                 { recommendText }
                 <ItemSelect />

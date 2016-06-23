@@ -39,7 +39,7 @@ module.exports = React.createClass({
                         <button type="submit" onClick={this.proceedViewClients}>View Clients</button>
                     </label>
 	                <label>
-	                	<button type="submit" onClick={this.proceedSettings}>Settings</button>
+	                	<button type="submit" onClick={this.proceedProfile}>Your Profile</button>
 	                </label>
                 </form>
             </div>
@@ -57,10 +57,10 @@ module.exports = React.createClass({
             page: 'clientView'
         });
     },
-    proceedSettings: function(e) {
+    proceedProfile: function(e) {
         e.preventDefault();
         this.getFlux().actions.page.update({
-            page: 'settings'
+            page: 'profile'
         });
     },
 

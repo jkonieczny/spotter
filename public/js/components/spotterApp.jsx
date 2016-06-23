@@ -13,6 +13,7 @@ var ClientAdd			= require('./client/clientAdd.jsx'),
 	Email				= require('./email.jsx'),
 	Header				= require('./header.jsx'),
 	Home				= require('./home.jsx'),
+	Profile				= require('./profile.jsx'),
 	Product				= require('./product.jsx'),
 	SignIn				= require('./signIn.jsx'),
 	Settings			= require('./settings.jsx'),
@@ -64,6 +65,9 @@ module.exports = React.createClass({
 		        break;
 		    case 'product':
 		        page = (<Product />);
+		        break;
+		    case 'profile':
+		        page = (<Profile />);
 		        break;
 		    case 'settings':
 		        page = (<Settings />);

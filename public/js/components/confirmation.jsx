@@ -36,12 +36,12 @@ module.exports = React.createClass({
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
-			totalPrice 		= 0;
-			commisionPrice 	= 0;
+			totalPrice		= 0;
+			commisionPrice	= 0;
 
 			this.state.selectedProducts.forEach(function(product) {
-				totalPrice 		+= product.price;
-				commisionPrice 	+= product.price * 0.1;
+				totalPrice		+= product.price;
+				commisionPrice	+= product.expected_commission;
 				selectedProducts.push(
 					(<Item key={product.id} item={product} />)
 				);
@@ -67,7 +67,7 @@ module.exports = React.createClass({
                 	<h2>You would earn:<span>&pound;{commisionPrice}</span></h2>
                 	<p></p>
                 </div>
-                <div className="right">
+                <div className="right hide">
                 	<p></p>
                 	<p><a href="#" onClick={this.viewEmail}>View email</a></p>
                 </div>

@@ -17,7 +17,7 @@ if ('serviceWorker' in navigator) {
 }
 
 }).call(this,require('_process'))
-},{"./public/js/main.js":289,"_process":2}],2:[function(require,module,exports){
+},{"./public/js/main.js":290,"_process":2}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -23753,7 +23753,7 @@ var actions = {
 
 module.exports = actions;
 
-},{"../constants/constants":287}],268:[function(require,module,exports){
+},{"../constants/constants":288}],268:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23923,7 +23923,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../constants/constants":287,"classnames":3,"fluxxor":4,"react":266}],270:[function(require,module,exports){
+},{"../../constants/constants":288,"classnames":3,"fluxxor":4,"react":266}],270:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24059,7 +24059,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../constants/constants":287,"../avatar.jsx":268,"classnames":3,"fluxxor":4,"react":266}],271:[function(require,module,exports){
+},{"../../constants/constants":288,"../avatar.jsx":268,"classnames":3,"fluxxor":4,"react":266}],271:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24098,12 +24098,12 @@ module.exports = React.createClass({
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
-			totalPrice 		= 0;
-			commisionPrice 	= 0;
+			totalPrice		= 0;
+			commisionPrice	= 0;
 
 			this.state.selectedProducts.forEach(function(product) {
-				totalPrice 		+= product.price;
-				commisionPrice 	+= product.price * 0.1;
+				totalPrice		+= product.price;
+				commisionPrice	+= product.expected_commission;
 				selectedProducts.push(
 					(React.createElement(Item, {key: product.id, item: product}))
 				);
@@ -24129,7 +24129,7 @@ module.exports = React.createClass({
                 	React.createElement("h2", null, "You would earn:", React.createElement("span", null, "£", commisionPrice)), 
                 	React.createElement("p", null)
                 ), 
-                React.createElement("div", {className: "right"}, 
+                React.createElement("div", {className: "right hide"}, 
                 	React.createElement("p", null), 
                 	React.createElement("p", null, React.createElement("a", {href: "#", onClick: this.viewEmail}, "View email"))
                 ), 
@@ -24158,7 +24158,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":287,"./avatar.jsx":268,"./item.jsx":275,"classnames":3,"fluxxor":4,"react":266}],272:[function(require,module,exports){
+},{"../constants/constants":288,"./avatar.jsx":268,"./item.jsx":275,"classnames":3,"fluxxor":4,"react":266}],272:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24212,7 +24212,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":287,"./avatar.jsx":268,"./itemGrid.jsx":276,"classnames":3,"fluxxor":4,"react":266}],273:[function(require,module,exports){
+},{"../constants/constants":288,"./avatar.jsx":268,"./itemGrid.jsx":276,"classnames":3,"fluxxor":4,"react":266}],273:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24308,7 +24308,7 @@ module.exports = React.createClass({
                         React.createElement("button", {type: "submit", onClick: this.proceedViewClients}, "View Clients")
                     ), 
 	                React.createElement("label", null, 
-	                	React.createElement("button", {type: "submit", onClick: this.proceedSettings}, "Settings")
+	                	React.createElement("button", {type: "submit", onClick: this.proceedProfile}, "Your Profile")
 	                )
                 )
             )
@@ -24326,16 +24326,16 @@ module.exports = React.createClass({
             page: 'clientView'
         });
     },
-    proceedSettings: function(e) {
+    proceedProfile: function(e) {
         e.preventDefault();
         this.getFlux().actions.page.update({
-            page: 'settings'
+            page: 'profile'
         });
     },
 
 });
 
-},{"../constants/constants":287,"./avatar.jsx":268,"./searchBar.jsx":279,"classnames":3,"fluxxor":4,"react":266}],275:[function(require,module,exports){
+},{"../constants/constants":288,"./avatar.jsx":268,"./searchBar.jsx":280,"classnames":3,"fluxxor":4,"react":266}],275:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24611,7 +24611,7 @@ module.exports = React.createClass({
 
 });
 
-},{"./searchBar.jsx":279,"classnames":3,"fluxxor":4,"react":266}],278:[function(require,module,exports){
+},{"./searchBar.jsx":280,"classnames":3,"fluxxor":4,"react":266}],278:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24646,7 +24646,7 @@ module.exports = React.createClass({displayName: "exports",
 	},
     render: function() {
 
-		var totalPrice, commisionPrice, proceedButton, recommendText;
+		var totalPrice, commisionPrice, proceedButton, recommendText, removeText;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
@@ -24655,7 +24655,7 @@ module.exports = React.createClass({displayName: "exports",
 
 			this.state.selectedProducts.forEach(function(product) {
 				totalPrice		+= product.price;
-				commisionPrice	+= product.price * 0.1;
+				commisionPrice	+= product.expected_commission;
 				selectedProducts.push(
 					(React.createElement(Item, {key: product.id, item: product}))
 				);
@@ -24670,6 +24670,11 @@ module.exports = React.createClass({displayName: "exports",
 
 			proceedButton 	= (React.createElement("button", {type: "submit", onClick: this.proceed}, "Proceed"));
 			recommendText 	= (React.createElement("h3", null, "Recommend another product?"));
+			removeText 		= (
+                React.createElement("p", {className: "right"}, 
+	                React.createElement("small", null, "Tap a product to remove")
+	            )
+			);
 		}
 
         return (
@@ -24679,6 +24684,8 @@ module.exports = React.createClass({displayName: "exports",
                 React.createElement("div", {className: "item_list"}, 
                 	 selectedProducts 
                 ), 
+                removeText, 
+
                  totalPrice, 
                  recommendText, 
                 React.createElement(ItemSelect, null), 
@@ -24695,7 +24702,143 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"../constants/constants":287,"./avatar.jsx":268,"./item.jsx":275,"./itemSelect.jsx":277,"classnames":3,"fluxxor":4,"react":266}],279:[function(require,module,exports){
+},{"../constants/constants":288,"./avatar.jsx":268,"./item.jsx":275,"./itemSelect.jsx":277,"classnames":3,"fluxxor":4,"react":266}],279:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React = require('react'),
+	Fluxxor = require('fluxxor'),
+	FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+
+var cx = require('classnames');
+
+var CONSTANTS   = require('../constants/constants');
+
+var Avatar      = require('./avatar.jsx');
+
+module.exports = React.createClass({
+	displayName: 'profile.jsx',
+	mixins: [FluxMixin],
+    getInitialState: function() {
+        var trainer = this.getFlux().store('AuthStore').getState().trainer;
+        var name = trainer.name.split(' ');
+        trainer.fname = name.shift();
+        trainer.lname = name.join(' ');
+
+        return {
+            trainer: trainer
+        };
+    },
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
+    render: function() {
+        return (
+            React.createElement("div", {className: "page profile"}, 
+                React.createElement(Avatar, {person: this.state.trainer}), 
+                React.createElement("form", null, 
+                    React.createElement("label", null, 
+                        "First Name", 
+                        React.createElement("input", {type: "text", placeholder: "First Name", onChange: this.update.bind(this, 'fname'), value: this.state.trainer.fname})
+                    ), 
+                    React.createElement("label", null, 
+                        "Last Name", 
+                        React.createElement("input", {type: "text", placeholder: "Last Name", onChange: this.update.bind(this, 'lname'), value: this.state.trainer.lname})
+                    ), 
+                    React.createElement("label", null, 
+                        "Email", 
+                        React.createElement("input", {type: "email", placeholder: "Email", onChange: this.update.bind(this, 'email'), value: this.state.trainer.email})
+                    ), 
+                    React.createElement("label", null, 
+                        "Upload an image", 
+                        React.createElement("input", {ref: "file", type: "file", accept: "image/*", capture: "camera"})
+                    ), 
+	                React.createElement("label", null, 
+	                	React.createElement("button", {type: "submit", onClick: this.proceed}, "Update trainer details")
+	                )
+                )
+            )
+        );
+    },
+    update: function(field, e) {
+        var state = this.state;
+        state.trainer[field] = e.currentTarget.value;
+
+        this.setState(state);
+    },
+    proceed: function(e) {
+    	e.preventDefault();
+
+        var flux = this.getFlux();
+
+        flux.actions.page.update({
+            page: 'home'
+        });
+
+        return;
+
+        var missingValues = [];
+        var fieldNames = {
+            fname: 'first name',
+            lname: 'last name',
+            email: 'email'
+        }
+
+        var trainer = this.state.trainer;
+
+        Object.keys(trainer).forEach(function(key) {
+            if (fieldNames[key]) {
+                if (!trainer[key] || trainer[key].length === 0) {
+                    missingValues.push(fieldNames[key]);
+                }
+            }
+        });
+
+        if (missingValues.length > 0) {
+            alert('Please enter ' + missingValues.join(', '));
+            return;
+        }
+
+        var file = this.refs.file.files[0];
+
+        if (file) {
+            //alert('Your trainer image will upload in the background, you will be notified when it has finished');
+            if (this.state.action === 'update') {
+                flux.actions.trainer.image.add({
+                    file:   file,
+                    id:     this.state.trainer.id
+                });
+            } else {
+                flux.store('ClientStore').once('change:clientAdded', function() {
+                    flux.actions.client.image.add({
+                        file:   file,
+                        id:     this.getFlux().store('ClientStore').getState().lastAdded.id
+                    });
+                }.bind(this));
+            }
+
+        }
+
+        flux.store('ClientStore').once('change:clientsGot', function() {
+            flux.actions.page.update({
+                page: 'clientView'
+            });
+        }.bind(this));
+
+        if (this.state.action === 'update') {
+            client.name = client.fname + ' ' + client.lname;
+        }
+
+        flux.actions.client[this.state.action]({
+            client: client
+        });
+    }
+
+});
+
+},{"../constants/constants":288,"./avatar.jsx":268,"classnames":3,"fluxxor":4,"react":266}],280:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24723,7 +24866,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./searchBarResult.jsx":280,"react":266}],280:[function(require,module,exports){
+},{"./searchBarResult.jsx":281,"react":266}],281:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24752,7 +24895,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"fluxxor":4,"react":266}],281:[function(require,module,exports){
+},{"fluxxor":4,"react":266}],282:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24808,7 +24951,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":287,"classnames":3,"fluxxor":4,"react":266}],282:[function(require,module,exports){
+},{"../constants/constants":288,"classnames":3,"fluxxor":4,"react":266}],283:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24854,7 +24997,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":287,"./searchBar.jsx":279,"classnames":3,"fluxxor":4,"react":266}],283:[function(require,module,exports){
+},{"../constants/constants":288,"./searchBar.jsx":280,"classnames":3,"fluxxor":4,"react":266}],284:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24870,6 +25013,7 @@ var ClientAdd			= require('./client/clientAdd.jsx'),
 	Email				= require('./email.jsx'),
 	Header				= require('./header.jsx'),
 	Home				= require('./home.jsx'),
+	Profile				= require('./profile.jsx'),
 	Product				= require('./product.jsx'),
 	SignIn				= require('./signIn.jsx'),
 	Settings			= require('./settings.jsx'),
@@ -24922,6 +25066,9 @@ module.exports = React.createClass({displayName: "exports",
 		    case 'product':
 		        page = (React.createElement(Product, null));
 		        break;
+		    case 'profile':
+		        page = (React.createElement(Profile, null));
+		        break;
 		    case 'settings':
 		        page = (React.createElement(Settings, null));
 		        break;
@@ -24948,7 +25095,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./client/clientAdd.jsx":269,"./client/clientsView.jsx":270,"./confirmation.jsx":271,"./email.jsx":272,"./header.jsx":273,"./home.jsx":274,"./product.jsx":278,"./settings.jsx":281,"./signIn.jsx":282,"./success.jsx":284,"./trainerDetails.jsx":285,"./user.jsx":286,"fluxxor":4,"react":266}],284:[function(require,module,exports){
+},{"./client/clientAdd.jsx":269,"./client/clientsView.jsx":270,"./confirmation.jsx":271,"./email.jsx":272,"./header.jsx":273,"./home.jsx":274,"./product.jsx":278,"./profile.jsx":279,"./settings.jsx":282,"./signIn.jsx":283,"./success.jsx":285,"./trainerDetails.jsx":286,"./user.jsx":287,"fluxxor":4,"react":266}],285:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24987,12 +25134,12 @@ module.exports = React.createClass({
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
-			totalPrice 		= 0;
-			commisionPrice 	= 0;
+			totalPrice		= 0;
+			commisionPrice	= 0;
 
 			this.state.selectedProducts.forEach(function(product) {
-				totalPrice 		+= product.price;
-				commisionPrice 	+= product.price * 0.1;
+				totalPrice		+= product.price;
+				commisionPrice	+= product.expected_commission;
 				selectedProducts.push(
 					(React.createElement(Item, {key: product.id, item: product}))
 				);
@@ -25006,7 +25153,7 @@ module.exports = React.createClass({
             React.createElement("div", {className: "page page_success"}, 
             	React.createElement(Avatar, {person: this.state.selectedUser}), 
                 React.createElement("div", null, 
-                	React.createElement("p", null, "Great! We’ve sent these products by email to ", this.state.selectedUser.fname, ". When he buys them, you’ll earn the reward shown below")
+                	React.createElement("p", null, "Great! We’ve sent these products by email to ", this.state.selectedUser.fname, ". When they buy them, you’ll earn the reward shown below")
                 ), 
                 React.createElement("div", null, 
                 	selectedProducts
@@ -25016,7 +25163,7 @@ module.exports = React.createClass({
                 	React.createElement("h2", null, "Total Price:", React.createElement("span", null, "£", totalPrice)), 
                 	React.createElement("h2", null, "You would earn:", React.createElement("span", null, "£", commisionPrice))
                 ), 
-                React.createElement("div", {className: "right"}, 
+                React.createElement("div", {className: "right hide"}, 
                 	React.createElement("p", null), 
                 	React.createElement("p", null, React.createElement("a", {href: "#", onClick: this.viewEmail}, "View email"))
                 )
@@ -25031,7 +25178,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":287,"./avatar.jsx":268,"./item.jsx":275,"classnames":3,"fluxxor":4,"react":266}],285:[function(require,module,exports){
+},{"../constants/constants":288,"./avatar.jsx":268,"./item.jsx":275,"classnames":3,"fluxxor":4,"react":266}],286:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25087,7 +25234,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":287,"classnames":3,"fluxxor":4,"react":266}],286:[function(require,module,exports){
+},{"../constants/constants":288,"classnames":3,"fluxxor":4,"react":266}],287:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25204,7 +25351,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":287,"./searchBar.jsx":279,"classnames":3,"fluxxor":4,"react":266}],287:[function(require,module,exports){
+},{"../constants/constants":288,"./searchBar.jsx":280,"classnames":3,"fluxxor":4,"react":266}],288:[function(require,module,exports){
 var constants = {
     AUTH: {
         AUTHO: {
@@ -25250,7 +25397,7 @@ var constants = {
 
 module.exports = constants;
 
-},{}],288:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 'use strict';
 
 var baseURL = 'https://data.spotter.online/api/';
@@ -25331,7 +25478,7 @@ var spotterAPI = {
 
 module.exports = spotterAPI;
 
-},{}],289:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25375,7 +25522,7 @@ var App = {
 
 module.exports = App;
 
-},{"./actions/actions.js":267,"./components/spotterApp.jsx":283,"./stores/authStore.js":290,"./stores/clientStore.js":291,"./stores/pageStore.js":292,"./stores/productStore.js":293,"fluxxor":4,"react":266,"react-dom":101}],290:[function(require,module,exports){
+},{"./actions/actions.js":267,"./components/spotterApp.jsx":284,"./stores/authStore.js":291,"./stores/clientStore.js":292,"./stores/pageStore.js":293,"./stores/productStore.js":294,"fluxxor":4,"react":266,"react-dom":101}],291:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -25464,7 +25611,7 @@ var AuthStore = Fluxxor.createStore({
 
 module.exports = AuthStore;
 
-},{"../constants/constants":287,"../lib/spotter":288,"fluxxor":4}],291:[function(require,module,exports){
+},{"../constants/constants":288,"../lib/spotter":289,"fluxxor":4}],292:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -25634,7 +25781,7 @@ var ClientStore = Fluxxor.createStore({
 
 module.exports = ClientStore;
 
-},{"../constants/constants":287,"../lib/spotter":288,"fluxxor":4}],292:[function(require,module,exports){
+},{"../constants/constants":288,"../lib/spotter":289,"fluxxor":4}],293:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -25677,7 +25824,7 @@ var PageStore = Fluxxor.createStore({
 
 module.exports = PageStore;
 
-},{"../constants/constants":287,"fluxxor":4}],293:[function(require,module,exports){
+},{"../constants/constants":288,"fluxxor":4}],294:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -25740,4 +25887,4 @@ var ProductStore = Fluxxor.createStore({
 
 module.exports = ProductStore;
 
-},{"../constants/constants":287,"../lib/spotter":288,"fluxxor":4}]},{},[1]);
+},{"../constants/constants":288,"../lib/spotter":289,"fluxxor":4}]},{},[1]);
