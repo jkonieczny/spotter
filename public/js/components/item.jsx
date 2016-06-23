@@ -20,18 +20,12 @@ module.exports = React.createClass({
     render: function() {
         var item = this.props.item;
         return (
-            <div className="item" onClick={ this.removeItem }>
+            <div className="item" onClick={ this.props.action }>
                 <div className="item_img" style={{backgroundImage: 'url(' + item.image + '), url(images/icon.png)'}}></div>
                 {item.name}
                 <div className="item_price">&pound;{item.price.toFixed(2)}</div>
             </div>
         );
-    },
-    removeItem: function() {
-        var c = window.confirm('Do you want to remove ' + this.props.item.name + '?');
-        if (c === true) {
-            this.getFlux().actions.products.remove(this.props.item.id);
-        }
     }
 
 });

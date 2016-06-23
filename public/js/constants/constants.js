@@ -26,6 +26,9 @@ var constants = {
         SEND: 'EMAIL_SEND'
     },
     TRAINER: {
+        IMAGE: {
+            ADD: 'TRAINER_IMAGE_ADD'
+        },
         UPDATE: 'TRAINER_UPDATE'
     },
     PRODUCTS: {

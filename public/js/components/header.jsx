@@ -22,7 +22,7 @@ module.exports = React.createClass({
 		return {
 			pages:				state.pages,
 			page:				state.currentPage,
-			back:				(state.currentPage !== 'home' && state.currentPage !== 'success' && state.currentPage !== 'signin'),
+			back:				(state.currentPage !== 'home' && state.currentPage !== 'signin'),
 			trainer:			auth.trainer
 		};
 	},
@@ -39,14 +39,20 @@ module.exports = React.createClass({
 
 		return (
 			<header>
-				<div className={cx( 'header_back', { 'hide' : (this.state.back === false) } )} onClick={this.goBack}></div>
+				<div className={cx( 'header_back', { 'hide' : (this.state.back === false), 'home' : (this.state.page === 'success') } )} onClick={this.goBack}></div>
 				<h1 className="header_title">spotter</h1>
 				{avatar}
 			</header>
 		);
 	},
 	goBack: function(e) {
-		this.getFlux().actions.page.goBack();
+		if (this.state.page === 'success') {
+	    	this.getFlux().actions.page.update({
+	    		page: 'home'
+	    	});
+		} else {
+			this.getFlux().actions.page.goBack();
+		}
 	}
 
 });

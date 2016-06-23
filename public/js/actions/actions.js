@@ -60,7 +60,6 @@ var actions = {
 		},
 		image: {
 			add: function(payload) {
-				console.log('image add');
 				this.dispatch(CONSTANTS.CLIENT.IMAGE.ADD, payload);
 			},
 			uploaded: function(payload) {
@@ -78,6 +77,16 @@ var actions = {
 	clients: {
 		get: function() {
 			this.dispatch(CONSTANTS.CLIENTS.GET);
+		}
+	},
+	trainer: {
+		image: {
+			add: function(payload) {
+				this.dispatch(CONSTANTS.TRAINER.IMAGE.ADD, payload);
+			}
+		},
+		update: function(payload) {
+			this.dispatch(CONSTANTS.TRAINER.UPDATE, { trainer: payload.trainer });
 		}
 	}
 };

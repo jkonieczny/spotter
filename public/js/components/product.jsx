@@ -43,9 +43,9 @@ module.exports = React.createClass({
 				totalPrice		+= product.price;
 				commisionPrice	+= product.expected_commission;
 				selectedProducts.push(
-					(<Item key={product.id} item={product} />)
+					(<Item key={product.id} item={product} action={this.removeItem.bind(this, product)}/>)
 				);
-			});
+			}.bind(this));
 
 			totalPrice 		= 	(
 									<div className="product_price right">
@@ -84,6 +84,12 @@ module.exports = React.createClass({
     	this.getFlux().actions.page.update({
     		page: 'confirmation'
     	});
+    },
+    removeItem: function(product) {
+        var c = window.confirm('Do you want to remove ' + product.name + '?');
+        if (c === true) {
+            this.getFlux().actions.products.remove(product.id);
+        }
     }
 
 });

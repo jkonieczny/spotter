@@ -68,12 +68,6 @@ module.exports = React.createClass({
 
         var flux = this.getFlux();
 
-        flux.actions.page.update({
-            page: 'home'
-        });
-
-        return;
-
         var missingValues = [];
         var fieldNames = {
             fname: 'first name',
@@ -95,39 +89,22 @@ module.exports = React.createClass({
             alert('Please enter ' + missingValues.join(', '));
             return;
         }
-
+        return;
         var file = this.refs.file.files[0];
 
         if (file) {
-            //alert('Your trainer image will upload in the background, you will be notified when it has finished');
-            if (this.state.action === 'update') {
-                flux.actions.trainer.image.add({
-                    file:   file,
-                    id:     this.state.trainer.id
-                });
-            } else {
-                flux.store('ClientStore').once('change:clientAdded', function() {
-                    flux.actions.client.image.add({
-                        file:   file,
-                        id:     this.getFlux().store('ClientStore').getState().lastAdded.id
-                    });
-                }.bind(this));
-            }
-
-        }
-
-        flux.store('ClientStore').once('change:clientsGot', function() {
-            flux.actions.page.update({
-                page: 'clientView'
+            flux.actions.trainer.image.add({
+                file:   file,
+                id:     this.state.trainer.id
             });
-        }.bind(this));
-
-        if (this.state.action === 'update') {
-            client.name = client.fname + ' ' + client.lname;
         }
 
-        flux.actions.client[this.state.action]({
-            client: client
+        flux.actions.trainer.update({
+            trainer: trainer
+        });
+
+        flux.actions.page.update({
+            page: 'home'
         });
     }
 

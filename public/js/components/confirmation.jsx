@@ -62,6 +62,7 @@ module.exports = React.createClass({
                 <div className="item_list">
                 	{selectedProducts}
                 </div>
+                <p/>
                 <div className="product_price right">
                 	<h2>Total Price:<span>&pound;{totalPrice}</span></h2>
                 	<h2>You would earn:<span>&pound;{commisionPrice}</span></h2>

@@ -25,7 +25,7 @@ var spotterAPI = {
 		});
 		productQueue = [];
 
-		productQueue.push(this.XHR('products' + query, G, cb));
+		productQueue.push(this.xhrQuery('products' + query, G, cb));
 	},
 	getTrainer: function(cb) {
 		this.XHR('profile', G, cb);
@@ -47,6 +47,17 @@ var spotterAPI = {
 	    } else {
 		    xhr.send();
 		}
+
+	    return xhr;
+	},
+	xhrQuery: function(frag, method, cb, data) {
+	    var xhr = new XMLHttpRequest();
+	    xhr.addEventListener('load', function(data) {
+			cb(JSON.parse(data.currentTarget.responseText));
+	    });
+	    var query = (frag.indexOf('?') === -1) ? '?' : '&';
+	    xhr.open(method, 'https://data.spotter.online/api/' + frag + query + 'token=' + window.flux.stores.AuthStore.state.tokens.id_token, true);
+	    xhr.send();
 
 	    return xhr;
 	},
