@@ -1,28 +1,21 @@
-var CURRENT_CACHES = 'v1.0.12';
+var CURRENT_CACHES = 'v1.0.13';
 
 self.addEventListener('install', function(event) {
   console.log("SW installed", CURRENT_CACHES, self.registration.scope);
   var cachedAssests = [
-    '/',
-    '/spotter',
     'index.html',
     'bundle/css/bundle.css',
     'bundle/js/bundle.js',
     'images/fit-avatar.png',
     'images/icon.png',
-    'images/avatars/arnold.jpg',
-    'images/avatars/jan.jpg',
-    'images/avatars/julia.jpg',
-    'images/avatars/rob.jpg',
-    'images/avatars/trainer.jpg',
-    'images/avatars/trainer-large.jpg',
     'fonts/AvenirNext-Regular.woff2',
-    'fonts/AvenirNext-Bold.woff2'
+    'fonts/AvenirNext-Bold.woff2',
+    '//s3-eu-west-1.amazonaws.com/spotter-online/prod/image'
   ];
 
   // Node removes trailing slashes, Apache addes them!
-  var spotterDir = (self.registration.scope.search('localhost') > - 1) ? '/spotter' : '/spotter/';
-  cachedAssests.push(spotterDir);
+  //var spotterDir = (self.registration.scope.search('localhost') > - 1) ? '/spotter' : '/spotter/';
+  //cachedAssests.push(spotterDir);
 
   event.waitUntil(
     caches.open(CURRENT_CACHES).then(function(cache) {
@@ -48,7 +41,9 @@ self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request)
       .then(function(response) {
+        console.log('event.request', event.request.url);
         if (response) {
+          console.log('event.request.match', event.request.url);
           return response;
         }
 
