@@ -83,9 +83,13 @@ var actions = {
 		image: {
 			add: function(payload) {
 				this.dispatch(CONSTANTS.TRAINER.IMAGE.ADD, payload);
+			},
+			uploaded: function(payload) {
+				this.dispatch(CONSTANTS.TRAINER.IMAGE.UPLOADED, payload);
 			}
 		},
 		update: function(payload) {
+			console.log('payload', payload);
 			this.dispatch(CONSTANTS.TRAINER.UPDATE, { trainer: payload.trainer });
 		}
 	}

@@ -18,7 +18,6 @@ var ClientAdd			= require('./client/clientAdd.jsx'),
 	SignIn				= require('./signIn.jsx'),
 	Settings			= require('./settings.jsx'),
 	Success				= require('./success.jsx'),
-	TrainerDetails		= require('./trainerDetails.jsx'),
 	User				= require('./user.jsx');
 
 module.exports = React.createClass({
@@ -74,9 +73,6 @@ module.exports = React.createClass({
 		        break;
 		    case 'success':
 		        page = (<Success />);
-		        break;
-		    case 'trainerDetails':
-		        page = (<TrainerDetails />);
 		        break;
 		    case 'user':
 		        page = (<User />);

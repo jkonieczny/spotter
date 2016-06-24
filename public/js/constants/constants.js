@@ -27,7 +27,8 @@ var constants = {
     },
     TRAINER: {
         IMAGE: {
-            ADD: 'TRAINER_IMAGE_ADD'
+            ADD: 'TRAINER_IMAGE_ADD',
+            UPLOADED: 'TRAINER_IMAGE_UPLOADED'
         },
         UPDATE: 'TRAINER_UPDATE'
     },

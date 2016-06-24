@@ -15,12 +15,12 @@ var Avatar      = require('./avatar.jsx');
 var SearchBar   = require('./searchBar.jsx');
 
 module.exports = React.createClass({
-    mixins: [FluxMixin],
+    mixins: [FluxMixin, StoreWatchMixin('AuthStore')],
 	displayName: 'home.jsx',
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
-    getInitialState: function() {
+    getStateFromFlux: function() {
         return {
             trainer: this.getFlux().store('AuthStore').getState().trainer
         };

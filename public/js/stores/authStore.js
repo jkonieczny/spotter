@@ -13,11 +13,15 @@ var AuthStore = Fluxxor.createStore({
         };
 
         this.bindActions(
-            CONSTANTS.AUTH.AUTHO.GET, this.autho.getTrainer,
-            CONSTANTS.AUTH.AUTHO.LOCK, this.autho.createLock,
-            CONSTANTS.AUTH.AUTHO.SHOW, this.autho.show,
+            CONSTANTS.AUTH.AUTHO.GET,           this.autho.getTrainer,
+            CONSTANTS.AUTH.AUTHO.LOCK,          this.autho.createLock,
+            CONSTANTS.AUTH.AUTHO.SHOW,          this.autho.show,
 
-            CONSTANTS.AUTH.SPOTTER.GET, this.spotter.getTrainer
+            CONSTANTS.AUTH.SPOTTER.GET,         this.spotter.getTrainer,
+
+            CONSTANTS.TRAINER.UPDATE,           this.spotter.updateTrainer,
+            CONSTANTS.TRAINER.IMAGE.ADD,        this.spotter.updateTrainerImage,
+            CONSTANTS.TRAINER.IMAGE.UPLOADED,   this.spotter.uploadedTrainerImage
         );
     },
     autho: {
@@ -42,8 +46,6 @@ var AuthStore = Fluxxor.createStore({
             } else {
                 this.signOut();
             }
-
-            console.log('this.state.trainer', this.state.trainer);
 
             if (this.state.tokens) {
                 setTimeout(function() {
@@ -71,6 +73,27 @@ var AuthStore = Fluxxor.createStore({
                     alert('Sorry, something has gone wrong!');
                 }
             }.bind(this));
+        },
+        updateTrainer: function(payload) {
+            payload.trainer.name = payload.trainer.fname + ' ' + payload.trainer.lname;
+
+            SpotterAPI.updateTrainer(payload.trainer, function(data) {
+                console.log('updateTrainer', data);
+            });
+        },
+        updateTrainerImage: function(payload) {
+            SpotterAPI.imageTrainer(payload.file, function(data) {
+                this.flux.actions.trainer.image.uploaded({
+                    id:     payload.id,
+                    url:    data.url
+                });
+            }.bind(this));
+        },
+        uploadedTrainerImage: function(payload) {
+            this.state.trainer.picture = payload.url + '?cachebust=' + Math.floor(Math.random() * 20);
+
+            this.emit('change:trainerImageUploaded');
+            this.emit('change');
         }
     },
     signOut: function() {

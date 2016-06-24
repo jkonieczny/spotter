@@ -14,7 +14,7 @@ var CONSTANTS   = require('../../constants/constants');
 var Avatar      = require('../avatar.jsx');
 
 module.exports = React.createClass({
-	displayName: 'trainerDetails.jsx',
+	displayName: 'clientsView.jsx',
 	mixins: [FluxMixin, StoreWatchMixin('ClientStore')],
     getStateFromFlux: function() {
         var flux = this.getFlux();

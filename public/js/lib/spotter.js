@@ -16,6 +16,12 @@ var spotterAPI = {
 	updateClient: function(data, cb) {
 		this.XHR('client/update/' + data.id, P, cb, JSON.stringify(data));
 	},
+	imageClient: function(id, file, cb) {
+		this.xhrImage('client/update-image/' + id, file, cb);
+	},
+	imageTrainer: function(file, cb) {
+		this.xhrImage('/profile/update-image', file, cb);
+	},
 	getClients: function(cb) {
 		this.XHR('client/list', G, cb);
 	},
@@ -29,6 +35,9 @@ var spotterAPI = {
 	},
 	getTrainer: function(cb) {
 		this.XHR('profile', G, cb);
+	},
+	updateTrainer: function(data, cb) {
+		this.XHR('/profile/update', P, cb, JSON.stringify(data));
 	},
 	sendClientEmail: function(data, cb) {
 		this.XHR('recommend/new', P, cb, JSON.stringify(data));
@@ -61,7 +70,7 @@ var spotterAPI = {
 
 	    return xhr;
 	},
-	xhrImage: function(id, file, cb) {
+	xhrImage: function(frag, file, cb) {
 		var formData = new FormData();
 		formData.append('file', file);
 
@@ -71,7 +80,7 @@ var spotterAPI = {
 			cb(JSON.parse(data.currentTarget.responseText));
 		}, false);
 
-		xhr.open('POST', 'https://data.spotter.online/api/client/update-image/' + id);
+		xhr.open('POST', 'https://data.spotter.online/api/' + frag);
 		xhr.setRequestHeader('Accept', 'application/json');
 		xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.tokens.id_token);
 

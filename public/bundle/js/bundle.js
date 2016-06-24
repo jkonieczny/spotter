@@ -17,7 +17,7 @@ if ('serviceWorker' in navigator) {
 }
 
 }).call(this,require('_process'))
-},{"./public/js/main.js":290,"_process":2}],2:[function(require,module,exports){
+},{"./public/js/main.js":289,"_process":2}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -23752,9 +23752,13 @@ var actions = {
 		image: {
 			add: function(payload) {
 				this.dispatch(CONSTANTS.TRAINER.IMAGE.ADD, payload);
+			},
+			uploaded: function(payload) {
+				this.dispatch(CONSTANTS.TRAINER.IMAGE.UPLOADED, payload);
 			}
 		},
 		update: function(payload) {
+			console.log('payload', payload);
 			this.dispatch(CONSTANTS.TRAINER.UPDATE, { trainer: payload.trainer });
 		}
 	}
@@ -23762,7 +23766,7 @@ var actions = {
 
 module.exports = actions;
 
-},{"../constants/constants":288}],268:[function(require,module,exports){
+},{"../constants/constants":287}],268:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23932,7 +23936,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../constants/constants":288,"classnames":3,"fluxxor":4,"react":266}],270:[function(require,module,exports){
+},{"../../constants/constants":287,"classnames":3,"fluxxor":4,"react":266}],270:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -23949,7 +23953,7 @@ var CONSTANTS   = require('../../constants/constants');
 var Avatar      = require('../avatar.jsx');
 
 module.exports = React.createClass({
-	displayName: 'trainerDetails.jsx',
+	displayName: 'clientsView.jsx',
 	mixins: [FluxMixin, StoreWatchMixin('ClientStore')],
     getStateFromFlux: function() {
         var flux = this.getFlux();
@@ -24068,7 +24072,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../constants/constants":288,"../avatar.jsx":268,"classnames":3,"fluxxor":4,"react":266}],271:[function(require,module,exports){
+},{"../../constants/constants":287,"../avatar.jsx":268,"classnames":3,"fluxxor":4,"react":266}],271:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24168,7 +24172,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":288,"./avatar.jsx":268,"./item.jsx":275,"classnames":3,"fluxxor":4,"react":266}],272:[function(require,module,exports){
+},{"../constants/constants":287,"./avatar.jsx":268,"./item.jsx":275,"classnames":3,"fluxxor":4,"react":266}],272:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24222,7 +24226,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":288,"./avatar.jsx":268,"./itemGrid.jsx":276,"classnames":3,"fluxxor":4,"react":266}],273:[function(require,module,exports){
+},{"../constants/constants":287,"./avatar.jsx":268,"./itemGrid.jsx":276,"classnames":3,"fluxxor":4,"react":266}],273:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24300,12 +24304,12 @@ var Avatar      = require('./avatar.jsx');
 var SearchBar   = require('./searchBar.jsx');
 
 module.exports = React.createClass({
-    mixins: [FluxMixin],
+    mixins: [FluxMixin, StoreWatchMixin('AuthStore')],
 	displayName: 'home.jsx',
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
-    getInitialState: function() {
+    getStateFromFlux: function() {
         return {
             trainer: this.getFlux().store('AuthStore').getState().trainer
         };
@@ -24351,7 +24355,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":288,"./avatar.jsx":268,"./searchBar.jsx":280,"classnames":3,"fluxxor":4,"react":266}],275:[function(require,module,exports){
+},{"../constants/constants":287,"./avatar.jsx":268,"./searchBar.jsx":280,"classnames":3,"fluxxor":4,"react":266}],275:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24678,7 +24682,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"../constants/constants":288,"./avatar.jsx":268,"./item.jsx":275,"./itemSelect.jsx":277,"classnames":3,"fluxxor":4,"react":266}],279:[function(require,module,exports){
+},{"../constants/constants":287,"./avatar.jsx":268,"./item.jsx":275,"./itemSelect.jsx":277,"classnames":3,"fluxxor":4,"react":266}],279:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24725,7 +24729,7 @@ module.exports = React.createClass({
                     ), 
                     React.createElement("label", null, 
                         "Email", 
-                        React.createElement("input", {type: "email", placeholder: "Email", onChange: this.update.bind(this, 'email'), value: this.state.trainer.email})
+                        React.createElement("input", {type: "email", placeholder: "Email", onChange: this.update.bind(this, 'email'), value: this.state.trainer.email, disabled: true})
                     ), 
                     React.createElement("label", null, 
                         "Upload an image", 
@@ -24770,7 +24774,7 @@ module.exports = React.createClass({
             alert('Please enter ' + missingValues.join(', '));
             return;
         }
-        return;
+
         var file = this.refs.file.files[0];
 
         if (file) {
@@ -24791,7 +24795,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":288,"./avatar.jsx":268,"classnames":3,"fluxxor":4,"react":266}],280:[function(require,module,exports){
+},{"../constants/constants":287,"./avatar.jsx":268,"classnames":3,"fluxxor":4,"react":266}],280:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24904,7 +24908,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":288,"classnames":3,"fluxxor":4,"react":266}],283:[function(require,module,exports){
+},{"../constants/constants":287,"classnames":3,"fluxxor":4,"react":266}],283:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24941,16 +24945,11 @@ module.exports = React.createClass({
     proceed: function(e) {
     	e.preventDefault();
     	this.getFlux().actions.auth.autho.show();
-    	/*
-    	this.getFlux().actions.page.update({
-    		page: 'trainerDetails'
-    	});
-    	*/
     }
 
 });
 
-},{"../constants/constants":288,"./searchBar.jsx":280,"classnames":3,"fluxxor":4,"react":266}],284:[function(require,module,exports){
+},{"../constants/constants":287,"./searchBar.jsx":280,"classnames":3,"fluxxor":4,"react":266}],284:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -24971,7 +24970,6 @@ var ClientAdd			= require('./client/clientAdd.jsx'),
 	SignIn				= require('./signIn.jsx'),
 	Settings			= require('./settings.jsx'),
 	Success				= require('./success.jsx'),
-	TrainerDetails		= require('./trainerDetails.jsx'),
 	User				= require('./user.jsx');
 
 module.exports = React.createClass({displayName: "exports",
@@ -25028,9 +25026,6 @@ module.exports = React.createClass({displayName: "exports",
 		    case 'success':
 		        page = (React.createElement(Success, null));
 		        break;
-		    case 'trainerDetails':
-		        page = (React.createElement(TrainerDetails, null));
-		        break;
 		    case 'user':
 		        page = (React.createElement(User, null));
 		        break;
@@ -25048,7 +25043,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./client/clientAdd.jsx":269,"./client/clientsView.jsx":270,"./confirmation.jsx":271,"./email.jsx":272,"./header.jsx":273,"./home.jsx":274,"./product.jsx":278,"./profile.jsx":279,"./settings.jsx":282,"./signIn.jsx":283,"./success.jsx":285,"./trainerDetails.jsx":286,"./user.jsx":287,"fluxxor":4,"react":266}],285:[function(require,module,exports){
+},{"./client/clientAdd.jsx":269,"./client/clientsView.jsx":270,"./confirmation.jsx":271,"./email.jsx":272,"./header.jsx":273,"./home.jsx":274,"./product.jsx":278,"./profile.jsx":279,"./settings.jsx":282,"./signIn.jsx":283,"./success.jsx":285,"./user.jsx":286,"fluxxor":4,"react":266}],285:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25131,63 +25126,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":288,"./avatar.jsx":268,"./item.jsx":275,"classnames":3,"fluxxor":4,"react":266}],286:[function(require,module,exports){
-/** @jsx React.DOM */
-
-'use strict';
-
-var React = require('react'),
-	Fluxxor = require('fluxxor'),
-	FluxMixin = Fluxxor.FluxMixin(React),
-    StoreWatchMixin = Fluxxor.StoreWatchMixin;
-
-var cx = require('classnames');
-
-var CONSTANTS = require('../constants/constants');
-
-module.exports = React.createClass({
-	displayName: 'trainerDetails.jsx',
-	mixins: [FluxMixin],
-	componentDidMount: function() {
-		window.scrollTo(0,0);
-	},
-    render: function() {
-        return (
-            React.createElement("div", {className: "page signin"}, 
-	            React.createElement("div", {className: "user_avatar"}), 
-                "Trainer Details", 
-                React.createElement("form", null, 
-                    React.createElement("label", null, 
-                        "First Name", 
-                        React.createElement("input", {type: "text", placeholder: "First Name"})
-                    ), 
-                    React.createElement("label", null, 
-                        "Last Name", 
-                        React.createElement("input", {type: "text", placeholder: "Last Name"})
-                    ), 
-                    React.createElement("label", null, 
-                        "Upload an image", 
-                        React.createElement("input", {type: "file", accept: "image/*", capture: "camera"})
-                    ), 
-	                React.createElement("label", null, 
-	                	React.createElement("button", {type: "submit", onClick: this.proceed}, "Update your details")
-	                )
-                )
-            )
-        );
-    },
-    proceed: function(e) {
-        console.log('proceed');
-    	e.preventDefault();
-
-        this.getFlux().actions.page.update({
-            page: 'home'
-        });
-    }
-
-});
-
-},{"../constants/constants":288,"classnames":3,"fluxxor":4,"react":266}],287:[function(require,module,exports){
+},{"../constants/constants":287,"./avatar.jsx":268,"./item.jsx":275,"classnames":3,"fluxxor":4,"react":266}],286:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25304,7 +25243,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":288,"./searchBar.jsx":280,"classnames":3,"fluxxor":4,"react":266}],288:[function(require,module,exports){
+},{"../constants/constants":287,"./searchBar.jsx":280,"classnames":3,"fluxxor":4,"react":266}],287:[function(require,module,exports){
 var constants = {
     AUTH: {
         AUTHO: {
@@ -25334,7 +25273,8 @@ var constants = {
     },
     TRAINER: {
         IMAGE: {
-            ADD: 'TRAINER_IMAGE_ADD'
+            ADD: 'TRAINER_IMAGE_ADD',
+            UPLOADED: 'TRAINER_IMAGE_UPLOADED'
         },
         UPDATE: 'TRAINER_UPDATE'
     },
@@ -25353,7 +25293,7 @@ var constants = {
 
 module.exports = constants;
 
-},{}],289:[function(require,module,exports){
+},{}],288:[function(require,module,exports){
 'use strict';
 
 var baseURL = 'https://data.spotter.online/api/';
@@ -25372,6 +25312,12 @@ var spotterAPI = {
 	updateClient: function(data, cb) {
 		this.XHR('client/update/' + data.id, P, cb, JSON.stringify(data));
 	},
+	imageClient: function(id, file, cb) {
+		this.xhrImage('client/update-image/' + id, file, cb);
+	},
+	imageTrainer: function(file, cb) {
+		this.xhrImage('/profile/update-image', file, cb);
+	},
 	getClients: function(cb) {
 		this.XHR('client/list', G, cb);
 	},
@@ -25385,6 +25331,9 @@ var spotterAPI = {
 	},
 	getTrainer: function(cb) {
 		this.XHR('profile', G, cb);
+	},
+	updateTrainer: function(data, cb) {
+		this.XHR('/profile/update', P, cb, JSON.stringify(data));
 	},
 	sendClientEmail: function(data, cb) {
 		this.XHR('recommend/new', P, cb, JSON.stringify(data));
@@ -25417,7 +25366,7 @@ var spotterAPI = {
 
 	    return xhr;
 	},
-	xhrImage: function(id, file, cb) {
+	xhrImage: function(frag, file, cb) {
 		var formData = new FormData();
 		formData.append('file', file);
 
@@ -25427,7 +25376,7 @@ var spotterAPI = {
 			cb(JSON.parse(data.currentTarget.responseText));
 		}, false);
 
-		xhr.open('POST', 'https://data.spotter.online/api/client/update-image/' + id);
+		xhr.open('POST', 'https://data.spotter.online/api/' + frag);
 		xhr.setRequestHeader('Accept', 'application/json');
 		xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.tokens.id_token);
 
@@ -25445,7 +25394,7 @@ var spotterAPI = {
 
 module.exports = spotterAPI;
 
-},{}],290:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25489,7 +25438,7 @@ var App = {
 
 module.exports = App;
 
-},{"./actions/actions.js":267,"./components/spotterApp.jsx":284,"./stores/authStore.js":291,"./stores/clientStore.js":292,"./stores/pageStore.js":293,"./stores/productStore.js":294,"fluxxor":4,"react":266,"react-dom":101}],291:[function(require,module,exports){
+},{"./actions/actions.js":267,"./components/spotterApp.jsx":284,"./stores/authStore.js":290,"./stores/clientStore.js":291,"./stores/pageStore.js":292,"./stores/productStore.js":293,"fluxxor":4,"react":266,"react-dom":101}],290:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -25505,11 +25454,15 @@ var AuthStore = Fluxxor.createStore({
         };
 
         this.bindActions(
-            CONSTANTS.AUTH.AUTHO.GET, this.autho.getTrainer,
-            CONSTANTS.AUTH.AUTHO.LOCK, this.autho.createLock,
-            CONSTANTS.AUTH.AUTHO.SHOW, this.autho.show,
+            CONSTANTS.AUTH.AUTHO.GET,           this.autho.getTrainer,
+            CONSTANTS.AUTH.AUTHO.LOCK,          this.autho.createLock,
+            CONSTANTS.AUTH.AUTHO.SHOW,          this.autho.show,
 
-            CONSTANTS.AUTH.SPOTTER.GET, this.spotter.getTrainer
+            CONSTANTS.AUTH.SPOTTER.GET,         this.spotter.getTrainer,
+
+            CONSTANTS.TRAINER.UPDATE,           this.spotter.updateTrainer,
+            CONSTANTS.TRAINER.IMAGE.ADD,        this.spotter.updateTrainerImage,
+            CONSTANTS.TRAINER.IMAGE.UPLOADED,   this.spotter.uploadedTrainerImage
         );
     },
     autho: {
@@ -25534,8 +25487,6 @@ var AuthStore = Fluxxor.createStore({
             } else {
                 this.signOut();
             }
-
-            console.log('this.state.trainer', this.state.trainer);
 
             if (this.state.tokens) {
                 setTimeout(function() {
@@ -25563,6 +25514,27 @@ var AuthStore = Fluxxor.createStore({
                     alert('Sorry, something has gone wrong!');
                 }
             }.bind(this));
+        },
+        updateTrainer: function(payload) {
+            payload.trainer.name = payload.trainer.fname + ' ' + payload.trainer.lname;
+
+            SpotterAPI.updateTrainer(payload.trainer, function(data) {
+                console.log('updateTrainer', data);
+            });
+        },
+        updateTrainerImage: function(payload) {
+            SpotterAPI.imageTrainer(payload.file, function(data) {
+                this.flux.actions.trainer.image.uploaded({
+                    id:     payload.id,
+                    url:    data.url
+                });
+            }.bind(this));
+        },
+        uploadedTrainerImage: function(payload) {
+            this.state.trainer.picture = payload.url + '?cachebust=' + Math.floor(Math.random() * 20);
+
+            this.emit('change:trainerImageUploaded');
+            this.emit('change');
         }
     },
     signOut: function() {
@@ -25578,7 +25550,7 @@ var AuthStore = Fluxxor.createStore({
 
 module.exports = AuthStore;
 
-},{"../constants/constants":288,"../lib/spotter":289,"fluxxor":4}],292:[function(require,module,exports){
+},{"../constants/constants":287,"../lib/spotter":288,"fluxxor":4}],291:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -25706,9 +25678,7 @@ var ClientStore = Fluxxor.createStore({
         this.emit('change');
     },
     clientImageAdd: function(payload) {
-        console.log('clientImageAdd', payload);
-
-        SpotterAPI.xhrImage(payload.id, payload.file, function(data) {
+        SpotterAPI.imageClient(payload.id, payload.file, function(data) {
             this.flux.actions.client.image.uploaded({
                 id:     payload.id,
                 url:    data.url
@@ -25748,7 +25718,7 @@ var ClientStore = Fluxxor.createStore({
 
 module.exports = ClientStore;
 
-},{"../constants/constants":288,"../lib/spotter":289,"fluxxor":4}],293:[function(require,module,exports){
+},{"../constants/constants":287,"../lib/spotter":288,"fluxxor":4}],292:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -25791,7 +25761,7 @@ var PageStore = Fluxxor.createStore({
 
 module.exports = PageStore;
 
-},{"../constants/constants":288,"fluxxor":4}],294:[function(require,module,exports){
+},{"../constants/constants":287,"fluxxor":4}],293:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -25846,4 +25816,4 @@ var ProductStore = Fluxxor.createStore({
 
 module.exports = ProductStore;
 
-},{"../constants/constants":288,"../lib/spotter":289,"fluxxor":4}]},{},[1]);
+},{"../constants/constants":287,"../lib/spotter":288,"fluxxor":4}]},{},[1]);

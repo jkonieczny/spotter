@@ -125,9 +125,7 @@ var ClientStore = Fluxxor.createStore({
         this.emit('change');
     },
     clientImageAdd: function(payload) {
-        console.log('clientImageAdd', payload);
-
-        SpotterAPI.xhrImage(payload.id, payload.file, function(data) {
+        SpotterAPI.imageClient(payload.id, payload.file, function(data) {
             this.flux.actions.client.image.uploaded({
                 id:     payload.id,
                 url:    data.url

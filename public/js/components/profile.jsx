@@ -44,7 +44,7 @@ module.exports = React.createClass({
                     </label>
                     <label>
                         Email
-                        <input type="email" placeholder="Email" onChange={this.update.bind(this, 'email')} value={this.state.trainer.email} />
+                        <input type="email" placeholder="Email" onChange={this.update.bind(this, 'email')} value={this.state.trainer.email} disabled />
                     </label>
                     <label>
                         Upload an image
@@ -89,7 +89,7 @@ module.exports = React.createClass({
             alert('Please enter ' + missingValues.join(', '));
             return;
         }
-        return;
+
         var file = this.refs.file.files[0];
 
         if (file) {
