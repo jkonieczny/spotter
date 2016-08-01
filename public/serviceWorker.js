@@ -9,8 +9,7 @@ self.addEventListener('install', function(event) {
     'images/fit-avatar.png',
     'images/icon.png',
     'fonts/AvenirNext-Regular.woff2',
-    'fonts/AvenirNext-Bold.woff2',
-    '//s3-eu-west-1.amazonaws.com/spotter-online/prod/image'
+    'fonts/AvenirNext-Bold.woff2'
   ];
 
   // Node removes trailing slashes, Apache addes them!
