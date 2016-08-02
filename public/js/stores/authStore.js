@@ -13,6 +13,7 @@ var AuthStore = Fluxxor.createStore({
         };
 
         this.bindActions(
+            CONSTANTS.AUTH.INIT,                this.authInitialize,
             CONSTANTS.AUTH.AUTHO.GET,           this.autho.getTrainer,
             CONSTANTS.AUTH.AUTHO.LOCK,          this.autho.createLock,
             CONSTANTS.AUTH.AUTHO.SHOW,          this.autho.show,
@@ -24,6 +25,35 @@ var AuthStore = Fluxxor.createStore({
             CONSTANTS.TRAINER.IMAGE.UPLOADED,   this.spotter.uploadedTrainerImage
         );
     },
+    authInitialize: function() {
+        var token = localStorage.getItem('token');
+
+        if (token && window.location.hash.search('access_token') === -1) {
+            this.state.token = token;
+
+            SpotterAPI.getTrainer(function(data) {
+                if (data.id) {
+                    this.state.trainer = data;
+
+                    this.flux.actions.page.update({
+                        page: 'home'
+                    });
+
+                    this.flux.actions.clients.get();
+                } else {
+                    setTimeout(function() {
+                        this.flux.actions.auth.autho.lock();
+                        this.flux.actions.auth.autho.show();
+                    }.bind(this));
+                }
+            }.bind(this));
+        } else {
+            setTimeout(function() {
+                this.flux.actions.auth.autho.lock();
+                this.flux.actions.auth.autho.show();
+            }.bind(this));
+        }
+    },
     autho: {
         createLock: function() {
             this.state.lock = new Auth0Lock('YDvRFV8XQoX3fuF1X65l8RqMSmCKHGOg', 'fitflow.eu.auth0.com',{
@@ -31,7 +61,7 @@ var AuthStore = Fluxxor.createStore({
                 allowedConnections: ['google-oauth2', 'facebook'],
                 avatar: null,
                 languageDictionary: {
-                    title: 'Sign in'
+                    title: 'Log in'
                 },
                 theme: {
                     logo: window.location.pathname + 'images/splash.jpg',
@@ -58,6 +88,8 @@ var AuthStore = Fluxxor.createStore({
             this.state.lock.show();
         },
         getTrainer: function(authResult, profile) {
+            if (!authResult.idToken) { return; }
+
             try {
                 localStorage.setItem('token', authResult.idToken);
             } catch (e) {}

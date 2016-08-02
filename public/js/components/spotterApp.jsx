@@ -34,8 +34,8 @@ module.exports = React.createClass({
 	},
 	componentDidMount: function() {
 		console.log('componentDidMount spotterApp');
-        this.getFlux().actions.auth.autho.lock();
-        this.getFlux().actions.auth.autho.get();
+        //this.getFlux().actions.auth.autho.lock();
+        //this.getFlux().actions.auth.autho.get();
 	},
 	componentWillUpdate: function() {
 		console.log('componentWillUpdate');

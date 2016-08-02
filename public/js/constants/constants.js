@@ -1,5 +1,6 @@
 var constants = {
     AUTH: {
+        INIT: 'AUTH_INIT',
         AUTHO: {
             GET: 'AUTHO_GET',
             LOCK: 'AUTHO_LOCK',

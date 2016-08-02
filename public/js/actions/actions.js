@@ -4,6 +4,9 @@ var CONSTANTS = require('../constants/constants');
 
 var actions = {
 	auth: {
+		init: function() {
+			this.dispatch(CONSTANTS.AUTH.INIT, {});
+		},
 		autho: {
 			get: function() {
 				this.dispatch(CONSTANTS.AUTH.AUTHO.GET, {});

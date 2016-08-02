@@ -20,7 +20,7 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
         console.log('signin componentDidMount');
         setTimeout(function() {
-            this.getFlux().actions.auth.autho.show();
+            this.getFlux().actions.auth.init();
         }.bind(this));
 	},
     render: function() {
