@@ -12,7 +12,7 @@ module.exports = React.createClass({
         var result = this.props.result;
 
         return (
-            <li class="searchbar_result" onClick={this.onSelected}>
+            <li className="searchbar_result" onClick={this.onSelected}>
                 {result[this.props.keys]}
             </li>
         );

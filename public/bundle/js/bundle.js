@@ -26084,7 +26084,7 @@ module.exports = React.createClass({displayName: "exports",
 
     	this.props.matches.forEach(function(result) {
     		results.push(
-    			React.createElement(SearchBarResult, {key: result[this.props.reactKeys || this.props.keys], keys: this.props.keys, result: result, class: "searchbar_result", onSelectedAction: this.props.onSelectedAction})
+    			React.createElement(SearchBarResult, {key: result[this.props.reactKeys || this.props.keys], keys: this.props.keys, result: result, className: "searchbar_result", onSelectedAction: this.props.onSelectedAction})
     		);
     	}.bind(this));
 
@@ -26112,7 +26112,7 @@ module.exports = React.createClass({displayName: "exports",
         var result = this.props.result;
 
         return (
-            React.createElement("li", {class: "searchbar_result", onClick: this.onSelected}, 
+            React.createElement("li", {className: "searchbar_result", onClick: this.onSelected}, 
                 result[this.props.keys]
             )
         );
