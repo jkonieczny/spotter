@@ -18,22 +18,18 @@ module.exports = React.createClass({
 	mixins: [FluxMixin],
 	componentDidMount: function() {
 		window.scrollTo(0,0);
+        console.log('signin componentDidMount');
+        setTimeout(function() {
+            this.getFlux().actions.auth.autho.show();
+        }.bind(this));
 	},
     render: function() {
         return (
             <div className="page signin">
 	            <div className="user_avatar"></div>
-                <form>
-	                <label>
-	                	<button type="submit" onClick={this.proceed}>Sign In</button>
-	                </label>
-                </form>
+                <div id="auth"></div>
             </div>
         );
-    },
-    proceed: function(e) {
-    	e.preventDefault();
-    	this.getFlux().actions.auth.autho.show();
     }
 
 });

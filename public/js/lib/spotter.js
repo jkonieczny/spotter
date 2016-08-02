@@ -49,7 +49,7 @@ var spotterAPI = {
 	    });
 	    xhr.open(method, 'https://data.spotter.online/api/' + frag, true);
 	    xhr.setRequestHeader('Accept', 'application/json');
-	    xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.tokens.id_token);
+	    xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.token);
 	    if (method === 'POST') {
 			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 			xhr.send(data);
@@ -65,7 +65,7 @@ var spotterAPI = {
 			cb(JSON.parse(data.currentTarget.responseText));
 	    });
 	    var query = (frag.indexOf('?') === -1) ? '?' : '&';
-	    xhr.open(method, 'https://data.spotter.online/api/' + frag + query + 'token=' + window.flux.stores.AuthStore.state.tokens.id_token, true);
+	    xhr.open(method, 'https://data.spotter.online/api/' + frag + query + 'token=' + window.flux.stores.AuthStore.state.token, true);
 	    xhr.send();
 
 	    return xhr;
@@ -82,7 +82,7 @@ var spotterAPI = {
 
 		xhr.open('POST', 'https://data.spotter.online/api/' + frag);
 		xhr.setRequestHeader('Accept', 'application/json');
-		xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.tokens.id_token);
+		xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.token);
 
 		xhr.send(formData);
 	},

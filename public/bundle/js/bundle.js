@@ -26200,22 +26200,18 @@ module.exports = React.createClass({
 	mixins: [FluxMixin],
 	componentDidMount: function() {
 		window.scrollTo(0,0);
+        console.log('signin componentDidMount');
+        setTimeout(function() {
+            this.getFlux().actions.auth.autho.show();
+        }.bind(this));
 	},
     render: function() {
         return (
             React.createElement("div", {className: "page signin"}, 
 	            React.createElement("div", {className: "user_avatar"}), 
-                React.createElement("form", null, 
-	                React.createElement("label", null, 
-	                	React.createElement("button", {type: "submit", onClick: this.proceed}, "Sign In")
-	                )
-                )
+                React.createElement("div", {id: "auth"})
             )
         );
-    },
-    proceed: function(e) {
-    	e.preventDefault();
-    	this.getFlux().actions.auth.autho.show();
     }
 
 });
@@ -26255,8 +26251,8 @@ module.exports = React.createClass({displayName: "exports",
 			page: flux.store('PageStore').getState()
 		};
 	},
-	componentWillMount: function() {
-		console.log('componentWillMount');
+	componentDidMount: function() {
+		console.log('componentDidMount spotterApp');
         this.getFlux().actions.auth.autho.lock();
         this.getFlux().actions.auth.autho.get();
 	},
@@ -26616,7 +26612,7 @@ var spotterAPI = {
 	    });
 	    xhr.open(method, 'https://data.spotter.online/api/' + frag, true);
 	    xhr.setRequestHeader('Accept', 'application/json');
-	    xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.tokens.id_token);
+	    xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.token);
 	    if (method === 'POST') {
 			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 			xhr.send(data);
@@ -26632,7 +26628,7 @@ var spotterAPI = {
 			cb(JSON.parse(data.currentTarget.responseText));
 	    });
 	    var query = (frag.indexOf('?') === -1) ? '?' : '&';
-	    xhr.open(method, 'https://data.spotter.online/api/' + frag + query + 'token=' + window.flux.stores.AuthStore.state.tokens.id_token, true);
+	    xhr.open(method, 'https://data.spotter.online/api/' + frag + query + 'token=' + window.flux.stores.AuthStore.state.token, true);
 	    xhr.send();
 
 	    return xhr;
@@ -26649,7 +26645,7 @@ var spotterAPI = {
 
 		xhr.open('POST', 'https://data.spotter.online/api/' + frag);
 		xhr.setRequestHeader('Accept', 'application/json');
-		xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.tokens.id_token);
+		xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.token);
 
 		xhr.send(formData);
 	},
@@ -26720,7 +26716,7 @@ var SpotterAPI = require('../lib/spotter');
 var AuthStore = Fluxxor.createStore({
     initialize: function(params) {
         this.state = {
-            tokens:     null,
+            token:      null,
             trainer:    null
         };
 
@@ -26738,12 +26734,50 @@ var AuthStore = Fluxxor.createStore({
     },
     autho: {
         createLock: function() {
-            this.state.lock = new Auth0Lock('YDvRFV8XQoX3fuF1X65l8RqMSmCKHGOg', 'fitflow.eu.auth0.com');
+            this.state.lock = new Auth0Lock('YDvRFV8XQoX3fuF1X65l8RqMSmCKHGOg', 'fitflow.eu.auth0.com',{
+                container: 'auth',
+                allowedConnections: ['google-oauth2', 'facebook'],
+                avatar: null,
+                languageDictionary: {
+                    title: 'Sign in'
+                },
+                theme: {
+                    logo: window.location.pathname + 'images/splash.jpg',
+                    primaryColor: 'white'
+                },
+                auth: {
+                   redirect: true,
+                   responseType: 'token'
+                }
+            });
+
+            this.state.lock.on('authenticated', function(authResult) {
+                this.state.lock.getProfile(authResult.idToken, function(error, profile) {
+                    if (error) {
+                        this.signOut();
+                        return;
+                    }
+
+                    this.autho.getTrainer.bind(this)(authResult, profile);
+                }.bind(this));
+            }.bind(this));
         },
         show: function() {
             this.state.lock.show();
         },
-        getTrainer: function() {
+        getTrainer: function(authResult, profile) {
+            try {
+                localStorage.setItem('token', authResult.idToken);
+            } catch (e) {}
+
+            this.state.token = authResult.idToken;
+
+            if (this.state.token) {
+                setTimeout(function() {
+                    this.flux.actions.auth.spotter.get();
+                }.bind(this), 0);
+            }
+            return;
             var tokens = localStorage.getItem('tokens');
 
             if (this.state.lock && this.state.lock.parseHash && window.location.hash.length > 0) {
@@ -26769,7 +26803,6 @@ var AuthStore = Fluxxor.createStore({
     spotter: {
         getTrainer: function() {
             SpotterAPI.getTrainer(function(data) {
-                console.log('getTrainer callback!', data);
                 if (data.id) {
                     this.state.trainer = data;
 
@@ -26811,7 +26844,7 @@ var AuthStore = Fluxxor.createStore({
     signOut: function() {
         localStorage.clear();
 
-        this.state.tokens   = null;
+        this.state.token    = null;
         this.state.trainer  = null;
     },
     getState: function(){

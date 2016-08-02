@@ -117,6 +117,14 @@ header .header_avatar {
 	background-size: cover;
 }
 
+.auth0-lock.auth0-lock img.auth0-lock-header-logo {
+	width: calc(100% + 28px);
+	height: calc(100% + 28px);
+	position: relative;
+	left:  -14px;
+	top: -14px;
+}
+
 .page {
 	padding: 20px 10px;
 }

@@ -32,8 +32,8 @@ module.exports = React.createClass({
 			page: flux.store('PageStore').getState()
 		};
 	},
-	componentWillMount: function() {
-		console.log('componentWillMount');
+	componentDidMount: function() {
+		console.log('componentDidMount spotterApp');
         this.getFlux().actions.auth.autho.lock();
         this.getFlux().actions.auth.autho.get();
 	},
