@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Spotter</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="css/main.css" />
+	</head>
+	<body>
+		<!-- Google Tag Manager -->
+		<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-5N7BF6"
+		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','GTM-5N7BF6');</script>
+		<!-- End Google Tag Manager -->
+		<div class="container">
+			<h1>SPOTTER</h1>
+
+			<div id="swiper" class="swipe">
+				<div class='swipe-wrap'>
+					<div class="card card_1">
+						<div class="content">
+							<h2>Trust Spotter to help<br/>you make money</h2>
+							<ul>
+								<li>Just a few clicks to use</li>
+
+								<li>Choice of over 250 brands</li>
+
+								<li>Best prices &amp; discount codes</li>
+
+								<li>Completely FREE with no commitment</li>
+
+								<li>A better service from you to your clients</li>
+								 
+								<li>Top tips on the latest sports nutrition trends</li>
+							</ul>
+						</div>
+					</div>
+					<div class="card card_2">
+						<div class="content">
+							<h2>No more forgotten<br/>recommendations</h2>
+							<p>
+								Send personalised messages to your clients with their recommendations, through email or WhatsApp.
+								Build your relationship with your clients through better ways of recommending.
+							</p>
+						</div>
+					</div>
+					<div class="card card_3">
+						<div class="content">
+							<h2>Exclusive discounts</h2>
+							<p>
+								Choose products from over 250 top supplement brands to bring you and your clients the lowest prices,
+								plus all the latest discount codes &amp; exclusive deals.
+								SPOTTER is the only source of this information
+							</p>
+						</div>
+					</div>
+					<div class="card card_4">
+						<div class="content">
+							<h2>Knowledge is power</h2>
+							<p>
+								Why give out nutrition advice for free? 
+								Earn commission for every product your clients buy, from over 50 online retailers.
+								Complete transparency on what you will earn, with fast and easy payment. 
+							</p>
+						</div>
+					</div>
+					<div class="card card_5">
+						<div class="content">
+							<h2>The best trainers<br/>deserve the best rewards</h2>
+							<p>
+								Spotter is the Uber of sports nutrition.<br/>
+								We help you give fantastic recommendations<br/>
+								to your clients with great deals.<br/>
+								You earn commission when they buy - all for FREE
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="menu">
+				<ul id="menu_blobs">
+					<li class="active"></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
+
+				<button>SIGN UP</button>
+				<button>LOG IN</button>
+			</div>
+		</div>
+		<script src="js/swipe.js"></script>
+		<script>
+			var card 	= 0;
+			var blobs 	= [].slice.call(document.getElementById('menu_blobs').children);
+
+			window.mySwipe = new Swipe(document.getElementById('swiper'), {
+				startSlide: 0,
+				speed: 200,
+				continuous: false,
+				disableScroll: false,
+				stopPropagation: false,
+				callback: function(index, elem) {},
+				transitionEnd: function(index, elem) {
+					console.log('transitionEnd', index, elem);
+					blobs.forEach(function(blob, i) {
+						blob.classList[i === index ? 'add' : 'remove']('active');
+						console.log(i, blob);
+					});
+				}
+			});
+		</script>
+	</body>
+</html>
