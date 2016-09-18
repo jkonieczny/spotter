@@ -23,31 +23,20 @@
 				<div class='swipe-wrap'>
 					<div class="card card_1">
 						<div class="content">
-							<h2>Trust Spotter to help<br/>you make money</h2>
-							<ul>
-								<li>Just a few clicks to use</li>
-
-								<li>Choice of over 250 brands</li>
-
-								<li>Best prices &amp; discount codes</li>
-
-								<li class="green">Completely FREE with no commitment</li>
-
-								<li>A better service from you to your clients</li>
-								 
-								<li>Top tips on the latest sports nutrition trends</li>
-							</ul>
+							<h2>The best trainers<br/>deserve the best rewards</h2>
+							<p>
+								Spotter is the Uber of sports nutrition.<br/>
+								We help you give fantastic recommendations to your clients with great deals.<br/>
+								You earn commission when they buy - all for FREE
+							</p>
 						</div>
 					</div>
 					<div class="card card_2">
 						<div class="content">
 							<h2>Exclusive discounts</h2>
 							<p>
-								From L.A Muscle to USN, choose products from<br/>
-								over 250 supplement brands at the lowest prices.<br/> 
-								We’ve partnered with 50 online retailers<br/> 
-								to bring you discount codes and deals<br/> 
-								you won’t find anywhere else. 
+								From L.A Muscle to USN, choose products from over 250 supplement brands at the lowest prices.<br/> 
+								We’ve partnered with 50 online retailers to bring you discount codes and deals you won’t find anywhere else. 
 							</p>
 						</div>
 					</div>
@@ -56,20 +45,27 @@
 							<h2>No more forgotten recommendations</h2>
 							<p>
 								Want to give your clients an even better service with personalised nutrition advice?<br/>
-								With Spotter's one-click messaging service,<br/>
-								that’s easy. Build stronger relationships with your clients through new ways of recommending. 
+								With Spotter's one-click messaging service, that’s easy.<br/>
+								Build stronger relationships with your clients through new ways of recommending. 
 							</p>
 						</div>
 					</div>
 					<div class="card card_4">
 						<div class="content">
-							<h2>The best trainers<br/>deserve the best rewards</h2>
-							<p>
-								Spotter is the Uber of sports nutrition.<br/>
-								We help you give fantastic recommendations<br/>
-								to your clients with great deals.<br/>
-								You earn commission when they buy - all for FREE
-							</p>
+							<h2>Trust Spotter to help you make money</h2>
+							<ul>
+								<li><span>Just a few clicks to use</span></li>
+
+								<li><span>Choice of over 250 brands</span></li>
+
+								<li><span>Best prices &amp; discount codes</span></li>
+
+								<li class="green"><span>Completely FREE with no commitment</span></li>
+
+								<li><span>A better service from you to your clients</span></li>
+								 
+								<li><span>Top tips on the latest sports nutrition trends</span></li>
+							</ul>
 						</div>
 					</div>
 				</div>
@@ -100,13 +96,36 @@
 				stopPropagation: false,
 				callback: function(index, elem) {},
 				transitionEnd: function(index, elem) {
-					console.log('transitionEnd', index, elem);
 					blobs.forEach(function(blob, i) {
 						blob.classList[i === index ? 'add' : 'remove']('active');
-						console.log(i, blob);
 					});
 				}
 			});
+
+			[].slice.call(document.getElementsByTagName('button')).forEach(function(btn) {
+				btn.addEventListener('click', function(e) {
+					e.preventDefault();
+					window.location.href = '/';
+				});
+			});
+
+			blobs.forEach(function(blob) {
+				blob.addEventListener('click', function(e) {
+					e.preventDefault();
+
+					mySwipe.slide(indexInParent(e.currentTarget), 200);
+				})
+			});
+
+			function indexInParent(node) {
+			    var children = node.parentNode.childNodes;
+			    var num = 0;
+			    for (var i=0; i<children.length; i++) {
+			         if (children[i]==node) return num;
+			         if (children[i].nodeType==1) num++;
+			    }
+			    return -1;
+			}
 		</script>
 	</body>
 </html>
