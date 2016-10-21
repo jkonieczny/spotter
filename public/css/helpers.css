@@ -53,16 +53,60 @@ p {
 }
 
 .searchbar li {
-	border-bottom: 1px solid #ccc;
-	cursor: pointer;
-	line-height: 50px;
-	overflow: hidden;
-	padding: 0 10px;
-	text-overflow: ellipsis;
-	white-space: nowrap;             
+    border-bottom: 3px solid #ccc;
+    cursor: pointer;
+    min-height: 66px;
+    padding: 8px 10px 4px 70px;
+    min-height: 66px;
+    position: relative;
+    line-height: 18px;        
 }
 
 .searchbar li:last-child {
 	border-bottom: 0;
+}
+
+.searchbar .searchbar_result .searchbar_result_image {
+	background-color: #ccc;
+	background-position: 50%;
+	background-repeat: no-repeat;
+	background-size: contain;
+	height: 50px;
+	position: absolute;
+	width: 50px;
+	top: 8px;
+	left: 10px;
+}
+
+.searchbar li.searchbar_result_has_discount {
+	padding-bottom: 30px;
+	min-height: 95px;
+}
+
+.searchbar .searchbar_result_discount {
+	background-color: #4eafb3;
+	bottom: 0px;
+	clear: both;
+	color: #fff;
+	display: block;
+	font-size: 12px;
+	height: 26px;
+	left: 0;
+	line-height: 26px;
+	position: absolute;
+	text-align: center;
+	width: 100%;
+}
+
+.searchbar .searchbar_result_discount::before {
+	background-color: #4eafb3;
+	content: '';
+	display: block;
+	height: 10px;
+	left: 30px;
+	position: absolute;
+	top:  -5px;
+	transform: rotate(45deg);
+	width: 10px;
 }
 

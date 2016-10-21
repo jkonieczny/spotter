@@ -12,7 +12,6 @@ var cx = require('classnames');
 var CONSTANTS = require('../constants/constants');
 
 var Avatar      = require('./avatar.jsx');
-var SearchBar   = require('./searchBar.jsx');
 
 module.exports = React.createClass({
     mixins: [FluxMixin, StoreWatchMixin('AuthStore')],

@@ -32,16 +32,19 @@ module.exports = React.createClass({
 	},
     render: function() {
 
-		var totalPrice, commisionPrice;
+		var totalPrice, totalSaving, commisionPrice, saving;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
 			totalPrice		= 0;
 			commisionPrice	= 0;
+			totalSaving     = 0;
 
 			this.state.selectedProducts.forEach(function(product) {
 				totalPrice		+= product.price;
 				commisionPrice	+= product.expected_commission;
+				totalSaving     += (product.original_price - product.price);
+
 				selectedProducts.push(
 					(<Item key={product.id} item={product} />)
 				);
@@ -49,6 +52,14 @@ module.exports = React.createClass({
 
 			commisionPrice 	= (Math.round(commisionPrice * 100) / 100).toFixed(2);
 			totalPrice 		= totalPrice.toFixed(2);
+
+            if (totalSaving > 0) {
+                saving = (
+                    <h2>
+                        Saving: <span>&pound;{totalSaving.toFixed(2)}</span>
+                    </h2>
+                );  
+            }
 		}
 
         return (
@@ -63,6 +74,7 @@ module.exports = React.createClass({
                 <div className="product_price right">
 	                <p></p>
                 	<h2>Total Price:<span>&pound;{totalPrice}</span></h2>
+                	{saving}
                 	<h2>You would earn:<span>&pound;{commisionPrice}</span></h2>
                 </div>
                 <div className="right hide">

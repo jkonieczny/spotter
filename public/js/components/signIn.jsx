@@ -11,8 +11,6 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var SearchBar = require('./searchBar.jsx');
-
 module.exports = React.createClass({
 	displayName: 'signIn.jsx',
 	mixins: [FluxMixin],

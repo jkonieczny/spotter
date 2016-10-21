@@ -51,7 +51,7 @@ var spotterAPI = {
 	    xhr.setRequestHeader('Accept', 'application/json');
 	    xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.token);
 	    if (method === 'POST') {
-			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			xhr.setRequestHeader('Content-type', 'application/json');
 			xhr.send(data);
 	    } else {
 		    xhr.send();

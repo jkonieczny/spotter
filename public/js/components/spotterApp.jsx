@@ -17,8 +17,7 @@ var ClientAdd			= require('./client/clientAdd.jsx'),
 	Product				= require('./product.jsx'),
 	SignIn				= require('./signIn.jsx'),
 	Settings			= require('./settings.jsx'),
-	Success				= require('./success.jsx'),
-	User				= require('./user.jsx');
+	Success				= require('./success.jsx');
 
 module.exports = React.createClass({
 	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
@@ -73,9 +72,6 @@ module.exports = React.createClass({
 		        break;
 		    case 'success':
 		        page = (<Success />);
-		        break;
-		    case 'user':
-		        page = (<User />);
 		        break;
 		    default:
 		        page = (<SignIn />);

@@ -5,7 +5,7 @@ process.env.NODE_ENV = 'dev';
 
 var App = require('./public/js/main.js');
 App.init();
-
+/*
 if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('./serviceWorker.js', {scope: './'}).then(function(reg) {
 		console.log('◕‿◕', reg);
@@ -13,9 +13,10 @@ if ('serviceWorker' in navigator) {
 		console.log('ಠ_ಠ', err);
 	});
 }
+*/
 
 }).call(this,require('_process'))
-},{"./public/js/main.js":296,"_process":2}],2:[function(require,module,exports){
+},{"./public/js/main.js":295,"_process":2}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -25024,7 +25025,7 @@ var actions = {
 
 module.exports = actions;
 
-},{"../constants/constants":294}],275:[function(require,module,exports){
+},{"../constants/constants":293}],275:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25194,7 +25195,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../constants/constants":294,"classnames":3,"fluxxor":4,"react":273}],277:[function(require,module,exports){
+},{"../../constants/constants":293,"classnames":3,"fluxxor":4,"react":273}],277:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25330,7 +25331,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../constants/constants":294,"../avatar.jsx":275,"classnames":3,"fluxxor":4,"react":273}],278:[function(require,module,exports){
+},{"../../constants/constants":293,"../avatar.jsx":275,"classnames":3,"fluxxor":4,"react":273}],278:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25365,16 +25366,19 @@ module.exports = React.createClass({
 	},
     render: function() {
 
-		var totalPrice, commisionPrice, proceedButton;
+		var totalPrice, totalSaving, commisionPrice, proceedButton, saving;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
 			totalPrice		= 0;
 			commisionPrice	= 0;
+            totalSaving     = 0;
 
 			this.state.selectedProducts.forEach(function(product) {
 				totalPrice		+= product.price;
 				commisionPrice	+= product.expected_commission;
+                totalSaving     += (product.original_price - product.price);
+
 				selectedProducts.push(
 					(React.createElement(Item, {key: product.id, item: product}))
 				);
@@ -25384,6 +25388,14 @@ module.exports = React.createClass({
 			totalPrice 		= totalPrice.toFixed(2);
 
 			proceedButton = (React.createElement("button", {type: "submit", onClick: this.proceed}, "Proceed"));
+
+            if (totalSaving > 0) {
+                saving = (
+                    React.createElement("h2", null, 
+                        "Saving: ", React.createElement("span", null, "£", totalSaving.toFixed(2))
+                    )
+                );  
+            }
 		}
 
         return (
@@ -25398,6 +25410,7 @@ module.exports = React.createClass({
                 React.createElement("p", null), 
                 React.createElement("div", {className: "product_price right"}, 
                 	React.createElement("h2", null, "Total Price:", React.createElement("span", null, "£", totalPrice)), 
+                    saving, 
                 	React.createElement("h2", null, "You would earn:", React.createElement("span", null, "£", commisionPrice)), 
                 	React.createElement("p", null)
                 ), 
@@ -25430,7 +25443,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":294,"./avatar.jsx":275,"./item.jsx":282,"classnames":3,"fluxxor":4,"react":273}],279:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"./item.jsx":282,"classnames":3,"fluxxor":4,"react":273}],279:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25439,8 +25452,6 @@ var React = require('react'),
 	Fluxxor = require('fluxxor'),
 	FluxMixin = Fluxxor.FluxMixin(React),
     StoreWatchMixin = Fluxxor.StoreWatchMixin;
-
-var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
@@ -25484,7 +25495,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":294,"./avatar.jsx":275,"./itemGrid.jsx":283,"classnames":3,"fluxxor":4,"react":273}],280:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"./itemGrid.jsx":283,"fluxxor":4,"react":273}],280:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25559,7 +25570,6 @@ var cx = require('classnames');
 var CONSTANTS = require('../constants/constants');
 
 var Avatar      = require('./avatar.jsx');
-var SearchBar   = require('./searchBar.jsx');
 
 module.exports = React.createClass({
     mixins: [FluxMixin, StoreWatchMixin('AuthStore')],
@@ -25613,7 +25623,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":294,"./avatar.jsx":275,"./searchBar.jsx":287,"classnames":3,"fluxxor":4,"react":273}],282:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"classnames":3,"fluxxor":4,"react":273}],282:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25894,24 +25904,36 @@ module.exports = React.createClass({displayName: "exports",
 	},
     render: function() {
 
-		var totalPrice, commisionPrice, proceedButton, recommendText, removeText;
+		var totalPrice, totalSaving, commisionPrice, proceedButton, recommendText, removeText, saving;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
 			totalPrice		= 0;
 			commisionPrice	= 0;
+			totalSaving		= 0;
 
 			this.state.selectedProducts.forEach(function(product) {
 				totalPrice		+= product.price;
 				commisionPrice	+= product.expected_commission;
+				totalSaving 	+= (product.original_price - product.price);
+
 				selectedProducts.push(
 					(React.createElement(Item, {key: product.id, item: product, action: this.removeItem.bind(this, product)}))
 				);
 			}.bind(this));
 
+			if (totalSaving > 0) {
+				saving = (
+					React.createElement("h2", null, 
+						"Saving: ", React.createElement("span", null, "£", totalSaving.toFixed(2))
+					)
+				);	
+			}
+
 			totalPrice 		= 	(
 									React.createElement("div", {className: "product_price right"}, 
 										React.createElement("h2", null, "Total Price:  ", React.createElement("span", null, "£", totalPrice.toFixed(2))), 
+										saving, 
 										React.createElement("h2", null, "You would earn: ", React.createElement("span", null, "£", (Math.round(commisionPrice * 100) / 100).toFixed(2)))
 									)
 								);
@@ -25956,7 +25978,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"../constants/constants":294,"./avatar.jsx":275,"./item.jsx":282,"./itemSelect.jsx":284,"classnames":3,"fluxxor":4,"react":273}],286:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"./item.jsx":282,"./itemSelect.jsx":284,"classnames":3,"fluxxor":4,"react":273}],286:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -26069,7 +26091,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":294,"./avatar.jsx":275,"classnames":3,"fluxxor":4,"react":273}],287:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"classnames":3,"fluxxor":4,"react":273}],287:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -26084,7 +26106,7 @@ module.exports = React.createClass({displayName: "exports",
 
     	this.props.matches.forEach(function(result) {
     		results.push(
-    			React.createElement(SearchBarResult, {key: result[this.props.reactKeys || this.props.keys], keys: this.props.keys, result: result, className: "searchbar_result", onSelectedAction: this.props.onSelectedAction})
+    			React.createElement(SearchBarResult, {key: result[this.props.reactKeys || this.props.keys], result: result, className: "searchbar_result", onSelectedAction: this.props.onSelectedAction})
     		);
     	}.bind(this));
 
@@ -26106,14 +26128,27 @@ var React = require('react'),
     Fluxxor = require('fluxxor'),
     FluxMixin = Fluxxor.FluxMixin(React);
 
+var cx = require('classnames');
+
 module.exports = React.createClass({displayName: "exports",
     mixins: [FluxMixin],
     render: function() {
         var result = this.props.result;
 
+        var discount;
+
+        if (result.discount && result.discount.discount_type) {
+            if (result.discount.discount_type === 'percent') {
+                discount = (React.createElement("strong", {className: "searchbar_result_discount"}, "EXCLUSIVE ", result.discount.value, "% OFF"));
+            } else if (result.discount.discount_type === 'flat') {
+                discount = (React.createElement("strong", {className: "searchbar_result_discount"}, "SAVE £", result.discount.value));
+            }
+        }
+
         return (
-            React.createElement("li", {className: "searchbar_result", onClick: this.onSelected}, 
-                result[this.props.keys]
+            React.createElement("li", {className: cx({'searchbar_result': true, 'searchbar_result_has_discount': discount}), onClick: this.onSelected}, 
+                React.createElement("div", {className: "searchbar_result_image", style:  { backgroundImage: 'url(' + result.image + ')'} }), 
+                result.name, discount
             )
         );
     },
@@ -26126,7 +26161,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"fluxxor":4,"react":273}],289:[function(require,module,exports){
+},{"classnames":3,"fluxxor":4,"react":273}],289:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -26182,7 +26217,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":294,"classnames":3,"fluxxor":4,"react":273}],290:[function(require,module,exports){
+},{"../constants/constants":293,"classnames":3,"fluxxor":4,"react":273}],290:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -26195,8 +26230,6 @@ var React = require('react'),
 var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
-
-var SearchBar = require('./searchBar.jsx');
 
 module.exports = React.createClass({
 	displayName: 'signIn.jsx',
@@ -26219,7 +26252,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":294,"./searchBar.jsx":287,"classnames":3,"fluxxor":4,"react":273}],291:[function(require,module,exports){
+},{"../constants/constants":293,"classnames":3,"fluxxor":4,"react":273}],291:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -26239,8 +26272,7 @@ var ClientAdd			= require('./client/clientAdd.jsx'),
 	Product				= require('./product.jsx'),
 	SignIn				= require('./signIn.jsx'),
 	Settings			= require('./settings.jsx'),
-	Success				= require('./success.jsx'),
-	User				= require('./user.jsx');
+	Success				= require('./success.jsx');
 
 module.exports = React.createClass({displayName: "exports",
 	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
@@ -26296,9 +26328,6 @@ module.exports = React.createClass({displayName: "exports",
 		    case 'success':
 		        page = (React.createElement(Success, null));
 		        break;
-		    case 'user':
-		        page = (React.createElement(User, null));
-		        break;
 		    default:
 		        page = (React.createElement(SignIn, null));
 		}
@@ -26313,7 +26342,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./client/clientAdd.jsx":276,"./client/clientsView.jsx":277,"./confirmation.jsx":278,"./email.jsx":279,"./header.jsx":280,"./home.jsx":281,"./product.jsx":285,"./profile.jsx":286,"./settings.jsx":289,"./signIn.jsx":290,"./success.jsx":292,"./user.jsx":293,"fluxxor":4,"react":273}],292:[function(require,module,exports){
+},{"./client/clientAdd.jsx":276,"./client/clientsView.jsx":277,"./confirmation.jsx":278,"./email.jsx":279,"./header.jsx":280,"./home.jsx":281,"./product.jsx":285,"./profile.jsx":286,"./settings.jsx":289,"./signIn.jsx":290,"./success.jsx":292,"fluxxor":4,"react":273}],292:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -26348,16 +26377,19 @@ module.exports = React.createClass({
 	},
     render: function() {
 
-		var totalPrice, commisionPrice;
+		var totalPrice, totalSaving, commisionPrice, saving;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
 			totalPrice		= 0;
 			commisionPrice	= 0;
+			totalSaving     = 0;
 
 			this.state.selectedProducts.forEach(function(product) {
 				totalPrice		+= product.price;
 				commisionPrice	+= product.expected_commission;
+				totalSaving     += (product.original_price - product.price);
+
 				selectedProducts.push(
 					(React.createElement(Item, {key: product.id, item: product}))
 				);
@@ -26365,6 +26397,14 @@ module.exports = React.createClass({
 
 			commisionPrice 	= (Math.round(commisionPrice * 100) / 100).toFixed(2);
 			totalPrice 		= totalPrice.toFixed(2);
+
+            if (totalSaving > 0) {
+                saving = (
+                    React.createElement("h2", null, 
+                        "Saving: ", React.createElement("span", null, "£", totalSaving.toFixed(2))
+                    )
+                );  
+            }
 		}
 
         return (
@@ -26379,6 +26419,7 @@ module.exports = React.createClass({
                 React.createElement("div", {className: "product_price right"}, 
 	                React.createElement("p", null), 
                 	React.createElement("h2", null, "Total Price:", React.createElement("span", null, "£", totalPrice)), 
+                	saving, 
                 	React.createElement("h2", null, "You would earn:", React.createElement("span", null, "£", commisionPrice))
                 ), 
                 React.createElement("div", {className: "right hide"}, 
@@ -26396,124 +26437,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":294,"./avatar.jsx":275,"./item.jsx":282,"classnames":3,"fluxxor":4,"react":273}],293:[function(require,module,exports){
-/** @jsx React.DOM */
-
-'use strict';
-
-var React = require('react'),
-	Fluxxor = require('fluxxor'),
-	FluxMixin = Fluxxor.FluxMixin(React),
-    StoreWatchMixin = Fluxxor.StoreWatchMixin;
-
-var cx = require('classnames');
-
-var CONSTANTS = require('../constants/constants');
-
-var SearchBar = require('./searchBar.jsx');
-
-module.exports = React.createClass({
-	displayName: 'user.jsx',
-	mixins: [FluxMixin, StoreWatchMixin('ClientStore')],
-	getInitialState: function() {
-		return {
-			selectedUser: {
-				name: '',
-				email: ''
-			}
-		};
-	},
-	getStateFromFlux: function() {
-		var flux = this.getFlux();
-
-		return flux.store('ClientStore').getState();
-	},
-	componentDidMount: function() {
-		window.scrollTo(0,0);
-
-		this.getFlux().actions.products.reset();
-	},
-    render: function() {
-		var matchedUsers;
-
-		if (this.state.matchedUsers) {
-			matchedUsers = (React.createElement(SearchBar, {keys: "email", matches:  this.state.matchedUsers, onSelectedAction: this.searchUsersSelected}))
-		}
-
-		var avatarClasses = {
-			user_avatar: true
-		};
-		var avatarInlineCSS = {};
-
-		if (this.state.selectedUser && this.state.selectedUser.avatar) {
-			avatarClasses.user_selected 	= true;
-			avatarInlineCSS.backgroundImage = 'url(images/avatars/' + this.state.selectedUser.avatar + '.jpg)';
-		}
-
-        return (
-            React.createElement("div", {className: "page page_user"}, 
-                React.createElement("div", {className: cx(avatarClasses), style: avatarInlineCSS}), 
-                React.createElement("p", {className: "center"}, "Add your client"), 
-
-                React.createElement("form", null, 
-                	React.createElement("label", null, 
-                		"Email", 
-	                	React.createElement("input", {type: "email", placeholder: "Email", onChange:  this.updateEmail, value:  this.state.selectedUser.email}), 
-	                	 matchedUsers 
-	                ), 
-	                React.createElement("label", null, 
-	                	"Name", 
-	                	React.createElement("input", {type: "text", placeholder: "Name", onChange:  this.updateName, value:  this.state.selectedUser.name})
-	                ), 
-	                React.createElement("button", {type: "submit", onClick: this.proceed, disabled:  (!this.state.selectedUser.email) }, "Proceed")
-                )
-            )
-        );
-    },
-    updateEmail: function(e) {
-    	var matchedUsers = this.state.users.filter(function(user) {
-    		return (user.email.search(e.currentTarget.value) > -1) ? user : false;
-    	});
-
-		this.setState({
-			selectedUser: {
-				email: e.currentTarget.value,
-				name: this.state.selectedUser.name
-			},
-			matchedUsers: (matchedUsers.length > 0) ? matchedUsers : []
-		});
-    },
-	updateName: function(e) {
-		this.setState({
-			selectedUser: {
-				email: this.state.selectedUser.email,
-				name: e.currentTarget.value
-			}
-		});
-	},
-    searchUsersSelected: function(value) {
-    	this.setState({
-    		selectedUser: value.value,
-    		matchedUsers: null
-    	});
-
-    	setTimeout(function() {
-	    	document.activeElement.blur();
-    	}, 0);
-    },
-    proceed: function(e) {
-    	e.preventDefault();
-    	this.getFlux().actions.page.update({
-    		page: 'product'
-    	});
-    	this.getFlux().actions.client.update({
-    		client: this.state.selectedUser
-    	});
-    }
-
-});
-
-},{"../constants/constants":294,"./searchBar.jsx":287,"classnames":3,"fluxxor":4,"react":273}],294:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"./item.jsx":282,"classnames":3,"fluxxor":4,"react":273}],293:[function(require,module,exports){
 var constants = {
     AUTH: {
         INIT: 'AUTH_INIT',
@@ -26564,7 +26488,7 @@ var constants = {
 
 module.exports = constants;
 
-},{}],295:[function(require,module,exports){
+},{}],294:[function(require,module,exports){
 'use strict';
 
 var baseURL = 'https://data.spotter.online/api/';
@@ -26618,7 +26542,7 @@ var spotterAPI = {
 	    xhr.setRequestHeader('Accept', 'application/json');
 	    xhr.setRequestHeader('Authorization', 'Bearer ' + window.flux.stores.AuthStore.state.token);
 	    if (method === 'POST') {
-			xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+			xhr.setRequestHeader('Content-type', 'application/json');
 			xhr.send(data);
 	    } else {
 		    xhr.send();
@@ -26665,7 +26589,7 @@ var spotterAPI = {
 
 module.exports = spotterAPI;
 
-},{}],296:[function(require,module,exports){
+},{}],295:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -26709,7 +26633,7 @@ var App = {
 
 module.exports = App;
 
-},{"./actions/actions.js":274,"./components/spotterApp.jsx":291,"./stores/authStore.js":297,"./stores/clientStore.js":298,"./stores/pageStore.js":299,"./stores/productStore.js":300,"fluxxor":4,"react":273,"react-dom":101}],297:[function(require,module,exports){
+},{"./actions/actions.js":274,"./components/spotterApp.jsx":291,"./stores/authStore.js":296,"./stores/clientStore.js":297,"./stores/pageStore.js":298,"./stores/productStore.js":299,"fluxxor":4,"react":273,"react-dom":101}],296:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -26890,7 +26814,7 @@ var AuthStore = Fluxxor.createStore({
 
 module.exports = AuthStore;
 
-},{"../constants/constants":294,"../lib/spotter":295,"fluxxor":4}],298:[function(require,module,exports){
+},{"../constants/constants":293,"../lib/spotter":294,"fluxxor":4}],297:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -27058,7 +26982,7 @@ var ClientStore = Fluxxor.createStore({
 
 module.exports = ClientStore;
 
-},{"../constants/constants":294,"../lib/spotter":295,"fluxxor":4}],299:[function(require,module,exports){
+},{"../constants/constants":293,"../lib/spotter":294,"fluxxor":4}],298:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -27101,7 +27025,7 @@ var PageStore = Fluxxor.createStore({
 
 module.exports = PageStore;
 
-},{"../constants/constants":294,"fluxxor":4}],300:[function(require,module,exports){
+},{"../constants/constants":293,"fluxxor":4}],299:[function(require,module,exports){
 'use strict';
 
 var Fluxxor = require('fluxxor');
@@ -27156,4 +27080,4 @@ var ProductStore = Fluxxor.createStore({
 
 module.exports = ProductStore;
 
-},{"../constants/constants":294,"../lib/spotter":295,"fluxxor":4}]},{},[1]);
+},{"../constants/constants":293,"../lib/spotter":294,"fluxxor":4}]},{},[1]);
