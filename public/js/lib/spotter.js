@@ -20,7 +20,7 @@ var spotterAPI = {
 		this.xhrImage('client/update-image/' + id, file, cb);
 	},
 	imageTrainer: function(file, cb) {
-		this.xhrImage('/profile/update-image', file, cb);
+		this.xhrImage('profile/update-image', file, cb);
 	},
 	getClients: function(cb) {
 		this.XHR('client/list', G, cb);
@@ -37,7 +37,7 @@ var spotterAPI = {
 		this.XHR('profile', G, cb);
 	},
 	updateTrainer: function(data, cb) {
-		this.XHR('/profile/update', P, cb, JSON.stringify(data));
+		this.XHR('profile/update', P, cb, JSON.stringify(data));
 	},
 	sendClientEmail: function(data, cb) {
 		this.XHR('recommend/new', P, cb, JSON.stringify(data));
