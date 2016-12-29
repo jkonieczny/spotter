@@ -25678,7 +25678,7 @@ module.exports = React.createClass({
         return (
             React.createElement("div", {className: "page signin"}, 
                 React.createElement(Avatar, {person: this.state.trainer}), 
-                React.createElement("h2", {className: "center"}, "Welcome back ", this.state.trainer.name), 
+                React.createElement("h2", {className: "center"}, "Hi ", this.state.trainer.name.split(' ')[0], "!"), 
                 React.createElement("p", null), 
                 React.createElement("form", null, 
                     React.createElement("label", null, 
@@ -25879,7 +25879,6 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-		console.log('state', this.state);
 		var masterProducts, loading;
 
 		if (this.state.masterProducts.length > 0 && this.state.loading === false) {
@@ -25900,15 +25899,14 @@ module.exports = React.createClass({
 
     	if (this.state.loading === true) {
     		loading = (
-    			React.createElement("div", null, 
-    				"Loading..."
-    			)
+    			React.createElement("div", {className: "spotter_loader"})
     		);
     	} 
 
     	return (
     		React.createElement("div", {className: "page page_master_product"}, 
     			React.createElement("div", {className: "product_search"}, 
+    				React.createElement("p", null, "Recommend to ",  this.state.selectedUser.fname), 
     				React.createElement("input", {type: "text", placeholder: "E.g. GF-1, Creatine, Vit C…", onChange:  this.productInput, value:  this.state.value})
     			), 
     			 loading, 
@@ -25983,14 +25981,15 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var Avatar				= require('./avatar.jsx');
 var ChildProductItem	= require('./childProductItem.jsx');
 
 module.exports = React.createClass({
 	displayName: 'product.jsx',
 	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
-		return {};
+		return {
+			image: null
+		};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
@@ -26006,8 +26005,23 @@ module.exports = React.createClass({
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
+	componentDidUpdate: function() {
+		if (!this.state.image && this.state.childProducts[0] && this.state.childProducts[0].image) {
+			var img = document.createElement('img');
+			img.onload = function() {
+				this.setState({
+					image: this.state.childProducts[0].image
+				})
+			}.bind(this);
+
+			img.src = this.state.childProducts[0].image;
+		}
+	},
     render: function() {
 		var childProducts, loading;
+    	var productDetailsClasses = {
+			master_product_details: true
+    	};
 
 		if (this.state.loading === false) {
 			if (this.state.childProducts.length > 0) {
@@ -26035,17 +26049,22 @@ module.exports = React.createClass({
 
     	if (this.state.loading === true) {
     		loading = (
-    			React.createElement("div", null, 
-    				"Loading..."
-    			)
+				React.createElement("div", {className: "spotter_loader"})
     		);
     	}
 
     	var masterProduct = this.state.masterProduct;
 
+    	var productImage;
+
+    	if (this.state.image) {
+    		productImage = { backgroundImage: 'url(' + this.state.image + ')' }
+    		productDetailsClasses.img_loaded = true;
+    	}
+
     	return (
-    		React.createElement("div", null, 
-    			React.createElement("div", null, 
+    		React.createElement("div", {className: "page page_child_product"}, 
+    			React.createElement("div", {className: cx(productDetailsClasses), style:  productImage }, 
     				React.createElement("h2", null,  masterProduct.name), 
     				React.createElement("p", null,  masterProduct.description)
     			), 
@@ -26057,7 +26076,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":293,"./avatar.jsx":275,"./childProductItem.jsx":276,"classnames":3,"fluxxor":4,"react":273}],288:[function(require,module,exports){
+},{"../constants/constants":293,"./childProductItem.jsx":276,"classnames":3,"fluxxor":4,"react":273}],288:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';

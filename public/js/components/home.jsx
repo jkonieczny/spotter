@@ -28,7 +28,7 @@ module.exports = React.createClass({
         return (
             <div className="page signin">
                 <Avatar person={this.state.trainer} />
-                <h2 className="center">Welcome back {this.state.trainer.name}</h2>
+                <h2 className="center">Hi {this.state.trainer.name.split(' ')[0]}!</h2>
                 <p/>
                 <form>
                     <label>

@@ -1,6 +1,6 @@
 html,
 body {
-	font-family: 'AvenirNext-Regular', Lato, Arial;
+	font-family: 'montserratregular', Lato, Arial;
 }
 
 *, *::before, *::after {
@@ -22,14 +22,13 @@ body,
 }
 
 header {
-	border-bottom: 1px solid #ccc;
+	background-color: #7740A2;
 	height: 50px;
 	line-height: 50px;
 	position: relative;
 }
 
 header .header_back {
-	border-right: 1px solid #ccc;
 	cursor: pointer;
 	height: 100%;
 	left: 0;
@@ -40,8 +39,8 @@ header .header_back {
 }
 
 header .header_back::before {
-	border-left: 2px solid #000;
-	border-top: 2px solid #000;
+	border-left: 2px solid #fff;
+	border-top: 2px solid #fff;
 	content: '';
 	display: block;
 	height: 40%;
@@ -79,13 +78,20 @@ header .header_back.home::after {
 }
 
 header .header_title {
-	font-weight: bold;
+	background-image: url('../../images/header_logo.png');
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size: contain;
+	height: 100%;
 	left: 50%;
 	position: absolute;
+	text-indent: -9999px;
 	transform: translateX(-50%);
+	width: 110px;
 }
 
 header .header_avatar {
+	background-color: #3F2686;
 	background-size: cover;
 	background-position: 50%;
 	border: 1px solid #ccc;
@@ -99,12 +105,12 @@ header .header_avatar {
 
 .user_avatar {
 	background-color: #fff;
-	background-image: url('../../images/icon.png');
-	background-position: calc(50% + 9px) 50%;
+	background-image: url('../../images/loader.png');
+	background-position: 50%;
 	background-repeat: no-repeat;
-	background-size: 80%;
+	background-size: 50%;
 	border-radius: 100%;
-	border: 2px solid #4eafb3;
+	border: 2px solid #7740A2;
 	box-shadow: inset 0 2px 2px 1px rgba(0,0,0,0.2);
 	height: 120px;
 	margin: 20px auto 40px;
@@ -112,7 +118,7 @@ header .header_avatar {
 }
 
 .user_avatar.user_selected {
-	background-color: #ccc;
+	background-color: #3F2686;
 	background-position: 50%;
 	background-size: cover;
 }

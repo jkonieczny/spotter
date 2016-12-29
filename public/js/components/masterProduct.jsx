@@ -42,7 +42,6 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-		console.log('state', this.state);
 		var masterProducts, loading;
 
 		if (this.state.masterProducts.length > 0 && this.state.loading === false) {
@@ -63,15 +62,14 @@ module.exports = React.createClass({
 
     	if (this.state.loading === true) {
     		loading = (
-    			<div>
-    				Loading...
-    			</div>
+    			<div className="spotter_loader"></div>
     		);
     	} 
 
     	return (
     		<div className="page page_master_product">
     			<div className="product_search">
+    				<p>Recommend to { this.state.selectedUser.fname }</p>
     				<input type="text" placeholder="E.g. GF-1, Creatine, Vit C…" onChange={ this.productInput } value={ this.state.value } />
     			</div>
     			{ loading }

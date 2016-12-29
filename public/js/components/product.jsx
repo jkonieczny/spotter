@@ -11,14 +11,15 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var Avatar				= require('./avatar.jsx');
 var ChildProductItem	= require('./childProductItem.jsx');
 
 module.exports = React.createClass({
 	displayName: 'product.jsx',
 	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
-		return {};
+		return {
+			image: null
+		};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
@@ -34,8 +35,23 @@ module.exports = React.createClass({
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
+	componentDidUpdate: function() {
+		if (!this.state.image && this.state.childProducts[0] && this.state.childProducts[0].image) {
+			var img = document.createElement('img');
+			img.onload = function() {
+				this.setState({
+					image: this.state.childProducts[0].image
+				})
+			}.bind(this);
+
+			img.src = this.state.childProducts[0].image;
+		}
+	},
     render: function() {
 		var childProducts, loading;
+    	var productDetailsClasses = {
+			master_product_details: true
+    	};
 
 		if (this.state.loading === false) {
 			if (this.state.childProducts.length > 0) {
@@ -63,17 +79,22 @@ module.exports = React.createClass({
 
     	if (this.state.loading === true) {
     		loading = (
-    			<div>
-    				Loading...
-    			</div>
+				<div className="spotter_loader"></div>
     		);
     	}
 
     	var masterProduct = this.state.masterProduct;
 
+    	var productImage;
+
+    	if (this.state.image) {
+    		productImage = { backgroundImage: 'url(' + this.state.image + ')' }
+    		productDetailsClasses.img_loaded = true;
+    	}
+
     	return (
-    		<div>
-    			<div>
+    		<div className="page page_child_product">
+    			<div className={cx(productDetailsClasses)} style={ productImage }>
     				<h2>{ masterProduct.name }</h2>
     				<p>{ masterProduct.description }</p>
     			</div>

@@ -2,8 +2,7 @@ input,
 button,
 select {
 	background-color: #fff;
-	border-radius: 2px;
-	border: 1px solid #ccc;
+	border-radius: 12px;
 	line-height: 50px;
 	margin: 4px 0 20px;
 	padding: 0 10px;
@@ -12,16 +11,20 @@ select {
 	-webkit-appearance: none;
 }
 
+input {
+	border: 2px solid #8493A7;
+}
+
 input:focus,
 button:focus,
 select:focus {
 	outline: none;
-	box-shadow: 0 0 0 2px #4eafb3;
+	box-shadow: 0 0 0 2px #FF5063;
 	z-index: 1;
 }
 
 button {
-	background-color: #4eafb3;
+	background-color: #FF5063;
 	border: 0;
 	color: #fff;
 	font-size: 16px;
@@ -110,3 +113,34 @@ p {
 	width: 10px;
 }
 
+.spotter_loader {
+	height: 100px;
+	position: relative;
+}
+
+.spotter_loader::before {
+	background-image: url('../../images/loader.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: 50%;
+	content: '';
+	display: block;
+	height: 60px;
+	left:  calc(50% - 30px);
+	position: absolute;
+	top:  20px;
+	width: 60px;
+	animation-duration: 1s;
+	animation-name: loader;
+	animation-iteration-count: infinite;
+}
+
+@keyframes loader {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+}
