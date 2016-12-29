@@ -16,7 +16,7 @@ module.exports = React.createClass({
 	mixins: [FluxMixin],
 	componentDidMount: function() {
 		window.scrollTo(0,0);
-        console.log('signin componentDidMount');
+
         setTimeout(function() {
             this.getFlux().actions.auth.init();
         }.bind(this));

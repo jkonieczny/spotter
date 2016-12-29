@@ -40,6 +40,14 @@ var constants = {
         RESET: 'PRODUCTS_RESET',
         SEARCH: 'PRODUCTS_SEARCH'
     },
+    MASTERPRODUCTS: {
+        SEARCH: 'MASTER_PRODUCTS_SEARCH',
+        SELECTED: 'MASTER_PRODUCTS_SELECTED',
+        VALUE: 'MASTER_PRODUCTS_VALUE'
+    },
+    CHILDPRODUCTS: {
+        GET: 'CHILD_PRODUCTS_GET'
+    },
     PAGE: {
         GOBACK: 'PAGE_BACK',
         UPDATE: 'PAGE_UPDATE'

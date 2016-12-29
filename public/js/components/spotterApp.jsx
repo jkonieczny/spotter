@@ -14,6 +14,7 @@ var ClientAdd			= require('./client/clientAdd.jsx'),
 	Header				= require('./header.jsx'),
 	Home				= require('./home.jsx'),
 	Profile				= require('./profile.jsx'),
+	MasterProduct		= require('./masterProduct.jsx'),
 	Product				= require('./product.jsx'),
 	SignIn				= require('./signIn.jsx'),
 	Settings			= require('./settings.jsx'),
@@ -32,12 +33,8 @@ module.exports = React.createClass({
 		};
 	},
 	componentDidMount: function() {
-		console.log('componentDidMount spotterApp');
         //this.getFlux().actions.auth.autho.lock();
         //this.getFlux().actions.auth.autho.get();
-	},
-	componentWillUpdate: function() {
-		console.log('componentWillUpdate');
 	},
     render: function() {
 		var page;
@@ -63,6 +60,9 @@ module.exports = React.createClass({
 		        break;
 		    case 'product':
 		        page = (<Product />);
+		        break;
+		    case 'masterProduct':
+		        page = (<MasterProduct />);
 		        break;
 		    case 'profile':
 		        page = (<Profile />);

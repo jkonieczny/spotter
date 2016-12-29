@@ -54,6 +54,34 @@ var actions = {
 			this.dispatch(CONSTANTS.PRODUCTS.RESET);
 		}
 	},
+	childProducts: {
+		get: function(payload) {
+			console.log('childProducts selected', payload);
+			this.dispatch(CONSTANTS.CHILDPRODUCTS.GET, {
+				id: payload.id,
+				value: payload.value
+			});
+		}
+	},
+	masterProducts: {
+		search: function(payload) {
+			console.log('actions', payload);
+			this.dispatch(CONSTANTS.MASTERPRODUCTS.SEARCH, {
+				value: payload.value
+			});
+		},
+		selected: function(payload) {
+			console.log('selected', payload);
+			this.dispatch(CONSTANTS.MASTERPRODUCTS.SELECTED, {
+				masterProduct: payload.masterProduct
+			});
+		},
+		value: function(payload) {
+			this.dispatch(CONSTANTS.MASTERPRODUCTS.VALUE, {
+				value: payload.value
+			});
+		}
+	},
 	client: {
 		add: function(payload) {
 			this.dispatch(CONSTANTS.CLIENT.ADD, { client: payload.client });

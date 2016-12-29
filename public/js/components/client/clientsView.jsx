@@ -105,7 +105,7 @@ module.exports = React.createClass({
                 client: client
             });
             this.getFlux().actions.page.update({
-                page: 'product'
+                page: 'masterProduct'
             });
         }
     },

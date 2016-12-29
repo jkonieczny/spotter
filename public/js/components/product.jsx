@@ -11,97 +11,76 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var Avatar		= require('./avatar.jsx');
-var Item		= require('./item.jsx');
-var ItemSelect	= require('./itemSelect.jsx');
+var Avatar				= require('./avatar.jsx');
+var ChildProductItem	= require('./childProductItem.jsx');
 
 module.exports = React.createClass({
+	displayName: 'product.jsx',
 	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
+		var productStore = flux.store('ProductStore').getState();
+
 		return {
 			selectedUser: flux.store('ClientStore').getState().client,
-			selectedProducts: flux.store('ProductStore').getState().selectedProducts
+			loading: productStore.loading,
+			masterProduct: productStore.selectedMasterProduct,
+			childProducts: productStore.childProducts
 		};
 	},
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
     render: function() {
+		var childProducts, loading;
 
-		var totalPrice, totalSaving, commisionPrice, proceedButton, recommendText, removeText, saving;
+		if (this.state.loading === false) {
+			if (this.state.childProducts.length > 0) {
+				var childProductsArray = [];
 
-		var selectedProducts = [];
-		if (this.state.selectedProducts.length > 0) {
-			totalPrice		= 0;
-			commisionPrice	= 0;
-			totalSaving		= 0;
+	    		this.state.childProducts.forEach(function(product) {
+	    			childProductsArray.push(
+    					(<ChildProductItem key={ product.id } product={ product } />)
+	    			);
+	    		}.bind(this));
 
-			this.state.selectedProducts.forEach(function(product) {
-				totalPrice		+= product.price;
-				commisionPrice	+= product.expected_commission;
-				totalSaving 	+= (product.original_price - product.price);
-
-				selectedProducts.push(
-					(<Item key={product.id} item={product} action={this.removeItem.bind(this, product)}/>)
+				childProducts = (
+					<ul className="item_list product_results">
+						{ childProductsArray }
+					</ul>
 				);
-			}.bind(this));
+	    	} else {
+	    		loading = (
+	    			<div>
+	    				No results found
+	    			</div>
+	    		);
+	    	}
+	    }
 
-			if (totalSaving > 0) {
-				saving = (
-					<h2>
-						Saving: <span>&pound;{totalSaving.toFixed(2)}</span>
-					</h2>
-				);	
-			}
+    	if (this.state.loading === true) {
+    		loading = (
+    			<div>
+    				Loading...
+    			</div>
+    		);
+    	}
 
-			totalPrice 		= 	(
-									<div className="product_price right">
-										<h2>Total Price: 	<span>&pound;{totalPrice.toFixed(2)}</span></h2>
-										{saving}
-										<h2>You would earn: <span>&pound;{(Math.round(commisionPrice * 100) / 100).toFixed(2)}</span></h2>
-									</div>
-								);
+    	var masterProduct = this.state.masterProduct;
 
-			proceedButton 	= (<button type="submit" onClick={this.proceed}>Proceed</button>);
-			recommendText 	= (<h3>Recommend another product?</h3>);
-			removeText 		= (
-                <p className="right">
-	                <small>Tap a product to remove</small>
-	            </p>
-			);
-		}
-
-        return (
-            <div className="page page_product">
-            	<Avatar person={this.state.selectedUser} />
-                <p className="center">What would you like to recommend to {this.state.selectedUser.fname}?</p>
-                <div className="item_list">
-                	{ selectedProducts }
-                </div>
-                {removeText}
-
-                { totalPrice }
-                { recommendText }
-                <ItemSelect />
-                { proceedButton }
-            </div>
-        );
-    },
-    proceed: function(e) {
-    	e.preventDefault();
-    	this.getFlux().actions.page.update({
-    		page: 'confirmation'
-    	});
-    },
-    removeItem: function(product) {
-        var c = window.confirm('Do you want to remove ' + product.name + '?');
-        if (c === true) {
-            this.getFlux().actions.products.remove(product.id);
-        }
+    	return (
+    		<div>
+    			<div>
+    				<h2>{ masterProduct.name }</h2>
+    				<p>{ masterProduct.description }</p>
+    			</div>
+    			{ loading }
+    			{ childProducts }
+    		</div>
+    	);
     }
 
 });

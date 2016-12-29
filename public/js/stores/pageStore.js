@@ -8,7 +8,7 @@ var PageStore = Fluxxor.createStore({
         this.state = {
             currentPage:    'signin',
             history:        [],
-            pages:          ['signin', 'user', 'product', 'confirmation', 'success']
+            pages:          ['signin', 'user', 'masterProduct', 'product', 'confirmation', 'success']
         };
 
         this.bindActions(
@@ -20,7 +20,6 @@ var PageStore = Fluxxor.createStore({
         return this.state;
     },
     updatePage: function(payload) {
-        console.log('updatePage', payload);
         this.state.history.push(payload.page);
 
         this.state.currentPage = payload.page;
@@ -29,7 +28,7 @@ var PageStore = Fluxxor.createStore({
     },
     goBack: function() {
         var newPage = this.state.history[this.state.history.length - 2];
-        console.log('newPage', newPage);
+
         this.state.currentPage = (newPage) ? newPage : 'home';
 
         this.state.history = this.state.history.slice(0, this.state.history.length - 2);

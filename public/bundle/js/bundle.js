@@ -5,7 +5,7 @@ process.env.NODE_ENV = 'dev';
 
 var App = require('./public/js/main.js');
 App.init();
-
+/*
 if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('./serviceWorker.js', {scope: './'}).then(function(reg) {
 		console.log('◕‿◕', reg);
@@ -13,6 +13,7 @@ if ('serviceWorker' in navigator) {
 		console.log('ಠ_ಠ', err);
 	});
 }
+*/
 
 }).call(this,require('_process'))
 },{"./public/js/main.js":295,"_process":2}],2:[function(require,module,exports){
@@ -24978,6 +24979,34 @@ var actions = {
 			this.dispatch(CONSTANTS.PRODUCTS.RESET);
 		}
 	},
+	childProducts: {
+		get: function(payload) {
+			console.log('childProducts selected', payload);
+			this.dispatch(CONSTANTS.CHILDPRODUCTS.GET, {
+				id: payload.id,
+				value: payload.value
+			});
+		}
+	},
+	masterProducts: {
+		search: function(payload) {
+			console.log('actions', payload);
+			this.dispatch(CONSTANTS.MASTERPRODUCTS.SEARCH, {
+				value: payload.value
+			});
+		},
+		selected: function(payload) {
+			console.log('selected', payload);
+			this.dispatch(CONSTANTS.MASTERPRODUCTS.SELECTED, {
+				masterProduct: payload.masterProduct
+			});
+		},
+		value: function(payload) {
+			this.dispatch(CONSTANTS.MASTERPRODUCTS.VALUE, {
+				value: payload.value
+			});
+		}
+	},
 	client: {
 		add: function(payload) {
 			this.dispatch(CONSTANTS.CLIENT.ADD, { client: payload.client });
@@ -25053,6 +25082,70 @@ module.exports = React.createClass({
 });
 
 },{"classnames":3,"react":273}],276:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React = require('react'),
+    Fluxxor = require('fluxxor'),
+    FluxMixin = Fluxxor.FluxMixin(React);
+
+var CONSTANTS = require('../constants/constants');
+
+module.exports = React.createClass({
+    displayName: 'childProductItem.jsx',
+    mixins: [FluxMixin],
+    getInitialState: function() {
+        return {
+            confirm: false
+        };
+    },
+    render: function() {
+        var item;
+
+        if (this.state.confirm === false) {
+            item = (
+                React.createElement("div", {onClick:  this.selectedChild}, 
+                    React.createElement("p", null,  this.props.product.name), 
+                    React.createElement("p", null,  this.props.product.merchant_name)
+                )
+            );
+        } else {
+            item = (
+                React.createElement("div", null, 
+                    "Added to basket!", 
+                    React.createElement("button", {onClick:  this.backToSearch}, "Back to search"), 
+                    React.createElement("button", {onClick:  this.goToBasket}, "Go to basket")
+                )
+            );
+        }
+    	return (
+            React.createElement("li", null, 
+                 item 
+            )
+    	);
+    },
+    selectedChild: function(e) {
+        this.setState({ confirm: true });
+
+        this.getFlux().actions.products.add({
+            product: this.props.product
+        });
+    },
+    backToSearch: function(e) {
+        this.getFlux().actions.page.update({
+            page: 'masterProduct'
+        });
+    },
+    goToBasket: function(e) {
+        this.getFlux().actions.page.update({
+            page: 'confirmation'
+        });
+    }
+
+});
+
+},{"../constants/constants":293,"fluxxor":4,"react":273}],277:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25194,7 +25287,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../constants/constants":293,"classnames":3,"fluxxor":4,"react":273}],277:[function(require,module,exports){
+},{"../../constants/constants":293,"classnames":3,"fluxxor":4,"react":273}],278:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25302,7 +25395,7 @@ module.exports = React.createClass({
                 client: client
             });
             this.getFlux().actions.page.update({
-                page: 'product'
+                page: 'masterProduct'
             });
         }
     },
@@ -25330,7 +25423,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../constants/constants":293,"../avatar.jsx":275,"classnames":3,"fluxxor":4,"react":273}],278:[function(require,module,exports){
+},{"../../constants/constants":293,"../avatar.jsx":275,"classnames":3,"fluxxor":4,"react":273}],279:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25442,7 +25535,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":293,"./avatar.jsx":275,"./item.jsx":282,"classnames":3,"fluxxor":4,"react":273}],279:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"./item.jsx":283,"classnames":3,"fluxxor":4,"react":273}],280:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25494,7 +25587,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":293,"./avatar.jsx":275,"./itemGrid.jsx":283,"fluxxor":4,"react":273}],280:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"./itemGrid.jsx":284,"fluxxor":4,"react":273}],281:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25554,7 +25647,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"classnames":3,"fluxxor":4,"react":273}],281:[function(require,module,exports){
+},{"classnames":3,"fluxxor":4,"react":273}],282:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25622,7 +25715,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":293,"./avatar.jsx":275,"classnames":3,"fluxxor":4,"react":273}],282:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"classnames":3,"fluxxor":4,"react":273}],283:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25655,7 +25748,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"classnames":3,"fluxxor":4,"react":273}],283:[function(require,module,exports){
+},{"classnames":3,"fluxxor":4,"react":273}],284:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25741,7 +25834,7 @@ module.exports = React.createClass({
 
 });
 
-},{"classnames":3,"fluxxor":4,"react":273}],284:[function(require,module,exports){
+},{"classnames":3,"fluxxor":4,"react":273}],285:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25751,13 +25844,9 @@ var React = require('react'),
 	FluxMixin = Fluxxor.FluxMixin(React),
     StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
-var cx = require('classnames');
+var CONSTANTS = require('../constants/constants');
 
-var SearchBar = require('./searchBar.jsx');
-
-var originalState = {
-	product: { name: '' }
-};
+var MasterProductItem	= require('./masterProductItem.jsx');
 
 function debounce(func, wait, immediate) {
     var timeout;
@@ -25773,102 +25862,114 @@ function debounce(func, wait, immediate) {
 };
 
 module.exports = React.createClass({
-	mixins: [FluxMixin, StoreWatchMixin('ProductStore')],
-    displayName: 'itemSelect.jsx',
-	getInitialState: function() {
-		return {
-			product: { name: '' }
-		};
-	},
+	displayName: 'masterProduct.jsx',
+	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getStateFromFlux: function() {
+		var flux = this.getFlux();
+		var productStore = flux.store('ProductStore').getState();
+
 		return {
-			selectedProducts: this.getFlux().store('ProductStore').getState().selectedProducts
+			loading: productStore.loading,
+			selectedUser: flux.store('ClientStore').getState().client,
+			masterProducts: productStore.masterProducts,
+			value: productStore.value
 		};
 	},
-    componentDidMount: function() {
-        this.getFlux().store('ProductStore').on('change:updateProduct', this.updateProductList);
-    },
-    componentWillUnmount: function() {
-        this.getFlux().store('ProductStore').off('change:updateProduct', this.updateProductList);
-    },
+	componentDidMount: function() {
+		window.scrollTo(0,0);
+	},
     render: function() {
-		var productMatches;
-		if (this.state.productMatches && this.state.product.name.length > 0) {
-			productMatches = (React.createElement(SearchBar, {reactKeys: "id", keys: "name", matches:  this.state.productMatches, onSelectedAction: this.searchProductsSelected}))
-		}
+		console.log('state', this.state);
+		var masterProducts, loading;
 
-        return (
-            React.createElement("div", null, 
-                React.createElement("form", null, 
-                	React.createElement("label", null, 
-                		"Product", 
-                		React.createElement("input", {id: "product_search", type: "text", placeholder: "e.g. Pure Protein GF-1...", value: this.state.product.name, autoComplete: "off", autoCorrect: "off", autoCapitalize: "off", onChange: this.searchProducts}), 
-                		 productMatches 
-                	), 
-                	React.createElement("button", {type: "submit", onClick:  this.addItem, disabled: !(this.state.product && this.state.product.id)}, "Add Item")
-                )
-            )
-        );
+		if (this.state.masterProducts.length > 0 && this.state.loading === false) {
+			var masterProductsArray = [];
+
+    		this.state.masterProducts.forEach(function(mp) {
+    			masterProductsArray.push(
+    				(React.createElement(MasterProductItem, {key:  mp.id, masterProduct:  mp, value:  this.state.value}))
+    			);
+    		}.bind(this));
+
+			masterProducts = (
+				React.createElement("ul", {className: "item_list product_results"}, 
+					 masterProductsArray 
+				)
+			);
+    	}
+
+    	if (this.state.loading === true) {
+    		loading = (
+    			React.createElement("div", null, 
+    				"Loading..."
+    			)
+    		);
+    	} 
+
+    	return (
+    		React.createElement("div", {className: "page page_master_product"}, 
+    			React.createElement("div", {className: "product_search"}, 
+    				React.createElement("input", {type: "text", placeholder: "E.g. GF-1, Creatine, Vit C…", onChange:  this.productInput, value:  this.state.value})
+    			), 
+    			 loading, 
+    			 masterProducts 
+    		)
+    	);
     },
-    searchProducts: function(e) {
-    	var productMatches = [];
-    	var value = e.currentTarget.value.toString().toLowerCase();
+    productInput: function(e) {
+    	this.getProducts(e.currentTarget.value);
 
-    	if (value.length > 0) {
-            this.getProducts(value);
-	    }  
-
-    	this.setState({
-    		product: { name: e.currentTarget.value }
+    	this.getFlux().actions.masterProducts.value({
+    		value: e.currentTarget.value
     	});
     },
     getProducts: debounce(function(value) {
-        this.getFlux().actions.products.search({
-            search_term: value
-        });
-    }, 250),
-    updateProductList: function() {
-        var matches = (this.state.product.name.length > 0) ? this.getFlux().store('ProductStore').getState().products : [];
-
-        this.setState({
-            productMatches: matches
-        });
-    },
-    searchProductsSelected: function(value) {
-    	this.setState({
-    		productMatches: null,
-    		product: value.value
+    	this.getFlux().actions.masterProducts.search({
+    		value: value
     	});
+    }, 250)
 
-    	setTimeout(function() {
-	    	document.activeElement.blur();
-    	}, 0);
+});
+
+},{"../constants/constants":293,"./masterProductItem.jsx":286,"fluxxor":4,"react":273}],286:[function(require,module,exports){
+/** @jsx React.DOM */
+
+'use strict';
+
+var React = require('react'),
+    Fluxxor = require('fluxxor'),
+    FluxMixin = Fluxxor.FluxMixin(React);
+
+var CONSTANTS = require('../constants/constants');
+
+module.exports = React.createClass({
+    displayName: 'masterProductItem.jsx',
+    mixins: [FluxMixin],
+    render: function() {
+    	return (
+            React.createElement("li", {key:  this.props.masterProduct.id, onClick:  this.selectedMaster}, 
+                React.createElement("strong", null,  this.props.masterProduct.name), " (",  this.props.masterProduct.deals, ")"
+            )
+    	);
     },
-    addItem: function(e) {
-    	e.preventDefault();
+    selectedMaster: function(e) {
+        this.getFlux().actions.masterProducts.selected({
+            masterProduct: this.props.masterProduct
+        });
 
-    	var productID = this.state.product.id;
+        this.getFlux().actions.childProducts.get({
+            id: this.props.masterProduct.id,
+            value: this.props.value
+        });
 
-    	var dupeProducts = this.state.selectedProducts.filter(function(product) {
-    		return (productID === product.id);
-    	});
-
-    	if (dupeProducts.length > 0) {
-    		alert('You already have added ' + this.state.product.name);
-    	} else {
-	    	this.getFlux().actions.products.add({
-	    		product: this.state.product
-	    	});
-	    }
-
-	    var newState = JSON.parse(JSON.stringify(originalState));
-
-    	this.setState(newState);
+        this.getFlux().actions.page.update({
+            page: 'product'
+        });
     }
 
 });
 
-},{"./searchBar.jsx":287,"classnames":3,"fluxxor":4,"react":273}],285:[function(require,module,exports){
+},{"../constants/constants":293,"fluxxor":4,"react":273}],287:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25882,102 +25983,81 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var Avatar		= require('./avatar.jsx');
-var Item		= require('./item.jsx');
-var ItemSelect	= require('./itemSelect.jsx');
+var Avatar				= require('./avatar.jsx');
+var ChildProductItem	= require('./childProductItem.jsx');
 
-module.exports = React.createClass({displayName: "exports",
+module.exports = React.createClass({
+	displayName: 'product.jsx',
 	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
 		var flux = this.getFlux();
+		var productStore = flux.store('ProductStore').getState();
+
 		return {
 			selectedUser: flux.store('ClientStore').getState().client,
-			selectedProducts: flux.store('ProductStore').getState().selectedProducts
+			loading: productStore.loading,
+			masterProduct: productStore.selectedMasterProduct,
+			childProducts: productStore.childProducts
 		};
 	},
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 	},
     render: function() {
+		var childProducts, loading;
 
-		var totalPrice, totalSaving, commisionPrice, proceedButton, recommendText, removeText, saving;
+		if (this.state.loading === false) {
+			if (this.state.childProducts.length > 0) {
+				var childProductsArray = [];
 
-		var selectedProducts = [];
-		if (this.state.selectedProducts.length > 0) {
-			totalPrice		= 0;
-			commisionPrice	= 0;
-			totalSaving		= 0;
+	    		this.state.childProducts.forEach(function(product) {
+	    			childProductsArray.push(
+    					(React.createElement(ChildProductItem, {key:  product.id, product:  product }))
+	    			);
+	    		}.bind(this));
 
-			this.state.selectedProducts.forEach(function(product) {
-				totalPrice		+= product.price;
-				commisionPrice	+= product.expected_commission;
-				totalSaving 	+= (product.original_price - product.price);
-
-				selectedProducts.push(
-					(React.createElement(Item, {key: product.id, item: product, action: this.removeItem.bind(this, product)}))
-				);
-			}.bind(this));
-
-			if (totalSaving > 0) {
-				saving = (
-					React.createElement("h2", null, 
-						"Saving: ", React.createElement("span", null, "£", totalSaving.toFixed(2))
+				childProducts = (
+					React.createElement("ul", {className: "item_list product_results"}, 
+						 childProductsArray 
 					)
-				);	
-			}
+				);
+	    	} else {
+	    		loading = (
+	    			React.createElement("div", null, 
+	    				"No results found"
+	    			)
+	    		);
+	    	}
+	    }
 
-			totalPrice 		= 	(
-									React.createElement("div", {className: "product_price right"}, 
-										React.createElement("h2", null, "Total Price:  ", React.createElement("span", null, "£", totalPrice.toFixed(2))), 
-										saving, 
-										React.createElement("h2", null, "You would earn: ", React.createElement("span", null, "£", (Math.round(commisionPrice * 100) / 100).toFixed(2)))
-									)
-								);
+    	if (this.state.loading === true) {
+    		loading = (
+    			React.createElement("div", null, 
+    				"Loading..."
+    			)
+    		);
+    	}
 
-			proceedButton 	= (React.createElement("button", {type: "submit", onClick: this.proceed}, "Proceed"));
-			recommendText 	= (React.createElement("h3", null, "Recommend another product?"));
-			removeText 		= (
-                React.createElement("p", {className: "right"}, 
-	                React.createElement("small", null, "Tap a product to remove")
-	            )
-			);
-		}
+    	var masterProduct = this.state.masterProduct;
 
-        return (
-            React.createElement("div", {className: "page page_product"}, 
-            	React.createElement(Avatar, {person: this.state.selectedUser}), 
-                React.createElement("p", {className: "center"}, "What would you like to recommend to ", this.state.selectedUser.fname, "?"), 
-                React.createElement("div", {className: "item_list"}, 
-                	 selectedProducts 
-                ), 
-                removeText, 
-
-                 totalPrice, 
-                 recommendText, 
-                React.createElement(ItemSelect, null), 
-                 proceedButton 
-            )
-        );
-    },
-    proceed: function(e) {
-    	e.preventDefault();
-    	this.getFlux().actions.page.update({
-    		page: 'confirmation'
-    	});
-    },
-    removeItem: function(product) {
-        var c = window.confirm('Do you want to remove ' + product.name + '?');
-        if (c === true) {
-            this.getFlux().actions.products.remove(product.id);
-        }
+    	return (
+    		React.createElement("div", null, 
+    			React.createElement("div", null, 
+    				React.createElement("h2", null,  masterProduct.name), 
+    				React.createElement("p", null,  masterProduct.description)
+    			), 
+    			 loading, 
+    			 childProducts 
+    		)
+    	);
     }
 
 });
 
-},{"../constants/constants":293,"./avatar.jsx":275,"./item.jsx":282,"./itemSelect.jsx":284,"classnames":3,"fluxxor":4,"react":273}],286:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"./childProductItem.jsx":276,"classnames":3,"fluxxor":4,"react":273}],288:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -26090,77 +26170,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":293,"./avatar.jsx":275,"classnames":3,"fluxxor":4,"react":273}],287:[function(require,module,exports){
-/** @jsx React.DOM */
-
-'use strict';
-
-var React = require('react');
-
-var SearchBarResult = require('./searchBarResult.jsx');
-
-module.exports = React.createClass({displayName: "exports",
-    render: function() {
-    	var results = [];
-
-    	this.props.matches.forEach(function(result) {
-    		results.push(
-    			React.createElement(SearchBarResult, {key: result[this.props.reactKeys || this.props.keys], result: result, className: "searchbar_result", onSelectedAction: this.props.onSelectedAction})
-    		);
-    	}.bind(this));
-
-        return (
-        	React.createElement("ul", {className: "searchbar"}, 
-        		results
-        	)
-        );
-    }
-
-});
-
-},{"./searchBarResult.jsx":288,"react":273}],288:[function(require,module,exports){
-/** @jsx React.DOM */
-
-'use strict';
-
-var React = require('react'),
-    Fluxxor = require('fluxxor'),
-    FluxMixin = Fluxxor.FluxMixin(React);
-
-var cx = require('classnames');
-
-module.exports = React.createClass({displayName: "exports",
-    mixins: [FluxMixin],
-    render: function() {
-        var result = this.props.result;
-
-        var discount;
-
-        if (result.discount && result.discount.discount_type) {
-            if (result.discount.discount_type === 'percent') {
-                discount = (React.createElement("strong", {className: "searchbar_result_discount"}, "EXCLUSIVE ", result.discount.value, "% OFF"));
-            } else if (result.discount.discount_type === 'flat') {
-                discount = (React.createElement("strong", {className: "searchbar_result_discount"}, "SAVE £", result.discount.value));
-            }
-        }
-
-        return (
-            React.createElement("li", {className: cx({'searchbar_result': true, 'searchbar_result_has_discount': discount}), onClick: this.onSelected}, 
-                React.createElement("div", {className: "searchbar_result_image", style:  { backgroundImage: 'url(' + result.image + ')'} }), 
-                result.name, discount
-            )
-        );
-    },
-
-    onSelected: function(e) {
-        this.props.onSelectedAction({
-            value: this.props.result
-        });
-    }
-
-});
-
-},{"classnames":3,"fluxxor":4,"react":273}],289:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"classnames":3,"fluxxor":4,"react":273}],289:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -26235,7 +26245,7 @@ module.exports = React.createClass({
 	mixins: [FluxMixin],
 	componentDidMount: function() {
 		window.scrollTo(0,0);
-        console.log('signin componentDidMount');
+
         setTimeout(function() {
             this.getFlux().actions.auth.init();
         }.bind(this));
@@ -26268,6 +26278,7 @@ var ClientAdd			= require('./client/clientAdd.jsx'),
 	Header				= require('./header.jsx'),
 	Home				= require('./home.jsx'),
 	Profile				= require('./profile.jsx'),
+	MasterProduct		= require('./masterProduct.jsx'),
 	Product				= require('./product.jsx'),
 	SignIn				= require('./signIn.jsx'),
 	Settings			= require('./settings.jsx'),
@@ -26286,12 +26297,8 @@ module.exports = React.createClass({displayName: "exports",
 		};
 	},
 	componentDidMount: function() {
-		console.log('componentDidMount spotterApp');
         //this.getFlux().actions.auth.autho.lock();
         //this.getFlux().actions.auth.autho.get();
-	},
-	componentWillUpdate: function() {
-		console.log('componentWillUpdate');
 	},
     render: function() {
 		var page;
@@ -26318,6 +26325,9 @@ module.exports = React.createClass({displayName: "exports",
 		    case 'product':
 		        page = (React.createElement(Product, null));
 		        break;
+		    case 'masterProduct':
+		        page = (React.createElement(MasterProduct, null));
+		        break;
 		    case 'profile':
 		        page = (React.createElement(Profile, null));
 		        break;
@@ -26341,7 +26351,7 @@ module.exports = React.createClass({displayName: "exports",
 
 });
 
-},{"./client/clientAdd.jsx":276,"./client/clientsView.jsx":277,"./confirmation.jsx":278,"./email.jsx":279,"./header.jsx":280,"./home.jsx":281,"./product.jsx":285,"./profile.jsx":286,"./settings.jsx":289,"./signIn.jsx":290,"./success.jsx":292,"fluxxor":4,"react":273}],292:[function(require,module,exports){
+},{"./client/clientAdd.jsx":277,"./client/clientsView.jsx":278,"./confirmation.jsx":279,"./email.jsx":280,"./header.jsx":281,"./home.jsx":282,"./masterProduct.jsx":285,"./product.jsx":287,"./profile.jsx":288,"./settings.jsx":289,"./signIn.jsx":290,"./success.jsx":292,"fluxxor":4,"react":273}],292:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -26436,7 +26446,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"../constants/constants":293,"./avatar.jsx":275,"./item.jsx":282,"classnames":3,"fluxxor":4,"react":273}],293:[function(require,module,exports){
+},{"../constants/constants":293,"./avatar.jsx":275,"./item.jsx":283,"classnames":3,"fluxxor":4,"react":273}],293:[function(require,module,exports){
 var constants = {
     AUTH: {
         INIT: 'AUTH_INIT',
@@ -26478,6 +26488,14 @@ var constants = {
         REMOVE: 'PRODUCTS_REMOVE',
         RESET: 'PRODUCTS_RESET',
         SEARCH: 'PRODUCTS_SEARCH'
+    },
+    MASTERPRODUCTS: {
+        SEARCH: 'MASTER_PRODUCTS_SEARCH',
+        SELECTED: 'MASTER_PRODUCTS_SELECTED',
+        VALUE: 'MASTER_PRODUCTS_VALUE'
+    },
+    CHILDPRODUCTS: {
+        GET: 'CHILD_PRODUCTS_GET'
     },
     PAGE: {
         GOBACK: 'PAGE_BACK',
@@ -26522,6 +26540,22 @@ var spotterAPI = {
 		productQueue = [];
 
 		productQueue.push(this.xhrQuery('products' + query, G, cb));
+	},
+	getMasterProducts: function(query, cb) {
+		productQueue.forEach(function(xhr) {
+			xhr.abort();
+		});
+		productQueue = [];
+
+		productQueue.push(this.xhrQuery('search/products' + query, G, cb));
+	},
+	getChildProducts: function(query, cb) {
+		productQueue.forEach(function(xhr) {
+			xhr.abort();
+		});
+		productQueue = [];
+
+		productQueue.push(this.xhrQuery('search/deals' + query, G, cb));
 	},
 	getTrainer: function(cb) {
 		this.XHR('profile', G, cb);
@@ -26917,10 +26951,7 @@ var ClientStore = Fluxxor.createStore({
         }.bind(this));
     },
     clientsGet: function() {
-        console.log('clientsGet');
-
         SpotterAPI.getClients(function(data) {
-            console.log('GOT CLIENTS', data);
             if (data.total && data.total > 0) {
                 this.state.clients = data.data;
             }
@@ -26931,7 +26962,6 @@ var ClientStore = Fluxxor.createStore({
         this.emit('change');
     },
     clientsSet: function(payload) {
-        console.log('clientsSet', payload);
         var name = payload.client.name.split(' ');
         payload.client.fname = name.shift();
         payload.client.lname = name.join(' ');
@@ -26964,7 +26994,7 @@ var ClientStore = Fluxxor.createStore({
         var products    =   flux.store('ProductStore').getState().selectedProducts.map(function(product){
                                 return product.id;
                             });
-        console.log('send email', client_id, products);
+
         var data = {
             client_id: client_id,
             products: products
@@ -26992,7 +27022,7 @@ var PageStore = Fluxxor.createStore({
         this.state = {
             currentPage:    'signin',
             history:        [],
-            pages:          ['signin', 'user', 'product', 'confirmation', 'success']
+            pages:          ['signin', 'user', 'masterProduct', 'product', 'confirmation', 'success']
         };
 
         this.bindActions(
@@ -27004,7 +27034,6 @@ var PageStore = Fluxxor.createStore({
         return this.state;
     },
     updatePage: function(payload) {
-        console.log('updatePage', payload);
         this.state.history.push(payload.page);
 
         this.state.currentPage = payload.page;
@@ -27013,7 +27042,7 @@ var PageStore = Fluxxor.createStore({
     },
     goBack: function() {
         var newPage = this.state.history[this.state.history.length - 2];
-        console.log('newPage', newPage);
+
         this.state.currentPage = (newPage) ? newPage : 'home';
 
         this.state.history = this.state.history.slice(0, this.state.history.length - 2);
@@ -27036,14 +27065,23 @@ var ProductStore = Fluxxor.createStore({
     initialize: function(params) {
 		this.state = {
 			products: [],
-			selectedProducts: []
+			selectedProducts: [],
+            masterProducts: [],
+            childProducts: [],
+            selectedMasterProduct: null,
+            loading: false,
+            value: ''
 		};
 
         this.bindActions(
-            CONSTANTS.PRODUCTS.ADD,		this.addProduct,
-            CONSTANTS.PRODUCTS.REMOVE,	this.removeProduct,
-            CONSTANTS.PRODUCTS.RESET,	this.resetStore,
-            CONSTANTS.PRODUCTS.SEARCH,	this.productSearch
+            CONSTANTS.PRODUCTS.ADD,             this.addProduct,
+            CONSTANTS.PRODUCTS.REMOVE,          this.removeProduct,
+            CONSTANTS.PRODUCTS.RESET,           this.resetStore,
+            CONSTANTS.PRODUCTS.SEARCH,          this.productSearch,
+            CONSTANTS.MASTERPRODUCTS.SELECTED,  this.masterProductSelected,
+            CONSTANTS.MASTERPRODUCTS.SEARCH,    this.masterProductSearch,
+            CONSTANTS.MASTERPRODUCTS.VALUE,     this.masterProductValue,
+            CONSTANTS.CHILDPRODUCTS.GET,        this.childProductsGet
         );
     },
     getState: function(){
@@ -27067,13 +27105,57 @@ var ProductStore = Fluxxor.createStore({
     productSearch: function(payload) {
 		var query = '?name=' + payload.value;
 
+        this.state.loading = true;
+
 		this.emit('change');
 
 		SpotterAPI.getProducts(query, function(data) {
 			this.state.products = data.data;
+            this.state.loading = false;
+
 			this.emit('change:updateProduct');
 			this.emit('change');
 		}.bind(this));
+    },
+    masterProductSearch: function(payload) {
+        var query = '?name=' + payload.value;
+
+        this.state.loading = true;
+
+        this.emit('change');
+
+        SpotterAPI.getMasterProducts(query, function(data) {
+            this.state.masterProducts = data.data;
+            this.state.loading = false;
+
+            this.emit('change:updateMasterProduct');
+            this.emit('change');
+        }.bind(this));
+    },
+    masterProductValue: function(payload) {
+        this.state.loading = true;
+        this.state.value = payload.value;
+
+        this.emit('change:updateMasterProductValue');
+        this.emit('change');
+    },
+    masterProductSelected: function(payload) {
+        this.state.selectedMasterProduct = payload.masterProduct;
+    },
+    childProductsGet: function(payload) {
+        var query = '?master_product=' + this.state.selectedMasterProduct.id;
+
+        this.state.loading = true;
+
+        this.emit('change');
+
+        SpotterAPI.getChildProducts(query, function(data) {
+            this.state.childProducts = data.data;
+            this.state.loading = false;
+
+            this.emit('change:loadedChildProduct');
+            this.emit('change');
+        }.bind(this));
     }
 });
 
