@@ -8,7 +8,13 @@ var PageStore = Fluxxor.createStore({
         this.state = {
             currentPage:    'signin',
             history:        [],
-            pages:          ['signin', 'user', 'product', 'confirmation', 'success']
+            pages:          ['signin', 'user', 'masterProduct', 'product', 'confirmation', 'success'],
+            userNames: {
+                clientEdit: 'Clients',
+                masterProduct: 'Clients',
+                product: 'Search',
+                confirmation: 'Products'
+            }
         };
 
         this.bindActions(
@@ -20,7 +26,6 @@ var PageStore = Fluxxor.createStore({
         return this.state;
     },
     updatePage: function(payload) {
-        console.log('updatePage', payload);
         this.state.history.push(payload.page);
 
         this.state.currentPage = payload.page;
@@ -28,11 +33,18 @@ var PageStore = Fluxxor.createStore({
         this.emit('change');
     },
     goBack: function() {
-        var newPage = this.state.history[this.state.history.length - 2];
-        console.log('newPage', newPage);
-        this.state.currentPage = (newPage) ? newPage : 'home';
+        var newPage;
 
-        this.state.history = this.state.history.slice(0, this.state.history.length - 2);
+        var structure = {
+            clientEdit: 'clientView',
+            masterProduct: 'clientView',
+            product: 'masterProduct',
+            confirmation: 'product'
+        };
+
+        newPage = structure[this.state.currentPage];
+
+        this.state.currentPage = (newPage) ? newPage : 'home';
 
         this.emit('change');
     }

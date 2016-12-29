@@ -11,6 +11,8 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../../constants/constants');
 
+var Avatar = require('../avatar.jsx');
+
 module.exports = React.createClass({
 	displayName: 'clientAdd.jsx',
 	mixins: [FluxMixin],
@@ -19,13 +21,17 @@ module.exports = React.createClass({
             client: {
                 fname: '',
                 lname: '',
-                email: ''
+                email: '',
+                phone: ''
             },
             action: (this.getFlux().store('PageStore').getState().currentPage === 'clientEdit') ? 'update' : 'add'
         };
 
         if (state.action === 'update') {
             state.client = this.getFlux().store('ClientStore').getState().client;
+            if (!state.client.phone) {
+                state.client.phone = '';
+            }
 
             if (!state.client.fname) {
                 var name = payload.client.name.split(' ');
@@ -40,10 +46,13 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
+        var title = (this.state.action === 'add') ? 'Add a client' : 'Edit client';
+        var button = (this.state.action === 'add') ? 'Add client' : 'Update client details';
+
         return (
-            <div className="page signin">
-	            <div className="user_avatar"></div>
-                Add a client
+            <div className="page client_edit light_blue">
+                <h2 className="center">{ title }</h2>
+                <p/>
                 <form>
                     <label>
                         First Name
@@ -58,11 +67,15 @@ module.exports = React.createClass({
                         <input type="email" placeholder="Email" onChange={this.update.bind(this, 'email')} value={this.state.client.email} />
                     </label>
                     <label>
+                        Phone Number
+                        <input type="tel" placeholder="Phone Number" onChange={this.update.bind(this, 'phone')} value={this.state.client.phone} />
+                    </label>
+                    <label>
                         Upload an image
                         <input ref="file" type="file" accept="image/*" capture="camera" />
                     </label>
 	                <label>
-	                	<button type="submit" onClick={this.proceed}>Update client details</button>
+	                	<button type="submit" onClick={this.proceed}>{button}</button>
 	                </label>
                 </form>
             </div>
@@ -75,7 +88,6 @@ module.exports = React.createClass({
         this.setState(state);
     },
     proceed: function(e) {
-        console.log('proceed');
     	e.preventDefault();
 
         var flux = this.getFlux();

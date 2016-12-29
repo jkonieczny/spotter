@@ -26,21 +26,22 @@ module.exports = React.createClass({
     },
     render: function() {
         return (
-            <div className="page signin">
+            <div className="page home light_blue">
                 <Avatar person={this.state.trainer} />
-                <h2 className="center">Welcome back {this.state.trainer.name}</h2>
+                <h2 className="center">Welcome back<br/>{ this.state.trainer.name }</h2>
                 <p/>
                 <form>
                     <label>
-                        <button type="submit" onClick={this.proceedAddClient}>Add Client</button>
+                        <button className="green_btn add_icon" type="submit" onClick={this.proceedAddClient}>Add Client</button>
                     </label>
                     <label>
-                        <button type="submit" onClick={this.proceedViewClients}>View Clients</button>
+                        <button className="clients_icon" type="submit" onClick={this.proceedViewClients}>View Clients</button>
                     </label>
 	                <label>
-	                	<button type="submit" onClick={this.proceedProfile}>Your Profile</button>
+	                	<button className="trans_btn cog_icon" type="submit" onClick={this.proceedProfile}>Your Profile</button>
 	                </label>
                 </form>
+                <div className="lazy_load_fonts">Spotter &copy;</div>
             </div>
         );
     },

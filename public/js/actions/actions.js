@@ -54,6 +54,31 @@ var actions = {
 			this.dispatch(CONSTANTS.PRODUCTS.RESET);
 		}
 	},
+	childProducts: {
+		get: function(payload) {
+			this.dispatch(CONSTANTS.CHILDPRODUCTS.GET, {
+				id: payload.id,
+				value: payload.value
+			});
+		}
+	},
+	masterProducts: {
+		search: function(payload) {
+			this.dispatch(CONSTANTS.MASTERPRODUCTS.SEARCH, {
+				value: payload.value
+			});
+		},
+		selected: function(payload) {
+			this.dispatch(CONSTANTS.MASTERPRODUCTS.SELECTED, {
+				masterProduct: payload.masterProduct
+			});
+		},
+		value: function(payload) {
+			this.dispatch(CONSTANTS.MASTERPRODUCTS.VALUE, {
+				value: payload.value
+			});
+		}
+	},
 	client: {
 		add: function(payload) {
 			this.dispatch(CONSTANTS.CLIENT.ADD, { client: payload.client });
@@ -70,7 +95,6 @@ var actions = {
 			}
 		},
 		set: function(payload) {
-			console.log('set client', payload);
 			this.dispatch(CONSTANTS.CLIENT.SET, { client: payload.client });
 		},
 		update: function(payload) {
@@ -92,7 +116,6 @@ var actions = {
 			}
 		},
 		update: function(payload) {
-			console.log('payload', payload);
 			this.dispatch(CONSTANTS.TRAINER.UPDATE, { trainer: payload.trainer });
 		}
 	}

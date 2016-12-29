@@ -33,6 +33,22 @@ var spotterAPI = {
 
 		productQueue.push(this.xhrQuery('products' + query, G, cb));
 	},
+	getMasterProducts: function(query, cb) {
+		productQueue.forEach(function(xhr) {
+			xhr.abort();
+		});
+		productQueue = [];
+
+		productQueue.push(this.xhrQuery('search/products' + query, G, cb));
+	},
+	getChildProducts: function(query, cb) {
+		productQueue.forEach(function(xhr) {
+			xhr.abort();
+		});
+		productQueue = [];
+
+		productQueue.push(this.xhrQuery('search/deals' + query, G, cb));
+	},
 	getTrainer: function(cb) {
 		this.XHR('profile', G, cb);
 	},

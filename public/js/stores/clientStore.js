@@ -101,10 +101,7 @@ var ClientStore = Fluxxor.createStore({
         }.bind(this));
     },
     clientsGet: function() {
-        console.log('clientsGet');
-
         SpotterAPI.getClients(function(data) {
-            console.log('GOT CLIENTS', data);
             if (data.total && data.total > 0) {
                 this.state.clients = data.data;
             }
@@ -115,7 +112,6 @@ var ClientStore = Fluxxor.createStore({
         this.emit('change');
     },
     clientsSet: function(payload) {
-        console.log('clientsSet', payload);
         var name = payload.client.name.split(' ');
         payload.client.fname = name.shift();
         payload.client.lname = name.join(' ');
@@ -148,7 +144,7 @@ var ClientStore = Fluxxor.createStore({
         var products    =   flux.store('ProductStore').getState().selectedProducts.map(function(product){
                                 return product.id;
                             });
-        console.log('send email', client_id, products);
+
         var data = {
             client_id: client_id,
             products: products

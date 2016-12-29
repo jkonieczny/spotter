@@ -11,8 +11,7 @@ var cx = require('classnames');
 
 var CONSTANTS = require('../constants/constants');
 
-var Avatar	= require('./avatar.jsx');
-var Item	= require('./item.jsx');
+var ConfirmationProductItem	= require('./confirmationProductItem.jsx');
 
 module.exports = React.createClass({
 	displayName: 'confirmation.jsx',
@@ -32,7 +31,7 @@ module.exports = React.createClass({
 	},
     render: function() {
 
-		var totalPrice, totalSaving, commisionPrice, proceedButton, saving;
+		var totalPrice, totalSaving, commisionPrice, proceedButton, saving, total;
 
 		var selectedProducts = [];
 		if (this.state.selectedProducts.length > 0) {
@@ -46,65 +45,90 @@ module.exports = React.createClass({
                 totalSaving     += (product.original_price - product.price);
 
 				selectedProducts.push(
-					(<Item key={product.id} item={product} />)
+					(<ConfirmationProductItem key={product.id} product={ product }></ConfirmationProductItem>)
 				);
 			});
-
-			commisionPrice 	= (Math.round(commisionPrice * 100) / 100).toFixed(2);
-			totalPrice 		= totalPrice.toFixed(2);
 
 			proceedButton = (<button type="submit" onClick={this.proceed}>Proceed</button>);
 
             if (totalSaving > 0) {
+                var clientCost = totalPrice - totalSaving;
                 saving = (
-                    <h2>
-                        Saving: <span>&pound;{totalSaving.toFixed(2)}</span>
-                    </h2>
+                        <div>
+                            <div>SPOTTER DISCOUNTS:</div><div>-&pound;{ totalSaving.toFixed(2) }</div>
+                        </div>
+                );  
+                total = (
+                        <div>
+                            <div>TOTAL FOR CLIENT:</div><div>&pound;{ clientCost.toFixed(2) }</div>
+                        </div>
                 );  
             }
+
+            commisionPrice  = (Math.round(commisionPrice * 100) / 100).toFixed(2);
+            totalPrice      = totalPrice.toFixed(2);
 		}
 
         return (
-            <div className="page page_product">
-                <Avatar person={this.state.selectedUser} />
-                <div className="center">
-                	<p>Your recommendations for {this.state.selectedUser.fname}</p>
+            <div className="page page_confirmation light_blue">
+                <div className="confirmation_header">
+                	Heres what you’d like to recommend to {this.state.selectedUser.fname}:
                 </div>
-                <div className="item_list">
+                <ul className="item_list confirmation_product_results">
                 	{selectedProducts}
+                </ul>
+                <div className="confirmation_prices">
+                    <div>
+                        <div>PRODUCT COST:</div><div>&pound;{totalPrice}</div>
+                    </div>
+                    { saving }
+                    { total }
+                    <div className="confirmation_earn">
+                        <div>YOU CAN EARN:</div><div>&pound;{commisionPrice}</div>
+                    </div>
                 </div>
-                <p/>
-                <div className="product_price right">
-                	<h2>Total Price:<span>&pound;{totalPrice}</span></h2>
-                    {saving}
-                	<h2>You would earn:<span>&pound;{commisionPrice}</span></h2>
-                	<p></p>
-                </div>
-                <div className="right hide">
-                	<p></p>
-                	<p><a href="#" onClick={this.viewEmail}>View email</a></p>
-                </div>
-                <div>
-                	<p className="center">
-                	Click below to send these recommendations to {this.state.selectedUser.fname}. If {this.state.selectedUser.fname} buys the products you've selected, you will earn the reward shown above</p>
-                	<button onClick={this.sendEmail}>Confirm & send recommendations by email</button>
+                <div className="confirmation_send center">
+                    <p>Send recommendation via:</p>
+                    <button className="button_email" onClick={this.send}>Email</button>
+                    <p/>
+                    <button className="button_whatsapp" onClick={this.send}>WhatsApp</button>
                 </div>
             </div>
         );
     },
-    viewEmail: function(e) {
-    	e.preventDefault();
-    	this.getFlux().actions.page.update({
-    		page: 'email'
-    	});
-    },
-    sendEmail: function(e) {
-    	e.preventDefault();
+    send: function(e) {
         this.getFlux().actions.email.send();
 
-    	this.getFlux().actions.page.update({
-    		page: 'success'
-    	});
-    }
+        if (e.currentTarget.innerText === 'WhatsApp') {
+            var trainer = this.getFlux().store('AuthStore').getState().trainer;
+            var message = 'Hi ' + this.state.selectedUser.fname + ',\nYour trainer ' +trainer.name + ' has recommended you these products.\n\nThanks,\nSPOTTER\n\n';
 
+            this.state.selectedProducts.forEach(function(value) {
+                var price           = value.price
+                var original_price  = value.original_price;
+
+                if (Number.isInteger) {
+                    if (Number.isInteger(value.price) === false) { price = value.price.toFixed(2); }
+                    if (Number.isInteger(value.original_price) === false) { original_price = value.original_price.toFixed(2); }
+                } else {
+                    price = price.toFixed(2);
+                    original_price = original_price.toFixed(2);
+                }
+
+                var discount = (value.price !== value.original_price) ? ', was £' + original_price : '';
+
+                message += value.name + ' (£' + price + discount + ')\n';
+                message += value.link + '\n\n';
+            });
+
+            window.open(
+                'whatsapp://send?text=' + encodeURIComponent(message),
+                'Spotter'
+            );
+        }
+
+        this.getFlux().actions.page.update({
+            page: 'success'
+        });
+    },
 });
