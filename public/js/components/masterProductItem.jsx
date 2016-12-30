@@ -12,9 +12,27 @@ module.exports = React.createClass({
     displayName: 'masterProductItem.jsx',
     mixins: [FluxMixin],
     render: function() {
+        var masterProduct = this.props.masterProduct;
+        var discount;
+
+        if (masterProduct.extra) {
+            if (masterProduct.extra.discount) {
+                if (masterProduct.extra.discount.discount_type === 'percent') {
+                    discount = (
+                        <span className="master_product_offer">{ masterProduct.extra.discount.name }</span>
+                    );
+                }
+            } else if (masterProduct.extra.minPrice) {
+                discount = (
+                    <span className="master_product_offer">from £{ masterProduct.extra.minPrice }</span>
+                );
+            }
+        }
+
     	return (
-            <li key={ this.props.masterProduct.id } onClick={ this.selectedMaster }>
-                <strong>{ this.props.masterProduct.name }</strong> ({ this.props.masterProduct.deals })
+            <li key={ masterProduct.id } onClick={ this.selectedMaster }>
+                <strong>{ masterProduct.name }</strong> ({ masterProduct.deals })
+                { discount }
             </li>
     	);
     },

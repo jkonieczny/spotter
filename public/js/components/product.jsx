@@ -64,13 +64,13 @@ module.exports = React.createClass({
 	    		}.bind(this));
 
 				childProducts = (
-					<ul className="item_list product_results">
+					<ul className="item_list child_product_results">
 						{ childProductsArray }
 					</ul>
 				);
 	    	} else {
 	    		loading = (
-	    			<div>
+	    			<div className="item_not_found">
 	    				No results found
 	    			</div>
 	    		);

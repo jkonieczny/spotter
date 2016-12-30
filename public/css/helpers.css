@@ -116,6 +116,7 @@ p {
 .spotter_loader {
 	height: 100px;
 	position: relative;
+	overflow: hidden;
 }
 
 .spotter_loader::before {

@@ -25101,19 +25101,51 @@ module.exports = React.createClass({
         };
     },
     render: function() {
-        var item;
+        var item, discounts;
 
         if (this.state.confirm === false) {
+            var itemImage;
+            var product = this.props.product;
+
+            if (product.image) {
+                itemImage = (
+                    React.createElement("span", {className: "child_item_image", style:  { backgroundImage: 'url(' + product.image + ')'}  })
+                );
+            }
+
+            if (product.discount) {
+                if (product.discount && product.discount.discount_type === 'percent') {
+                    discounts = (
+                        React.createElement("div", {className: "child_item_discounts"}, 
+                             product.discount.name
+                        )
+                    );
+                }
+            }
+
             item = (
-                React.createElement("div", {onClick:  this.selectedChild}, 
-                    React.createElement("p", null,  this.props.product.name), 
-                    React.createElement("p", null,  this.props.product.merchant_name)
+                React.createElement("div", {className: "child_item"}, 
+                     itemImage, 
+                    React.createElement("h2", null,  this.props.product.name), 
+                     discounts, 
+                    React.createElement("div", {className: "child_item_details"}, 
+                        React.createElement("div", {className: "child_item_earn"}, 
+                            React.createElement("small", null, "You earn:"), 
+                            "£",  this.props.product.expected_commission
+                        ), 
+                        React.createElement("div", {className: "child_item_price"}, 
+                            React.createElement("small", null, "Price:"), 
+                            "£",  this.props.product.price
+                        )
+                    ), 
+                    React.createElement("div", {className: "child_item_buy"}, React.createElement("small", null, "Buy from:"),  this.props.product.merchant_name), 
+                    React.createElement("button", {className: "child_item_add", onClick:  this.selectedChild}, "Add")
                 )
             );
         } else {
             item = (
-                React.createElement("div", null, 
-                    "Added to basket!", 
+                React.createElement("div", {className: "child_item_confirm"}, 
+                    React.createElement("strong", null, "Added to basket!"), 
                     React.createElement("button", {onClick:  this.backToSearch}, "Back to search"), 
                     React.createElement("button", {onClick:  this.goToBasket}, "Go to basket")
                 )
@@ -25944,9 +25976,27 @@ module.exports = React.createClass({
     displayName: 'masterProductItem.jsx',
     mixins: [FluxMixin],
     render: function() {
+        var masterProduct = this.props.masterProduct;
+        var discount;
+
+        if (masterProduct.extra) {
+            if (masterProduct.extra.discount) {
+                if (masterProduct.extra.discount.discount_type === 'percent') {
+                    discount = (
+                        React.createElement("span", {className: "master_product_offer"},  masterProduct.extra.discount.name)
+                    );
+                }
+            } else if (masterProduct.extra.minPrice) {
+                discount = (
+                    React.createElement("span", {className: "master_product_offer"}, "from £",  masterProduct.extra.minPrice)
+                );
+            }
+        }
+
     	return (
-            React.createElement("li", {key:  this.props.masterProduct.id, onClick:  this.selectedMaster}, 
-                React.createElement("strong", null,  this.props.masterProduct.name), " (",  this.props.masterProduct.deals, ")"
+            React.createElement("li", {key:  masterProduct.id, onClick:  this.selectedMaster}, 
+                React.createElement("strong", null,  masterProduct.name), " (",  masterProduct.deals, ")", 
+                 discount 
             )
     	);
     },
@@ -26034,13 +26084,13 @@ module.exports = React.createClass({
 	    		}.bind(this));
 
 				childProducts = (
-					React.createElement("ul", {className: "item_list product_results"}, 
+					React.createElement("ul", {className: "item_list child_product_results"}, 
 						 childProductsArray 
 					)
 				);
 	    	} else {
 	    		loading = (
-	    			React.createElement("div", null, 
+	    			React.createElement("div", {className: "item_not_found"}, 
 	    				"No results found"
 	    			)
 	    		);

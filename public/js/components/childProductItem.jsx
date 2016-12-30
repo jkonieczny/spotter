@@ -17,19 +17,51 @@ module.exports = React.createClass({
         };
     },
     render: function() {
-        var item;
+        var item, discounts;
 
         if (this.state.confirm === false) {
+            var itemImage;
+            var product = this.props.product;
+
+            if (product.image) {
+                itemImage = (
+                    <span className="child_item_image" style={ { backgroundImage: 'url(' + product.image + ')'}  }></span>
+                );
+            }
+
+            if (product.discount) {
+                if (product.discount && product.discount.discount_type === 'percent') {
+                    discounts = (
+                        <div className="child_item_discounts"> 
+                            { product.discount.name }
+                        </div>
+                    );
+                }
+            }
+
             item = (
-                <div onClick={ this.selectedChild }>
-                    <p>{ this.props.product.name }</p>
-                    <p>{ this.props.product.merchant_name }</p>
+                <div className="child_item">
+                    { itemImage }
+                    <h2>{ this.props.product.name }</h2>
+                    { discounts }
+                    <div className="child_item_details">
+                        <div className="child_item_earn">
+                            <small>You earn:</small>
+                            £{ this.props.product.expected_commission }
+                        </div>
+                        <div className="child_item_price">
+                            <small>Price:</small>
+                            £{ this.props.product.price }
+                        </div>
+                    </div>
+                    <div className="child_item_buy"><small>Buy from:</small>{ this.props.product.merchant_name }</div>
+                    <button className="child_item_add" onClick={ this.selectedChild }>Add</button>
                 </div>
             );
         } else {
             item = (
-                <div>
-                    Added to basket!
+                <div className="child_item_confirm">
+                    <strong>Added to basket!</strong>
                     <button onClick={ this.backToSearch }>Back to search</button>
                     <button onClick={ this.goToBasket }>Go to basket</button>
                 </div>
