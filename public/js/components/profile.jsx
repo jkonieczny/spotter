@@ -22,6 +22,10 @@ module.exports = React.createClass({
         trainer.fname = name.shift();
         trainer.lname = name.join(' ');
 
+        if (!trainer.phone) {
+            trainer.phone = '';
+        }
+
         return {
             trainer: trainer
         };
@@ -45,6 +49,10 @@ module.exports = React.createClass({
                     <label>
                         Email
                         <input type="email" placeholder="Email" onChange={this.update.bind(this, 'email')} value={this.state.trainer.email} disabled />
+                    </label>
+                    <label>
+                        Phone Number
+                        <input type="tel" placeholder="Phone Number" onChange={this.update.bind(this, 'phone')} value={this.state.trainer.phone} />
                     </label>
                     <label>
                         Upload an image

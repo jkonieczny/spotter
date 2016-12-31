@@ -60,12 +60,12 @@ header .header_back.home::before {
     width: 22px;
     left: 13px;
     top: 23px;
-    border: 8px solid #000;
+    border: 8px solid #fff;
     border-bottom: none;
 }
 
 header .header_back.home::after {
-    border-bottom: 15px solid #000;
+    border-bottom: 15px solid #fff;
     border-left: 16px solid transparent;
     border-right: 16px solid transparent;
     content: '';
@@ -85,6 +85,7 @@ header .header_title {
 	height: 100%;
 	left: 50%;
 	position: absolute;
+	opacity: 0.8;
 	text-indent: -9999px;
 	transform: translateX(-50%);
 	width: 110px;

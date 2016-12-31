@@ -41,6 +41,7 @@ module.exports = React.createClass({
 	                	<button type="submit" onClick={this.proceedProfile}>Your Profile</button>
 	                </label>
                 </form>
+                <div className="lazy_load_fonts">Spotter &copy;</div>
             </div>
         );
     },

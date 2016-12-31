@@ -37,16 +37,18 @@ module.exports = React.createClass({
     	);
     },
     selectedMaster: function(e) {
-        this.getFlux().actions.masterProducts.selected({
+        var flux = this.getFlux();
+
+        flux.actions.masterProducts.selected({
             masterProduct: this.props.masterProduct
         });
 
-        this.getFlux().actions.childProducts.get({
+        flux.actions.childProducts.get({
             id: this.props.masterProduct.id,
             value: this.props.value
         });
 
-        this.getFlux().actions.page.update({
+        flux.actions.page.update({
             page: 'product'
         });
     }

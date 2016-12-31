@@ -29,7 +29,8 @@ module.exports = React.createClass({
 			selectedUser: flux.store('ClientStore').getState().client,
 			loading: productStore.loading,
 			masterProduct: productStore.selectedMasterProduct,
-			childProducts: productStore.childProducts
+			childProducts: productStore.childProducts,
+			selectedProducts: productStore.selectedProducts
 		};
 	},
 	componentDidMount: function() {
@@ -48,7 +49,7 @@ module.exports = React.createClass({
 		}
 	},
     render: function() {
-		var childProducts, loading;
+		var childProducts, loading, goToBasket;
     	var productDetailsClasses = {
 			master_product_details: true
     	};
@@ -92,6 +93,14 @@ module.exports = React.createClass({
     		productDetailsClasses.img_loaded = true;
     	}
 
+    	if (this.state.selectedProducts.length > 0) {
+    		goToBasket = (
+    			<div className="page_child_go_basket">
+    				<button onClick={ this.goToBasket }>Go to basket</button>
+    			</div>
+    		)
+    	}
+
     	return (
     		<div className="page page_child_product">
     			<div className={cx(productDetailsClasses)} style={ productImage }>
@@ -100,8 +109,14 @@ module.exports = React.createClass({
     			</div>
     			{ loading }
     			{ childProducts }
+    			{ goToBasket }
     		</div>
     	);
+    },
+    goToBasket: function() {
+        this.getFlux().actions.page.update({
+            page: 'confirmation'
+        });
     }
 
 });

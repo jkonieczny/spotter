@@ -1,4 +1,0 @@
-
-> spotter@0.0.1 build-css /Users/robertdaly/Documents/Julia/spotter-app
-> cleancss -o public/bundle/css/bundle.css public/css/main.css --skip-rebase
-

@@ -238,13 +238,13 @@
     top: -1px;
 }
 
-.page_child_product .item_list.child_product_results .child_item_confirm {
+.page .item_list .child_item_confirm {
 	box-shadow: inset 0 0 0px 4px #3F2686;
 	padding: 20px;
 	text-align: center;
 }
 
-.page_child_product .item_list.child_product_results .child_item_confirm strong {
+.page .item_list .child_item_confirm strong {
 	color: #3F2686;
 	font-weight: bold;
 	display: block;
@@ -267,23 +267,24 @@
     width: 24px;
 }
 
-.page_child_product .item_list.child_product_results .child_item_confirm button {
+.page .item_list .child_item_confirm button {
 	background-color: #fff;
+	border: 2px solid #FF5063;
 	color: #FF5063;
 	display: inline-block;
+	min-width: 120px;
 	width: auto;
-	border: 2px solid #FF5063;
 }
 
-.page_child_product .item_list.child_product_results .child_item_confirm {
+.page .item_list .child_item_confirm {
 	border-bottom: 2px solid #cfd5dc;
 }
 
-.page_child_product .item_list.child_product_results .child_item_confirm button:first-child {
+.page .item_list .child_item_confirm button:first-child {
 	margin-right: 10px;
 }
 
-.page_child_product .item_list.child_product_results .child_item_confirm button:last-child {
+.page .item_list .child_item_confirm button:last-child {
 	margin-left: 10px;
 	border-color: #13B5EA;
 	color: #13B5EA;
@@ -292,4 +293,9 @@
 .page .item_not_found {
 	padding: 40px;
 	text-align: center;
+}
+
+.page .page_child_go_basket {
+	padding: 20px;
+	margin-bottom: 20px;
 }

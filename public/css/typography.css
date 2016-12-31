@@ -13,3 +13,9 @@
     font-weight: normal;
     font-style: normal;
 }
+
+.lazy_load_fonts {
+    color: #fff;
+    font-family: 'montserratlight';
+    text-align: center;
+}
