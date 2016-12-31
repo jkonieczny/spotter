@@ -17,7 +17,7 @@ module.exports = React.createClass({
         };
     },
     render: function() {
-        var item, discounts;
+        var item, discounts, displayPrice, displayCommission;
 
         if (this.state.confirm === false) {
             var itemImage;
@@ -39,6 +39,21 @@ module.exports = React.createClass({
                 }
             }
 
+            displayPrice = this.props.product.price;
+            displayCommission = this.props.product.expected_commission;
+
+            if (Number.isInteger) {
+                if (Number.isInteger(this.props.product.price) === false) {
+                    displayPrice = this.props.product.price.toFixed(2);
+                }
+                if (Number.isInteger(this.props.product.price) === false) {
+                    displayCommission = this.props.product.expected_commission.toFixed(2);
+                }
+            } else {
+                displayPrice = this.props.product.price.toFixed(2);
+                displayCommission = this.props.product.expected_commission.toFixed(2);
+            }
+
             item = (
                 <div className="child_item">
                     { itemImage }
@@ -47,11 +62,11 @@ module.exports = React.createClass({
                     <div className="child_item_details">
                         <div className="child_item_earn">
                             <small>You earn:</small>
-                            £{ this.props.product.expected_commission }
+                            £{ displayCommission }
                         </div>
                         <div className="child_item_price">
                             <small>Price:</small>
-                            £{ this.props.product.price }
+                            £{ displayPrice }
                         </div>
                     </div>
                     <div className="child_item_buy"><small>Buy from:</small>{ this.props.product.merchant_name }</div>

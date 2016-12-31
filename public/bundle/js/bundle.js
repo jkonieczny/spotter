@@ -25101,7 +25101,7 @@ module.exports = React.createClass({
         };
     },
     render: function() {
-        var item, discounts;
+        var item, discounts, displayPrice, displayCommission;
 
         if (this.state.confirm === false) {
             var itemImage;
@@ -25123,6 +25123,21 @@ module.exports = React.createClass({
                 }
             }
 
+            displayPrice = this.props.product.price;
+            displayCommission = this.props.product.expected_commission;
+
+            if (Number.isInteger) {
+                if (Number.isInteger(this.props.product.price) === false) {
+                    displayPrice = this.props.product.price.toFixed(2);
+                }
+                if (Number.isInteger(this.props.product.price) === false) {
+                    displayCommission = this.props.product.expected_commission.toFixed(2);
+                }
+            } else {
+                displayPrice = this.props.product.price.toFixed(2);
+                displayCommission = this.props.product.expected_commission.toFixed(2);
+            }
+
             item = (
                 React.createElement("div", {className: "child_item"}, 
                      itemImage, 
@@ -25131,11 +25146,11 @@ module.exports = React.createClass({
                     React.createElement("div", {className: "child_item_details"}, 
                         React.createElement("div", {className: "child_item_earn"}, 
                             React.createElement("small", null, "You earn:"), 
-                            "£",  this.props.product.expected_commission
+                            "£",  displayCommission 
                         ), 
                         React.createElement("div", {className: "child_item_price"}, 
                             React.createElement("small", null, "Price:"), 
-                            "£",  this.props.product.price
+                            "£",  displayPrice 
                         )
                     ), 
                     React.createElement("div", {className: "child_item_buy"}, React.createElement("small", null, "Buy from:"),  this.props.product.merchant_name), 
@@ -25223,7 +25238,8 @@ module.exports = React.createClass({
         return (
             React.createElement("div", {className: "page signin"}, 
 	            React.createElement("div", {className: "user_avatar"}), 
-                "Add a client", 
+                React.createElement("h2", {className: "center"}, "Add a client"), 
+                React.createElement("p", null), 
                 React.createElement("form", null, 
                     React.createElement("label", null, 
                         "First Name", 
@@ -25354,7 +25370,6 @@ module.exports = React.createClass({
         var clients = (React.createElement("li", null, "You currently have no clients"));
 
         if (this.state.clients) {
-            console.log(this.state.clients);
             clients = [];
 
             this.state.clients.forEach(function(client) {
@@ -25904,6 +25919,7 @@ module.exports = React.createClass({
 			loading: productStore.loading,
 			selectedUser: flux.store('ClientStore').getState().client,
 			masterProducts: productStore.masterProducts,
+			selectedProducts: productStore.selectedProducts,
 			value: productStore.value
 		};
 	},
@@ -25911,7 +25927,7 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-		var masterProducts, loading;
+		var masterProducts, viewBasket, loading;
 
 		if (this.state.masterProducts.length > 0 && this.state.loading === false) {
 			var masterProductsArray = [];
@@ -25933,13 +25949,20 @@ module.exports = React.createClass({
     		loading = (
     			React.createElement("div", {className: "spotter_loader"})
     		);
+    	}
+
+    	if (this.state.selectedProducts.length > 0) {
+    		viewBasket = (
+    			React.createElement("button", {onClick:  this.viewBasket}, "View Basket")
+    		);
     	} 
 
     	return (
     		React.createElement("div", {className: "page page_master_product"}, 
     			React.createElement("div", {className: "product_search"}, 
     				React.createElement("p", null, "Recommend to ",  this.state.selectedUser.fname), 
-    				React.createElement("input", {type: "text", placeholder: "E.g. GF-1, Creatine, Vit C…", onChange:  this.productInput, value:  this.state.value})
+    				React.createElement("input", {type: "text", placeholder: "E.g. GF-1, Creatine, Vitamin C…", onChange:  this.productInput, value:  this.state.value}), 
+    				 viewBasket 
     			), 
     			 loading, 
     			 masterProducts 
@@ -25953,11 +25976,16 @@ module.exports = React.createClass({
     		value: e.currentTarget.value
     	});
     },
+    viewBasket: function(e) {
+        this.getFlux().actions.page.update({
+            page: 'confirmation'
+        });
+    },
     getProducts: debounce(function(value) {
     	this.getFlux().actions.masterProducts.search({
     		value: value
     	});
-    }, 250)
+    }, 500)
 
 });
 

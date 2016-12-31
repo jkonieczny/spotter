@@ -32,7 +32,6 @@ module.exports = React.createClass({
         var clients = (<li>You currently have no clients</li>);
 
         if (this.state.clients) {
-            console.log(this.state.clients);
             clients = [];
 
             this.state.clients.forEach(function(client) {

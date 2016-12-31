@@ -43,7 +43,8 @@ module.exports = React.createClass({
         return (
             <div className="page signin">
 	            <div className="user_avatar"></div>
-                Add a client
+                <h2 className="center">Add a client</h2>
+                <p/>
                 <form>
                     <label>
                         First Name

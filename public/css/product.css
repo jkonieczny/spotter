@@ -156,7 +156,7 @@
 	z-index: 1;
 	left: -45px;
 	top: -10px;
-	transform: rotate(-45deg);
+	transform: rotate(-38deg);
 }
 
 .page_child_product .item_list.child_product_results .child_item h2 {
@@ -194,7 +194,7 @@
 .page_child_product .item_list.child_product_results li .child_item_add {
 	float: left;
 	margin-bottom: 0;
-	width: calc(100% - 110px);
+	width: calc(50% - 5px);
 }
 
 .page_child_product .item_list.child_product_results li .child_item_buy {
@@ -239,13 +239,32 @@
 }
 
 .page_child_product .item_list.child_product_results .child_item_confirm {
-	text-align: center;
+	box-shadow: inset 0 0 0px 4px #3F2686;
 	padding: 20px;
+	text-align: center;
 }
 
 .page_child_product .item_list.child_product_results .child_item_confirm strong {
+	color: #3F2686;
+	font-weight: bold;
 	display: block;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
+}
+
+.page_child_product .item_list.child_product_results .child_item_confirm strong::before {
+	background-image: url('../../images/tick.png');
+	background-position: 50%;
+	background-size: 62%;
+	background-repeat: no-repeat;
+    background-color: #3F2686;
+    border-radius: 100%;
+    content: '';
+    display: inline-block;
+    height: 24px;
+    margin-right: 6px;
+    position: relative;
+    top: 6px;
+    width: 24px;
 }
 
 .page_child_product .item_list.child_product_results .child_item_confirm button {

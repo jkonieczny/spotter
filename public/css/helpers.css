@@ -131,7 +131,7 @@ p {
 	position: absolute;
 	top:  20px;
 	width: 60px;
-	animation-duration: 1s;
+	animation-duration: 1.4s;
 	animation-name: loader;
 	animation-iteration-count: infinite;
 }

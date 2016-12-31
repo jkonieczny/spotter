@@ -35,6 +35,7 @@ module.exports = React.createClass({
 			loading: productStore.loading,
 			selectedUser: flux.store('ClientStore').getState().client,
 			masterProducts: productStore.masterProducts,
+			selectedProducts: productStore.selectedProducts,
 			value: productStore.value
 		};
 	},
@@ -42,7 +43,7 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-		var masterProducts, loading;
+		var masterProducts, viewBasket, loading;
 
 		if (this.state.masterProducts.length > 0 && this.state.loading === false) {
 			var masterProductsArray = [];
@@ -64,13 +65,20 @@ module.exports = React.createClass({
     		loading = (
     			<div className="spotter_loader"></div>
     		);
+    	}
+
+    	if (this.state.selectedProducts.length > 0) {
+    		viewBasket = (
+    			<button onClick={ this.viewBasket }>View Basket</button>
+    		);
     	} 
 
     	return (
     		<div className="page page_master_product">
     			<div className="product_search">
     				<p>Recommend to { this.state.selectedUser.fname }</p>
-    				<input type="text" placeholder="E.g. GF-1, Creatine, Vit C…" onChange={ this.productInput } value={ this.state.value } />
+    				<input type="text" placeholder="E.g. GF-1, Creatine, Vitamin C…" onChange={ this.productInput } value={ this.state.value } />
+    				{ viewBasket }
     			</div>
     			{ loading }
     			{ masterProducts }
@@ -84,10 +92,15 @@ module.exports = React.createClass({
     		value: e.currentTarget.value
     	});
     },
+    viewBasket: function(e) {
+        this.getFlux().actions.page.update({
+            page: 'confirmation'
+        });
+    },
     getProducts: debounce(function(value) {
     	this.getFlux().actions.masterProducts.search({
     		value: value
     	});
-    }, 250)
+    }, 500)
 
 });
