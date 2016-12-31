@@ -82,7 +82,6 @@ module.exports = React.createClass({
         );
     },
     selectClient: function(client, e) {
-        console.log('selectClient', e);
     	e.preventDefault();
 
         if (this.state.mode === 'delete') {

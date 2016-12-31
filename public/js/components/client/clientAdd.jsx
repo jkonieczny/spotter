@@ -86,8 +86,6 @@ module.exports = React.createClass({
         var state = this.state;
         state.client[field] = e.currentTarget.value;
 
-        console.log(field, state);
-
         this.setState(state);
     },
     proceed: function(e) {

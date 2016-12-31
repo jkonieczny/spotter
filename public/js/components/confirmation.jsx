@@ -104,8 +104,20 @@ module.exports = React.createClass({
             var message = 'Hi ' + this.state.selectedUser.fname + ',\nYour trainer ' +trainer.name + ' has recommended you these products.\n\nThanks,\nSPOTTER\n\n';
 
             this.state.selectedProducts.forEach(function(value) {
-                var discount = (value.price !== value.original_price) ? ', was £' + value.original_price : '';
-                message += value.name + ' (£' + value.price + discount + ')\n';
+                var price           = value.price
+                var original_price  = value.original_price;
+
+                if (Number.isInteger) {
+                    if (Number.isInteger(value.price) === false) { price = value.price.toFixed(2); }
+                    if (Number.isInteger(value.original_price) === false) { original_price = value.original_price.toFixed(2); }
+                } else {
+                    price = price.toFixed(2);
+                    original_price = original_price.toFixed(2);
+                }
+
+                var discount = (value.price !== value.original_price) ? ', was £' + original_price : '';
+
+                message += value.name + ' (£' + price + discount + ')\n';
                 message += value.link + '\n\n';
             });
 

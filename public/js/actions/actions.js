@@ -56,7 +56,6 @@ var actions = {
 	},
 	childProducts: {
 		get: function(payload) {
-			console.log('childProducts selected', payload);
 			this.dispatch(CONSTANTS.CHILDPRODUCTS.GET, {
 				id: payload.id,
 				value: payload.value
@@ -65,13 +64,11 @@ var actions = {
 	},
 	masterProducts: {
 		search: function(payload) {
-			console.log('actions', payload);
 			this.dispatch(CONSTANTS.MASTERPRODUCTS.SEARCH, {
 				value: payload.value
 			});
 		},
 		selected: function(payload) {
-			console.log('selected', payload);
 			this.dispatch(CONSTANTS.MASTERPRODUCTS.SELECTED, {
 				masterProduct: payload.masterProduct
 			});
@@ -98,7 +95,6 @@ var actions = {
 			}
 		},
 		set: function(payload) {
-			console.log('set client', payload);
 			this.dispatch(CONSTANTS.CLIENT.SET, { client: payload.client });
 		},
 		update: function(payload) {
@@ -120,7 +116,6 @@ var actions = {
 			}
 		},
 		update: function(payload) {
-			console.log('payload', payload);
 			this.dispatch(CONSTANTS.TRAINER.UPDATE, { trainer: payload.trainer });
 		}
 	}

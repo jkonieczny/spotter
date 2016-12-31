@@ -27,11 +27,18 @@ var PageStore = Fluxxor.createStore({
         this.emit('change');
     },
     goBack: function() {
-        var newPage = this.state.history[this.state.history.length - 2];
+        var newPage;
+
+        var structure = {
+            clientEdit: 'clientView',
+            masterProduct: 'clientView',
+            product: 'masterProduct',
+            confirmation: 'product'
+        };
+
+        newPage = structure[this.state.currentPage];
 
         this.state.currentPage = (newPage) ? newPage : 'home';
-
-        this.state.history = this.state.history.slice(0, this.state.history.length - 2);
 
         this.emit('change');
     }

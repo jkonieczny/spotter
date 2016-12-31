@@ -49,7 +49,7 @@ module.exports = React.createClass({
 		}
 	},
     render: function() {
-		var childProducts, loading, goToBasket;
+		var childProducts, loading, goToBasket, goBack;
     	var productDetailsClasses = {
 			master_product_details: true
     	};
@@ -76,6 +76,20 @@ module.exports = React.createClass({
 	    			</div>
 	    		);
 	    	}
+
+	    	if (this.state.selectedProducts.length > 0) {
+	    		goToBasket = (
+	    			<div className="page_child_go">
+	    				<button onClick={ this.goToBasket }>Go to basket</button>
+	    			</div>
+	    		)
+	    	}
+
+	    	goBack = (
+    			<div className="page_child_go">
+    				<button onClick={ this.goBack }>Back to search</button>
+    			</div>
+    		);
 	    }
 
     	if (this.state.loading === true) {
@@ -93,14 +107,6 @@ module.exports = React.createClass({
     		productDetailsClasses.img_loaded = true;
     	}
 
-    	if (this.state.selectedProducts.length > 0) {
-    		goToBasket = (
-    			<div className="page_child_go_basket">
-    				<button onClick={ this.goToBasket }>Go to basket</button>
-    			</div>
-    		)
-    	}
-
     	return (
     		<div className="page page_child_product">
     			<div className={cx(productDetailsClasses)} style={ productImage }>
@@ -109,13 +115,21 @@ module.exports = React.createClass({
     			</div>
     			{ loading }
     			{ childProducts }
-    			{ goToBasket }
+    			<div className="go_back_container">
+	    			{ goToBasket }
+	    			{ goBack }
+	    		</div>
     		</div>
     	);
     },
     goToBasket: function() {
         this.getFlux().actions.page.update({
             page: 'confirmation'
+        });
+    },
+    goBack: function() {
+        this.getFlux().actions.page.update({
+            page: 'masterProduct'
         });
     }
 

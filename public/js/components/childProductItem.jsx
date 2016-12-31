@@ -4,16 +4,23 @@
 
 var React = require('react'),
     Fluxxor = require('fluxxor'),
-    FluxMixin = Fluxxor.FluxMixin(React);
+    FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
 var CONSTANTS = require('../constants/constants');
 
 module.exports = React.createClass({
     displayName: 'childProductItem.jsx',
-    mixins: [FluxMixin],
-    getInitialState: function() {
+    mixins: [FluxMixin, StoreWatchMixin('ProductStore')],
+    getStateFromFlux: function() {
+        var selectedProducts = this.getFlux().store('ProductStore').getState().selectedProducts;
+
+        selectedProducts = selectedProducts.filter(function(product) {
+            return (this.props.product.id === product.id);
+        }.bind(this));
+
         return {
-            confirm: false
+            confirm: (selectedProducts.length > 0)
         };
     },
     render: function() {

@@ -43,7 +43,6 @@ module.exports = React.createClass({
         );
     },
     proceed: function(e) {
-        console.log('proceed');
     	e.preventDefault();
 
         this.getFlux().actions.page.update({

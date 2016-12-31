@@ -24981,7 +24981,6 @@ var actions = {
 	},
 	childProducts: {
 		get: function(payload) {
-			console.log('childProducts selected', payload);
 			this.dispatch(CONSTANTS.CHILDPRODUCTS.GET, {
 				id: payload.id,
 				value: payload.value
@@ -24990,13 +24989,11 @@ var actions = {
 	},
 	masterProducts: {
 		search: function(payload) {
-			console.log('actions', payload);
 			this.dispatch(CONSTANTS.MASTERPRODUCTS.SEARCH, {
 				value: payload.value
 			});
 		},
 		selected: function(payload) {
-			console.log('selected', payload);
 			this.dispatch(CONSTANTS.MASTERPRODUCTS.SELECTED, {
 				masterProduct: payload.masterProduct
 			});
@@ -25023,7 +25020,6 @@ var actions = {
 			}
 		},
 		set: function(payload) {
-			console.log('set client', payload);
 			this.dispatch(CONSTANTS.CLIENT.SET, { client: payload.client });
 		},
 		update: function(payload) {
@@ -25045,7 +25041,6 @@ var actions = {
 			}
 		},
 		update: function(payload) {
-			console.log('payload', payload);
 			this.dispatch(CONSTANTS.TRAINER.UPDATE, { trainer: payload.trainer });
 		}
 	}
@@ -25088,16 +25083,23 @@ module.exports = React.createClass({
 
 var React = require('react'),
     Fluxxor = require('fluxxor'),
-    FluxMixin = Fluxxor.FluxMixin(React);
+    FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
 var CONSTANTS = require('../constants/constants');
 
 module.exports = React.createClass({
     displayName: 'childProductItem.jsx',
-    mixins: [FluxMixin],
-    getInitialState: function() {
+    mixins: [FluxMixin, StoreWatchMixin('ProductStore')],
+    getStateFromFlux: function() {
+        var selectedProducts = this.getFlux().store('ProductStore').getState().selectedProducts;
+
+        selectedProducts = selectedProducts.filter(function(product) {
+            return (this.props.product.id === product.id);
+        }.bind(this));
+
         return {
-            confirm: false
+            confirm: (selectedProducts.length > 0)
         };
     },
     render: function() {
@@ -25281,8 +25283,6 @@ module.exports = React.createClass({
         var state = this.state;
         state.client[field] = e.currentTarget.value;
 
-        console.log(field, state);
-
         this.setState(state);
     },
     proceed: function(e) {
@@ -25434,7 +25434,6 @@ module.exports = React.createClass({
         );
     },
     selectClient: function(client, e) {
-        console.log('selectClient', e);
     	e.preventDefault();
 
         if (this.state.mode === 'delete') {
@@ -25591,8 +25590,20 @@ module.exports = React.createClass({
             var message = 'Hi ' + this.state.selectedUser.fname + ',\nYour trainer ' +trainer.name + ' has recommended you these products.\n\nThanks,\nSPOTTER\n\n';
 
             this.state.selectedProducts.forEach(function(value) {
-                var discount = (value.price !== value.original_price) ? ', was £' + value.original_price : '';
-                message += value.name + ' (£' + value.price + discount + ')\n';
+                var price           = value.price
+                var original_price  = value.original_price;
+
+                if (Number.isInteger) {
+                    if (Number.isInteger(value.price) === false) { price = value.price.toFixed(2); }
+                    if (Number.isInteger(value.original_price) === false) { original_price = value.original_price.toFixed(2); }
+                } else {
+                    price = price.toFixed(2);
+                    original_price = original_price.toFixed(2);
+                }
+
+                var discount = (value.price !== value.original_price) ? ', was £' + original_price : '';
+
+                message += value.name + ' (£' + price + discount + ')\n';
                 message += value.link + '\n\n';
             });
 
@@ -26240,7 +26251,7 @@ module.exports = React.createClass({
 		}
 	},
     render: function() {
-		var childProducts, loading, goToBasket;
+		var childProducts, loading, goToBasket, goBack;
     	var productDetailsClasses = {
 			master_product_details: true
     	};
@@ -26267,6 +26278,20 @@ module.exports = React.createClass({
 	    			)
 	    		);
 	    	}
+
+	    	if (this.state.selectedProducts.length > 0) {
+	    		goToBasket = (
+	    			React.createElement("div", {className: "page_child_go"}, 
+	    				React.createElement("button", {onClick:  this.goToBasket}, "Go to basket")
+	    			)
+	    		)
+	    	}
+
+	    	goBack = (
+    			React.createElement("div", {className: "page_child_go"}, 
+    				React.createElement("button", {onClick:  this.goBack}, "Back to search")
+    			)
+    		);
 	    }
 
     	if (this.state.loading === true) {
@@ -26284,14 +26309,6 @@ module.exports = React.createClass({
     		productDetailsClasses.img_loaded = true;
     	}
 
-    	if (this.state.selectedProducts.length > 0) {
-    		goToBasket = (
-    			React.createElement("div", {className: "page_child_go_basket"}, 
-    				React.createElement("button", {onClick:  this.goToBasket}, "Go to basket")
-    			)
-    		)
-    	}
-
     	return (
     		React.createElement("div", {className: "page page_child_product"}, 
     			React.createElement("div", {className: cx(productDetailsClasses), style:  productImage }, 
@@ -26300,13 +26317,21 @@ module.exports = React.createClass({
     			), 
     			 loading, 
     			 childProducts, 
-    			 goToBasket 
+    			React.createElement("div", {className: "go_back_container"}, 
+	    			 goToBasket, 
+	    			 goBack 
+	    		)
     		)
     	);
     },
     goToBasket: function() {
         this.getFlux().actions.page.update({
             page: 'confirmation'
+        });
+    },
+    goBack: function() {
+        this.getFlux().actions.page.update({
+            page: 'masterProduct'
         });
     }
 
@@ -26479,7 +26504,6 @@ module.exports = React.createClass({
         );
     },
     proceed: function(e) {
-        console.log('proceed');
     	e.preventDefault();
 
         this.getFlux().actions.page.update({
@@ -27261,11 +27285,18 @@ var PageStore = Fluxxor.createStore({
         this.emit('change');
     },
     goBack: function() {
-        var newPage = this.state.history[this.state.history.length - 2];
+        var newPage;
+
+        var structure = {
+            clientEdit: 'clientView',
+            masterProduct: 'clientView',
+            product: 'masterProduct',
+            confirmation: 'product'
+        };
+
+        newPage = structure[this.state.currentPage];
 
         this.state.currentPage = (newPage) ? newPage : 'home';
-
-        this.state.history = this.state.history.slice(0, this.state.history.length - 2);
 
         this.emit('change');
     }
