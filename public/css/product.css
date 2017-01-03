@@ -80,13 +80,23 @@
 
 .page.page_child_product .master_product_details {
 	background-color: #3F2686;
+	background: linear-gradient(to right,  #7652be 0%,#7652be 20%,#7740a2 80%,#7740a2 100%);
 	color: #fff;
 	min-height: 127px;
 	padding: 18px 10px 18px 100px;
+    position: relative;
+}
+
+.page.page_child_product .page_child_product_image {
 	position: relative;
 	background-size: 1px;
 	background-repeat: no-repeat;
 	background-position: -99999px;
+    width: 72px;
+    height: 100px;
+    position: absolute;
+    top: 14px;
+    left: 14px;
 }
 
 .page.page_child_product .master_product_details h2 {
@@ -98,8 +108,8 @@
 	margin-bottom: 0;
 }
 
-.page.page_child_product .master_product_details::before,
-.page.page_child_product .master_product_details::after {
+.page.page_child_product .page_child_product_image::before,
+.page.page_child_product .page_child_product_image::after {
 	background-position: 50%;
 	background-repeat: no-repeat;
 	content: '';
@@ -107,16 +117,16 @@
     width: 72px;
     height: 100px;
     position: absolute;
-    top: 14px;
-    left: 14px;
+    top: 0;
+    left: 0;
 }
 
-.page.page_child_product .master_product_details::before {
+.page.page_child_product .page_child_product_image::before {
 	background-image: url('../../images/tub-large.png');
 	background-size: 80%;
 }
 
-.page.page_child_product .master_product_details::after {
+.page.page_child_product .page_child_product_image::after {
 	z-index: 1;
 	background-color: #fff;
 	background-image: inherit;
@@ -125,7 +135,7 @@
 	transition: opacity 0.2s linear;
 }
 
-.page.page_child_product .master_product_details.img_loaded::after {
+.page.page_child_product .img_loaded .page_child_product_image::after {
 	opacity: 1;
 }
 
@@ -291,7 +301,7 @@
 	background-position: 50%;
 	background-size: 62%;
 	background-repeat: no-repeat;
-    background-color: #3F2686;
+    background-color: #fff;
     border-radius: 100%;
     content: '';
     display: inline-block;

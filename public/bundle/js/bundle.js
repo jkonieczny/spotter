@@ -25570,7 +25570,7 @@ module.exports = React.createClass({
 		}
 
         return (
-            React.createElement("div", {className: "page page_confirmation"}, 
+            React.createElement("div", {className: "page page_confirmation light_blue"}, 
                 React.createElement("div", {className: "confirmation_header"}, 
                 	"Heres what you’d like to recommend to ", this.state.selectedUser.fname, ":"
                 ), 
@@ -26338,7 +26338,8 @@ module.exports = React.createClass({
 
     	return (
     		React.createElement("div", {className: "page page_child_product light_blue"}, 
-    			React.createElement("div", {className: cx(productDetailsClasses), style:  productImage }, 
+    			React.createElement("div", {className: cx(productDetailsClasses)}, 
+    				React.createElement("div", {className: "page_child_product_image", style:  productImage }), 
     				React.createElement("h2", null,  masterProduct.name), 
     				React.createElement("p", null,  masterProduct.description)
     			), 

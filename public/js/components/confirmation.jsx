@@ -70,7 +70,7 @@ module.exports = React.createClass({
 		}
 
         return (
-            <div className="page page_confirmation">
+            <div className="page page_confirmation light_blue">
                 <div className="confirmation_header">
                 	Heres what you’d like to recommend to {this.state.selectedUser.fname}:
                 </div>

@@ -109,7 +109,8 @@ module.exports = React.createClass({
 
     	return (
     		<div className="page page_child_product light_blue">
-    			<div className={cx(productDetailsClasses)} style={ productImage }>
+    			<div className={cx(productDetailsClasses)}>
+    				<div className="page_child_product_image" style={ productImage }></div>
     				<h2>{ masterProduct.name }</h2>
     				<p>{ masterProduct.description }</p>
     			</div>

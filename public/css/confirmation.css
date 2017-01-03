@@ -10,6 +10,7 @@
 }
 
 .page_confirmation .item_list.confirmation_product_results .child_item {
+	background-color: #fff;
     border-bottom: 2px solid #cfd5dc;
     min-height: 102px;
     padding: 10px 10px 10px 80px;
