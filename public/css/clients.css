@@ -1,17 +1,41 @@
+.page.clients_view h2,
+.page.client_edit h2 {
+    color: #281954;
+    font-size: 24px;
+}
+
 .client_list_client {
-	border-top: 1px solid #ccc;
+	background-color: #fff;
+	border-top: 1px solid #d9d7e1;
 	cursor: pointer;
 	height: 50px;
 	line-height: 50px;
-	padding-left: 50px;
+	padding-left: 60px;
+	padding-right: 10px;
 	position: relative;
+	left: -10px;
+	width: calc(100% + 20px);
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 }
 
+.client_list_client.client_list_no_clients {
+	color: #d9d7e1;
+	padding-left: 0;
+	padding-right: 0;
+	text-align: center;
+}
+
+.client_list_client.client_list_add_client {
+	color: #45d0b1;
+	padding-left: 0;
+	padding-right: 0;
+	text-align: center;
+}
+
 .client_list_client:last-child {
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #d9d7e1;
 }
 
 .client_list_client span {

@@ -74,7 +74,7 @@ module.exports = React.createClass({
     	} 
 
     	return (
-    		<div className="page page_master_product">
+    		<div className="page page_master_product light_blue">
     			<div className="product_search">
     				<p>Recommend to { this.state.selectedUser.fname }</p>
     				<input type="text" placeholder="E.g. GF-1, Creatine, Vitamin C…" autoCapitalize="none" autoCorrect="off" onChange={ this.productInput } value={ this.state.value } />

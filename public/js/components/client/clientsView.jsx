@@ -29,9 +29,10 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-        var clients = (<li>You currently have no clients</li>);
+        var buttons;
+        var clients = (<li className="client_list_client client_list_no_clients">You currently have no clients</li>);
 
-        if (this.state.clients) {
+        if (this.state.clients && this.state.clients.length > 0) {
             clients = [];
 
             this.state.clients.forEach(function(client) {
@@ -44,29 +45,30 @@ module.exports = React.createClass({
                     </li>
                 );
             }.bind(this));
+
+            var buttons = (
+                <div>
+                    <a href="#" onClick={this.editClients}>Edit clients</a>
+                    <p/>
+                    <a href="#" onClick={this.deleteClients}>Select and delete clients</a>
+                </div>
+            );
+
+            if (this.state.mode) {
+                pageClasses[this.state.mode] = true;
+                buttons = (
+                    <div>
+                        <button onClick={this.modeClear}>Done</button>
+                    </div>
+                )
+            }
         }
 
         var pageClasses = {
             page: true,
-            signin: true
+            clients_view: true,
+            light_blue: true
         };
-
-        var buttons = (
-            <div>
-                <a href="#" onClick={this.editClients}>Edit clients</a>
-                <p/>
-                <a href="#" onClick={this.deleteClients}>Select and delete clients</a>
-            </div>
-        );
-
-        if (this.state.mode) {
-            pageClasses[this.state.mode] = true;
-            buttons = (
-                <div>
-                    <button onClick={this.modeClear}>Done</button>
-                </div>
-            )
-        }
 
         return (
             <div className={cx(pageClasses)}>
@@ -75,6 +77,9 @@ module.exports = React.createClass({
                 <p/>
                 <ul>
                     {clients}
+                    <li className="client_list_client client_list_add_client" onClick={ this.proceedAddClient }>
+                        Add a client
+                    </li>
                 </ul>
                 <p/>
                 {buttons}
@@ -126,6 +131,12 @@ module.exports = React.createClass({
 
         this.setState({
             mode: null
+        });
+    },
+    proceedAddClient: function(e) {
+        e.preventDefault();
+        this.getFlux().actions.page.update({
+            page: 'clientAdd'
         });
     }
 

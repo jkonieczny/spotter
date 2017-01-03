@@ -42,7 +42,7 @@ module.exports = React.createClass({
 			img.onload = function() {
 				this.setState({
 					image: this.state.childProducts[0].image
-				})
+				});
 			}.bind(this);
 
 			img.src = this.state.childProducts[0].image;
@@ -50,19 +50,19 @@ module.exports = React.createClass({
 	},
     render: function() {
 		var childProducts, loading, goToBasket, goBack;
-    	var productDetailsClasses = {
+		var productDetailsClasses = {
 			master_product_details: true
-    	};
+		};
 
 		if (this.state.loading === false) {
-			if (this.state.childProducts.length > 0) {
+			if (this.state.childProducts && this.state.childProducts.length > 0) {
 				var childProductsArray = [];
 
-	    		this.state.childProducts.forEach(function(product) {
-	    			childProductsArray.push(
+				this.state.childProducts.forEach(function(product) {
+					childProductsArray.push(
     					(<ChildProductItem key={ product.id } product={ product } />)
 	    			);
-	    		}.bind(this));
+				}.bind(this));
 
 				childProducts = (
 					<ul className="item_list child_product_results">
@@ -108,7 +108,7 @@ module.exports = React.createClass({
     	}
 
     	return (
-    		<div className="page page_child_product">
+    		<div className="page page_child_product light_blue">
     			<div className={cx(productDetailsClasses)} style={ productImage }>
     				<h2>{ masterProduct.name }</h2>
     				<p>{ masterProduct.description }</p>

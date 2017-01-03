@@ -50,8 +50,7 @@ module.exports = React.createClass({
         var button = (this.state.action === 'add') ? 'Add client' : 'Update client details';
 
         return (
-            <div className="page signin">
-	            <Avatar person={this.state.client} />
+            <div className="page client_edit light_blue">
                 <h2 className="center">{ title }</h2>
                 <p/>
                 <form>

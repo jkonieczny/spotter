@@ -25247,8 +25247,7 @@ module.exports = React.createClass({
         var button = (this.state.action === 'add') ? 'Add client' : 'Update client details';
 
         return (
-            React.createElement("div", {className: "page signin"}, 
-	            React.createElement(Avatar, {person: this.state.client}), 
+            React.createElement("div", {className: "page client_edit light_blue"}, 
                 React.createElement("h2", {className: "center"},  title ), 
                 React.createElement("p", null), 
                 React.createElement("form", null, 
@@ -25381,9 +25380,10 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-        var clients = (React.createElement("li", null, "You currently have no clients"));
+        var buttons;
+        var clients = (React.createElement("li", {className: "client_list_client client_list_no_clients"}, "You currently have no clients"));
 
-        if (this.state.clients) {
+        if (this.state.clients && this.state.clients.length > 0) {
             clients = [];
 
             this.state.clients.forEach(function(client) {
@@ -25396,29 +25396,30 @@ module.exports = React.createClass({
                     )
                 );
             }.bind(this));
+
+            var buttons = (
+                React.createElement("div", null, 
+                    React.createElement("a", {href: "#", onClick: this.editClients}, "Edit clients"), 
+                    React.createElement("p", null), 
+                    React.createElement("a", {href: "#", onClick: this.deleteClients}, "Select and delete clients")
+                )
+            );
+
+            if (this.state.mode) {
+                pageClasses[this.state.mode] = true;
+                buttons = (
+                    React.createElement("div", null, 
+                        React.createElement("button", {onClick: this.modeClear}, "Done")
+                    )
+                )
+            }
         }
 
         var pageClasses = {
             page: true,
-            signin: true
+            clients_view: true,
+            light_blue: true
         };
-
-        var buttons = (
-            React.createElement("div", null, 
-                React.createElement("a", {href: "#", onClick: this.editClients}, "Edit clients"), 
-                React.createElement("p", null), 
-                React.createElement("a", {href: "#", onClick: this.deleteClients}, "Select and delete clients")
-            )
-        );
-
-        if (this.state.mode) {
-            pageClasses[this.state.mode] = true;
-            buttons = (
-                React.createElement("div", null, 
-                    React.createElement("button", {onClick: this.modeClear}, "Done")
-                )
-            )
-        }
 
         return (
             React.createElement("div", {className: cx(pageClasses)}, 
@@ -25426,7 +25427,10 @@ module.exports = React.createClass({
                 React.createElement("h2", {className: "center"}, this.state.trainer.name, "'s clients"), 
                 React.createElement("p", null), 
                 React.createElement("ul", null, 
-                    clients
+                    clients, 
+                    React.createElement("li", {className: "client_list_client client_list_add_client", onClick:  this.proceedAddClient}, 
+                        "Add a client"
+                    )
                 ), 
                 React.createElement("p", null), 
                 buttons
@@ -25478,6 +25482,12 @@ module.exports = React.createClass({
 
         this.setState({
             mode: null
+        });
+    },
+    proceedAddClient: function(e) {
+        e.preventDefault();
+        this.getFlux().actions.page.update({
+            page: 'clientAdd'
         });
     }
 
@@ -25874,9 +25884,9 @@ module.exports = React.createClass({
     },
     render: function() {
         return (
-            React.createElement("div", {className: "page signin"}, 
+            React.createElement("div", {className: "page home light_blue"}, 
                 React.createElement(Avatar, {person: this.state.trainer}), 
-                React.createElement("h2", {className: "center"}, "Hi ", this.state.trainer.name.split(' ')[0], "!"), 
+                React.createElement("h2", {className: "center"}, "Welcome back", React.createElement("br", null),  this.state.trainer.name), 
                 React.createElement("p", null), 
                 React.createElement("form", null, 
                     React.createElement("label", null, 
@@ -26110,7 +26120,7 @@ module.exports = React.createClass({
     	} 
 
     	return (
-    		React.createElement("div", {className: "page page_master_product"}, 
+    		React.createElement("div", {className: "page page_master_product light_blue"}, 
     			React.createElement("div", {className: "product_search"}, 
     				React.createElement("p", null, "Recommend to ",  this.state.selectedUser.fname), 
     				React.createElement("input", {type: "text", placeholder: "E.g. GF-1, Creatine, Vitamin C…", autoCapitalize: "none", autoCorrect: "off", onChange:  this.productInput, value:  this.state.value}), 
@@ -26244,7 +26254,7 @@ module.exports = React.createClass({
 			img.onload = function() {
 				this.setState({
 					image: this.state.childProducts[0].image
-				})
+				});
 			}.bind(this);
 
 			img.src = this.state.childProducts[0].image;
@@ -26252,19 +26262,19 @@ module.exports = React.createClass({
 	},
     render: function() {
 		var childProducts, loading, goToBasket, goBack;
-    	var productDetailsClasses = {
+		var productDetailsClasses = {
 			master_product_details: true
-    	};
+		};
 
 		if (this.state.loading === false) {
-			if (this.state.childProducts.length > 0) {
+			if (this.state.childProducts && this.state.childProducts.length > 0) {
 				var childProductsArray = [];
 
-	    		this.state.childProducts.forEach(function(product) {
-	    			childProductsArray.push(
+				this.state.childProducts.forEach(function(product) {
+					childProductsArray.push(
     					(React.createElement(ChildProductItem, {key:  product.id, product:  product }))
 	    			);
-	    		}.bind(this));
+				}.bind(this));
 
 				childProducts = (
 					React.createElement("ul", {className: "item_list child_product_results"}, 
@@ -26310,7 +26320,7 @@ module.exports = React.createClass({
     	}
 
     	return (
-    		React.createElement("div", {className: "page page_child_product"}, 
+    		React.createElement("div", {className: "page page_child_product light_blue"}, 
     			React.createElement("div", {className: cx(productDetailsClasses), style:  productImage }, 
     				React.createElement("h2", null,  masterProduct.name), 
     				React.createElement("p", null,  masterProduct.description)
@@ -26480,7 +26490,7 @@ module.exports = React.createClass({
 	},
     render: function() {
         return (
-            React.createElement("div", {className: "page signin"}, 
+            React.createElement("div", {className: "page settings"}, 
 	            React.createElement("div", {className: "user_avatar"}), 
                 "Settings", 
                 React.createElement("form", null, 

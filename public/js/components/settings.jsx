@@ -19,7 +19,7 @@ module.exports = React.createClass({
 	},
     render: function() {
         return (
-            <div className="page signin">
+            <div className="page settings">
 	            <div className="user_avatar"></div>
                 Settings
                 <form>

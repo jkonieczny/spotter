@@ -110,6 +110,7 @@
 }
 
 .page_child_product .item_list.child_product_results .child_item {
+	background-color: #fff;
 	border-bottom: 2px solid #cfd5dc;
 	padding: 10px 10px 10px 80px;
 	position: relative;
