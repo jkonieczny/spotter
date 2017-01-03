@@ -30,6 +30,85 @@ button {
 	font-size: 16px;
 }
 
+button.green_btn {
+	background-color: #45d0b1;
+}
+
+button.trans_btn {
+	background-color: transparent;
+	box-shadow: inset 0 0 0 2px #FF5063;
+	color: #FF5063;
+}
+
+.add_icon::before {
+    background-image: url('../../images/add.png');
+    background-position: 50%;
+    background-size: contain;
+    content: '';
+    display: inline-block;
+    height: 24px;
+    margin-right: 10px;
+    position: relative;
+    top: 5px;
+    width: 24px;
+}
+
+.add_icon.add_icon_green::before {
+	background-image: url('../../images/add-green.png');
+}
+
+.delete_icon::before {
+    background-image: url('../../images/delete.png');
+    background-position: 50%;
+    background-size: contain;
+    content: '';
+    display: inline-block;
+    height: 24px;
+    margin-right: 10px;
+    position: relative;
+    top: 5px;
+    width: 24px;
+}
+
+.edit_icon::before {
+    background-image: url('../../images/edit.png');
+    background-position: 50%;
+    background-size: contain;
+    content: '';
+    display: inline-block;
+    height: 24px;
+    margin-right: 10px;
+    position: relative;
+    top: 5px;
+    width: 24px;
+}
+
+.clients_icon::before {
+    background-image: url('../../images/view-clients.png');
+    background-position: 50%;
+    background-size: contain;
+    content: '';
+    display: inline-block;
+    height: 24px;
+    margin-right: 10px;
+    position: relative;
+    top: 5px;
+    width: 24px;
+}
+
+.cog_icon::before {
+    background-image: url('../../images/cog.png');
+    background-position: 50%;
+    background-size: contain;
+    content: '';
+    display: inline-block;
+    height: 24px;
+    margin-right: 10px;
+    position: relative;
+    top: 5px;
+    width: 24px;
+}
+
 input:disabled,
 button:disabled {
 	opacity: 0.5;
@@ -144,4 +223,20 @@ p {
 	to {
 		transform: rotate(360deg);
 	}
+}
+
+.spotter_tip {
+	background-color: #fff;
+	color: #8493a7;
+	font-size: 12px;
+	font-family: montserratlight;
+	line-height: 18px;
+	margin: 30px 0;
+	padding: 10px;
+}
+
+.spotter_tip em {
+	display: inline-block;
+	text-decoration: underline;
+	margin-bottom: 4px;
 }

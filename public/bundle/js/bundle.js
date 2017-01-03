@@ -25380,8 +25380,22 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-        var buttons;
-        var clients = (React.createElement("li", {className: "client_list_client client_list_no_clients"}, "You currently have no clients"));
+        var clients = (React.createElement("li", {className: "client_list_client client_list_no_clients"}, "NO CLIENTS"));
+
+        var pageClasses = {
+            page: true,
+            clients_view: true,
+            light_blue: true,
+            no_clients: (!this.state.clients || this.state.clients.length === 0)
+        };
+
+        var buttons = (
+            React.createElement("div", {className: "client_list_actions"}, 
+                React.createElement("a", {className: "edit_icon", href: "#", onClick: this.editClients}, "Edit clients"), 
+                React.createElement("p", null), 
+                React.createElement("a", {className: "delete_icon", href: "#", onClick: this.deleteClients}, "Select and delete clients")
+            )
+        );
 
         if (this.state.clients && this.state.clients.length > 0) {
             clients = [];
@@ -25397,14 +25411,6 @@ module.exports = React.createClass({
                 );
             }.bind(this));
 
-            var buttons = (
-                React.createElement("div", null, 
-                    React.createElement("a", {href: "#", onClick: this.editClients}, "Edit clients"), 
-                    React.createElement("p", null), 
-                    React.createElement("a", {href: "#", onClick: this.deleteClients}, "Select and delete clients")
-                )
-            );
-
             if (this.state.mode) {
                 pageClasses[this.state.mode] = true;
                 buttons = (
@@ -25415,12 +25421,6 @@ module.exports = React.createClass({
             }
         }
 
-        var pageClasses = {
-            page: true,
-            clients_view: true,
-            light_blue: true
-        };
-
         return (
             React.createElement("div", {className: cx(pageClasses)}, 
 	            React.createElement(Avatar, {person: this.state.trainer}), 
@@ -25428,12 +25428,16 @@ module.exports = React.createClass({
                 React.createElement("p", null), 
                 React.createElement("ul", null, 
                     clients, 
-                    React.createElement("li", {className: "client_list_client client_list_add_client", onClick:  this.proceedAddClient}, 
+                    React.createElement("li", {className: "client_list_client client_list_add_client add_icon add_icon_green", onClick:  this.proceedAddClient}, 
                         "Add a client"
                     )
                 ), 
                 React.createElement("p", null), 
-                buttons
+                buttons, 
+                React.createElement("div", {className: "spotter_tip"}, 
+                    React.createElement("em", null, "SPOTTER TIP"), React.createElement("br", null), 
+                    "Why not add yourself as a client? Test drive how Spotter works and get some great products at a discount whilst you're at it!"
+                )
             )
         );
     },
@@ -25890,13 +25894,13 @@ module.exports = React.createClass({
                 React.createElement("p", null), 
                 React.createElement("form", null, 
                     React.createElement("label", null, 
-                        React.createElement("button", {type: "submit", onClick: this.proceedAddClient}, "Add Client")
+                        React.createElement("button", {className: "green_btn add_icon", type: "submit", onClick: this.proceedAddClient}, "Add Client")
                     ), 
                     React.createElement("label", null, 
-                        React.createElement("button", {type: "submit", onClick: this.proceedViewClients}, "View Clients")
+                        React.createElement("button", {className: "clients_icon", type: "submit", onClick: this.proceedViewClients}, "View Clients")
                     ), 
 	                React.createElement("label", null, 
-	                	React.createElement("button", {type: "submit", onClick: this.proceedProfile}, "Your Profile")
+	                	React.createElement("button", {className: "trans_btn cog_icon", type: "submit", onClick: this.proceedProfile}, "Your Profile")
 	                )
                 ), 
                 React.createElement("div", {className: "lazy_load_fonts"}, "Spotter ©")
@@ -26089,7 +26093,7 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-		var masterProducts, viewBasket, loading;
+		var masterProducts, viewBasket, loading, tip;
 
 		if (this.state.masterProducts.length > 0 && this.state.loading === false) {
 			var masterProductsArray = [];
@@ -26117,7 +26121,18 @@ module.exports = React.createClass({
     		viewBasket = (
     			React.createElement("button", {onClick:  this.viewBasket}, "View Basket")
     		);
-    	} 
+    	}
+
+    	if (!masterProducts && this.state.loading === false) {
+    		tip = (
+    			React.createElement("div", {className: "spotter_tip"}, 
+    				React.createElement("em", null, "How does this work?"), 
+    				React.createElement("p", null, "Step 1 - Search for products to recommend to your client"), 
+    				React.createElement("p", null, "Step 2 - choose a product that works for your client and send it to them"), 
+					"Step 3 - if they buy that product from the Spotter email link, you earn commission!"
+    			)
+    		);
+    	}
 
     	return (
     		React.createElement("div", {className: "page page_master_product light_blue"}, 
@@ -26127,7 +26142,8 @@ module.exports = React.createClass({
     				 viewBasket 
     			), 
     			 loading, 
-    			 masterProducts 
+    			 masterProducts, 
+    			 tip 
     		)
     	);
     },
@@ -26167,13 +26183,14 @@ module.exports = React.createClass({
     mixins: [FluxMixin],
     render: function() {
         var masterProduct = this.props.masterProduct;
+
         var discount;
 
         if (masterProduct.extra) {
             if (masterProduct.extra.discount) {
                 if (masterProduct.extra.discount.discount_type === 'percent') {
                     discount = (
-                        React.createElement("span", {className: "master_product_offer"},  masterProduct.extra.discount.name)
+                        React.createElement("span", {className: "master_product_offer"},  masterProduct.extra.discount.value, "% OFF")
                     );
                 }
             } else if (masterProduct.extra.minPrice) {
@@ -26185,7 +26202,7 @@ module.exports = React.createClass({
 
     	return (
             React.createElement("li", {key:  masterProduct.id, onClick:  this.selectedMaster}, 
-                React.createElement("strong", null,  masterProduct.name), " (",  masterProduct.deals, ")", 
+                React.createElement("strong", null,  masterProduct.name, " (",  masterProduct.deals, ")"), 
                  discount 
             )
     	);

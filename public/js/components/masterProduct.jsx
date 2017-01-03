@@ -43,7 +43,7 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-		var masterProducts, viewBasket, loading;
+		var masterProducts, viewBasket, loading, tip;
 
 		if (this.state.masterProducts.length > 0 && this.state.loading === false) {
 			var masterProductsArray = [];
@@ -71,7 +71,18 @@ module.exports = React.createClass({
     		viewBasket = (
     			<button onClick={ this.viewBasket }>View Basket</button>
     		);
-    	} 
+    	}
+
+    	if (!masterProducts && this.state.loading === false) {
+    		tip = (
+    			<div className="spotter_tip">
+    				<em>How does this work?</em>
+    				<p>Step 1 - Search for products to recommend to your client</p>
+    				<p>Step 2 - choose a product that works for your client and send it to them</p>
+					Step 3 - if they buy that product from the Spotter email link, you earn commission!
+    			</div>
+    		);
+    	}
 
     	return (
     		<div className="page page_master_product light_blue">
@@ -82,6 +93,7 @@ module.exports = React.createClass({
     			</div>
     			{ loading }
     			{ masterProducts }
+    			{ tip }
     		</div>
     	);
     },

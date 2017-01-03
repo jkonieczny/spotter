@@ -28,6 +28,7 @@ body,
 
 header {
 	background-color: #7740A2;
+	background: linear-gradient(to right,  #7652be 0%,#7652be 20%,#7740a2 80%,#7740a2 100%);
 	height: 50px;
 	line-height: 50px;
 	position: relative;
@@ -83,17 +84,16 @@ header .header_back.home::after {
 }
 
 header .header_title {
-	background-image: url('../../images/header_logo.png');
+	background-image: url('../../images/header-logo.png');
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
 	background-size: contain;
 	height: 100%;
 	left: 50%;
 	position: absolute;
-	opacity: 0.8;
 	text-indent: -9999px;
 	transform: translateX(-50%);
-	width: 110px;
+	width: 130px;
 }
 
 header .header_avatar {
@@ -143,6 +143,8 @@ header .header_avatar {
 
 .page.light_blue {
 	background-color: #edf2fa;
+	background-image: url('../../images/light-blue-bg.jpg');
+	background-size: 50%;
 	min-height: 100vh;
 }
 

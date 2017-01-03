@@ -4,6 +4,7 @@
 }
 .page_master_product .product_search {
 	background-color: #7740A2;
+	background: linear-gradient(to right,  #7652be 0%,#7652be 20%,#7740a2 80%,#7740a2 100%);
 	color: #fff;
     padding: 20px 10px 0;
     position: relative;
@@ -29,6 +30,10 @@
 	position: relative;
 }
 
+.page_master_product .item_list.product_results li strong {
+	display: block;
+}
+
 .page_master_product .item_list.product_results li::before {
 	background-image: url('../../images/tub.png');
 	background-position: 50%;
@@ -48,10 +53,29 @@
 	background: #13b5ea;
 	border-radius: 4px;
 	color: #fff;
-	display: block;
+	display: inline-block;
 	line-height: 24px;
 	margin-top: 4px;
 	padding: 2px 8px 0;
+}
+
+.page.page_master_product .spotter_tip {
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 20px;
+	position: relative;
+}
+
+.page.page_master_product .spotter_tip::before {
+	content: '';
+	display: block;
+	width: 20px;
+	height: 20px;
+	transform: rotate(45deg);
+	position: absolute;
+	left: 20px;
+	top:  -10px;
+	background-color: #fff;
 }
 
 .page.page_child_product .master_product_details {
@@ -189,6 +213,11 @@
 
 .page_child_product .item_list.child_product_results li .child_item_details > div:first-child {
 	border: 2px dashed #cfd5dc;
+	color: #32bfed;
+}
+
+.page_child_product .item_list.child_product_results li .child_item_details > div:first-child > *{
+	color: #32bfed;
 }
 
 .page_child_product .item_list.child_product_results li .child_item_details > div:last-child {
@@ -244,14 +273,14 @@
 }
 
 .page .item_list .child_item_confirm {
-	box-shadow: inset 0 0 0px 4px #3F2686;
+	background-color: #45d0b1;
+	color: #fff;
 	padding: 20px;
 	text-align: center;
 	position: relative;
 }
 
 .page .item_list .child_item_confirm strong {
-	color: #3F2686;
 	font-weight: bold;
 	display: block;
 	margin-bottom: 20px;
@@ -275,8 +304,7 @@
 
 .page .item_list .child_item_confirm button {
 	background-color: #fff;
-	border: 2px solid #FF5063;
-	color: #FF5063;
+	color: #45d0b1;
 	display: inline-block;
 	min-width: 120px;
 	width: auto;
@@ -292,8 +320,6 @@
 
 .page .item_list .child_item_confirm button:last-child {
 	margin-left: 10px;
-	border-color: #13B5EA;
-	color: #13B5EA;
 }
 
 .page .item_not_found {

@@ -29,8 +29,22 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-        var buttons;
-        var clients = (<li className="client_list_client client_list_no_clients">You currently have no clients</li>);
+        var clients = (<li className="client_list_client client_list_no_clients">NO CLIENTS</li>);
+
+        var pageClasses = {
+            page: true,
+            clients_view: true,
+            light_blue: true,
+            no_clients: (!this.state.clients || this.state.clients.length === 0)
+        };
+
+        var buttons = (
+            <div className="client_list_actions">
+                <a className="edit_icon" href="#" onClick={this.editClients}>Edit clients</a>
+                <p/>
+                <a className="delete_icon" href="#" onClick={this.deleteClients}>Select and delete clients</a>
+            </div>
+        );
 
         if (this.state.clients && this.state.clients.length > 0) {
             clients = [];
@@ -46,14 +60,6 @@ module.exports = React.createClass({
                 );
             }.bind(this));
 
-            var buttons = (
-                <div>
-                    <a href="#" onClick={this.editClients}>Edit clients</a>
-                    <p/>
-                    <a href="#" onClick={this.deleteClients}>Select and delete clients</a>
-                </div>
-            );
-
             if (this.state.mode) {
                 pageClasses[this.state.mode] = true;
                 buttons = (
@@ -64,12 +70,6 @@ module.exports = React.createClass({
             }
         }
 
-        var pageClasses = {
-            page: true,
-            clients_view: true,
-            light_blue: true
-        };
-
         return (
             <div className={cx(pageClasses)}>
 	            <Avatar person={this.state.trainer} />
@@ -77,12 +77,16 @@ module.exports = React.createClass({
                 <p/>
                 <ul>
                     {clients}
-                    <li className="client_list_client client_list_add_client" onClick={ this.proceedAddClient }>
+                    <li className="client_list_client client_list_add_client add_icon add_icon_green" onClick={ this.proceedAddClient }>
                         Add a client
                     </li>
                 </ul>
                 <p/>
                 {buttons}
+                <div className="spotter_tip">
+                    <em>SPOTTER TIP</em><br/>
+                    Why not add yourself as a client? Test drive how Spotter works and get some great products at a discount whilst you're at it!
+                </div>
             </div>
         );
     },
