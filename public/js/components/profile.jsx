@@ -35,7 +35,7 @@ module.exports = React.createClass({
 	},
     render: function() {
         return (
-            <div className="page profile">
+            <div className="page profile light_blue">
                 <Avatar person={this.state.trainer} />
                 <form>
                     <label>

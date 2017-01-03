@@ -26403,7 +26403,7 @@ module.exports = React.createClass({
 	},
     render: function() {
         return (
-            React.createElement("div", {className: "page profile"}, 
+            React.createElement("div", {className: "page profile light_blue"}, 
                 React.createElement(Avatar, {person: this.state.trainer}), 
                 React.createElement("form", null, 
                     React.createElement("label", null, 
