@@ -25812,50 +25812,49 @@ var React = require('react'),
 var cx = require('classnames');
 
 module.exports = React.createClass({displayName: "exports",
-	mixins: [FluxMixin, StoreWatchMixin('PageStore')],
+	mixins: [FluxMixin, StoreWatchMixin('PageStore', 'ProductStore')],
 	getInitialState: function() {
 		return {};
 	},
 	getStateFromFlux: function() {
-		var flux	= this.getFlux();
-		var state	= flux.store('PageStore').getState();
-		var auth	= flux.store('AuthStore').getState();
+		var flux			= this.getFlux();
+		var state			= flux.store('PageStore').getState();
+		var productStore	= flux.store('ProductStore').getState();
 
 		return {
-			pages:				state.pages,
 			page:				state.currentPage,
 			back:				(state.currentPage !== 'home' && state.currentPage !== 'signin'),
-			trainer:			auth.trainer
+			selectedProducts:	productStore.selectedProducts,
+			userNames:			state.userNames
 		};
 	},
 	render: function() {
-		var avatar, background;
+		var basket;
 
-		if (this.state.trainer && this.state.trainer.picture) {
-			background = {
-				backgroundImage: 'url(' + this.state.trainer.picture + ')'
-			}
-
-			avatar = (React.createElement("div", {className: "header_avatar", style: background}));
+		if (this.state.selectedProducts.length > 0) {
+			basket = (
+				React.createElement("div", {className: "header_basket", onClick:  this.goToBasket}, 
+					React.createElement("em", null, "Basket"), " (", this.state.selectedProducts.length, ")"
+				)
+			);
 		}
 
 		return (
 			React.createElement("header", null, 
-				React.createElement("div", {className: cx( 'header_back', { 'hide' : (this.state.back === false), 'home' : (this.state.page === 'success') }), onClick: this.goBack}), 
+				React.createElement("div", {className: cx( 'header_back', { 'hide' : (this.state.back === false) }), onClick: this.goBack},  this.state.userNames[this.state.page] || 'Home'), 
 				React.createElement("h1", {className: "header_title"}, "spotter"), 
-				avatar
+				 basket 
 			)
 		);
 	},
 	goBack: function(e) {
-		if (this.state.page === 'success') {
-	    	this.getFlux().actions.page.update({
-	    		page: 'home'
-	    	});
-		} else {
-			this.getFlux().actions.page.goBack();
-		}
-	}
+		this.getFlux().actions.page.goBack();
+	},
+    goToBasket: function(e) {
+        this.getFlux().actions.page.update({
+            page: 'confirmation'
+        });
+    }
 
 });
 
@@ -26093,7 +26092,7 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-		var masterProducts, viewBasket, loading, tip;
+		var masterProducts, loading, tip;
 
 		if (this.state.masterProducts.length > 0 && this.state.loading === false) {
 			var masterProductsArray = [];
@@ -26117,12 +26116,6 @@ module.exports = React.createClass({
     		);
     	}
 
-    	if (this.state.selectedProducts.length > 0) {
-    		viewBasket = (
-    			React.createElement("button", {onClick:  this.viewBasket}, "View Basket")
-    		);
-    	}
-
     	if (!masterProducts && this.state.loading === false) {
     		tip = (
     			React.createElement("div", {className: "spotter_tip"}, 
@@ -26138,8 +26131,7 @@ module.exports = React.createClass({
     		React.createElement("div", {className: "page page_master_product light_blue"}, 
     			React.createElement("div", {className: "product_search"}, 
     				React.createElement("p", null, "Recommend to ",  this.state.selectedUser.fname), 
-    				React.createElement("input", {type: "text", placeholder: "E.g. GF-1, Creatine, Vitamin C…", autoCapitalize: "none", autoCorrect: "off", onChange:  this.productInput, value:  this.state.value}), 
-    				 viewBasket 
+    				React.createElement("input", {type: "text", placeholder: "E.g. GF-1, Creatine, Vitamin C…", autoCapitalize: "none", autoCorrect: "off", onChange:  this.productInput, value:  this.state.value})
     			), 
     			 loading, 
     			 masterProducts, 
@@ -27274,7 +27266,7 @@ var ClientStore = Fluxxor.createStore({
 
         SpotterAPI.sendClientEmail(data, function() {
             console.log('EMAIL SENT');
-        });
+        }.bind(this));
 
         this.emit('change:clientEmailSending');
         this.emit('change');
@@ -27294,7 +27286,13 @@ var PageStore = Fluxxor.createStore({
         this.state = {
             currentPage:    'signin',
             history:        [],
-            pages:          ['signin', 'user', 'masterProduct', 'product', 'confirmation', 'success']
+            pages:          ['signin', 'user', 'masterProduct', 'product', 'confirmation', 'success'],
+            userNames: {
+                clientEdit: 'Clients',
+                masterProduct: 'Clients',
+                product: 'Search',
+                confirmation: 'Products'
+            }
         };
 
         this.bindActions(

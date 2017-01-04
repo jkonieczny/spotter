@@ -29,6 +29,7 @@ body,
 header {
 	background-color: #7740A2;
 	background: linear-gradient(to right,  #7652be 0%,#7652be 20%,#7740a2 80%,#7740a2 100%);
+	font-family: montserratlight;
 	height: 50px;
 	line-height: 50px;
 	position: relative;
@@ -41,7 +42,9 @@ header .header_back {
 	overflow: hidden;
 	position: absolute;
 	top: 0;
-	width: 50px;
+    color: #fff;
+    font-size: 12px;
+    padding-left: 22px;
 }
 
 header .header_back::before {
@@ -49,12 +52,12 @@ header .header_back::before {
 	border-top: 2px solid #fff;
 	content: '';
 	display: block;
-	height: 40%;
+	height: 10px;
 	position: absolute;
 	transform: rotate(-45deg);
-	width: 40%;
-    left: 40%;
-    top: 28%;
+	width: 10px;
+    left: 10px;
+    top: calc(50% - 5px);
 }
 
 header .header_back.home::before {
@@ -107,6 +110,19 @@ header .header_avatar {
 	right: 10px;
 	top: 10px;
 	width: 30px;
+}
+
+header .header_basket {
+	color: #fff;
+	font-size: 12px;
+	padding: 0 10px;
+	position: absolute;
+	right:  0;
+	top:  0;
+}
+
+header .header_basket em {
+	opacity: 0.6;
 }
 
 .user_avatar {

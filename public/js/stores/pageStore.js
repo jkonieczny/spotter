@@ -8,7 +8,13 @@ var PageStore = Fluxxor.createStore({
         this.state = {
             currentPage:    'signin',
             history:        [],
-            pages:          ['signin', 'user', 'masterProduct', 'product', 'confirmation', 'success']
+            pages:          ['signin', 'user', 'masterProduct', 'product', 'confirmation', 'success'],
+            userNames: {
+                clientEdit: 'Clients',
+                masterProduct: 'Clients',
+                product: 'Search',
+                confirmation: 'Products'
+            }
         };
 
         this.bindActions(

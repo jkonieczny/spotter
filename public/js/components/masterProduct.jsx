@@ -43,7 +43,7 @@ module.exports = React.createClass({
 		window.scrollTo(0,0);
 	},
     render: function() {
-		var masterProducts, viewBasket, loading, tip;
+		var masterProducts, loading, tip;
 
 		if (this.state.masterProducts.length > 0 && this.state.loading === false) {
 			var masterProductsArray = [];
@@ -67,12 +67,6 @@ module.exports = React.createClass({
     		);
     	}
 
-    	if (this.state.selectedProducts.length > 0) {
-    		viewBasket = (
-    			<button onClick={ this.viewBasket }>View Basket</button>
-    		);
-    	}
-
     	if (!masterProducts && this.state.loading === false) {
     		tip = (
     			<div className="spotter_tip">
@@ -89,7 +83,6 @@ module.exports = React.createClass({
     			<div className="product_search">
     				<p>Recommend to { this.state.selectedUser.fname }</p>
     				<input type="text" placeholder="E.g. GF-1, Creatine, Vitamin C…" autoCapitalize="none" autoCorrect="off" onChange={ this.productInput } value={ this.state.value } />
-    				{ viewBasket }
     			</div>
     			{ loading }
     			{ masterProducts }

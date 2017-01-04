@@ -48,6 +48,19 @@
 	width: 24px;
 }
 
+.page_master_product .item_list.product_results li::after {
+	border-top: 2px solid #fff;
+	border-right: 2px solid #fff;
+	content:  '';
+	display: block;
+	height: 10px;
+	right:  10px;
+	position: absolute;
+	width: 10px;
+	transform: rotate(45deg);
+	top: calc(50% - 5px);
+}
+
 .page_master_product .item_list.product_results li .master_product_offer,
 .page.page_child_product .item_list.child_product_results .child_item_discounts {
 	background: #13b5ea;
@@ -56,6 +69,7 @@
 	display: inline-block;
 	line-height: 24px;
 	margin-top: 4px;
+	margin-bottom: 4px;
 	padding: 2px 8px 0;
 }
 
