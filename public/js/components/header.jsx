@@ -28,10 +28,11 @@ module.exports = React.createClass({
 	},
 	render: function() {
 		var basket;
+		var page = this.state.page;
 
-		if (this.state.selectedProducts.length > 0) {
+		if (page === 'masterProduct' || page === 'product') {
 			basket = (
-				<div className="header_basket" onClick={ this.goToBasket }>
+				<div className={ cx({ header_basket: true, header_basket_items: (this.state.selectedProducts.length > 0) }) } onClick={ this.goToBasket }>
 					<em>Basket</em> ({this.state.selectedProducts.length})
 				</div>
 			);

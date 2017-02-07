@@ -7,6 +7,8 @@ var React = require('react'),
     FluxMixin = Fluxxor.FluxMixin(React),
     StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
+var cx = require('classnames');
+
 var CONSTANTS = require('../constants/constants');
 
 module.exports = React.createClass({
@@ -24,26 +26,32 @@ module.exports = React.createClass({
         };
     },
     render: function() {
-        var item, discounts, displayPrice, displayCommission;
+        var item, discounts, displayPrice, displayCommission, hasDiscount;
 
         if (this.state.confirm === false) {
             var itemImage;
             var product = this.props.product;
 
-            if (product.image) {
-                itemImage = (
-                    <span className="child_item_image" style={ { backgroundImage: 'url(' + product.image + ')'}  }></span>
-                );
-            }
-
             if (product.discount) {
                 if (product.discount && product.discount.discount_type === 'percent') {
+                    hasDiscount = true;
+
                     discounts = (
                         <div className="child_item_discounts"> 
-                            { product.discount.name }
+                            { product.discount.value }%<br/>
+                            OFF
                         </div>
+
                     );
                 }
+            }
+
+            if (product.image) {
+                itemImage = (
+                    <span className="child_item_image" style={ { backgroundImage: 'url(' + product.image + ')'}  }>
+                        { discounts }
+                    </span>
+                );
             }
 
             displayPrice = this.props.product.price;
@@ -62,10 +70,9 @@ module.exports = React.createClass({
             }
 
             item = (
-                <div className="child_item">
+                <div className={ cx({ child_item: true, child_item_bubble: hasDiscount }) }>
                     { itemImage }
                     <h2>{ this.props.product.name }</h2>
-                    { discounts }
                     <div className="child_item_details">
                         <div className="child_item_earn">
                             <small>You earn:</small>

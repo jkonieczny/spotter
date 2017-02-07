@@ -45,6 +45,7 @@ header .header_back {
     color: #fff;
     font-size: 12px;
     padding-left: 22px;
+    padding-right: 10px;
 }
 
 header .header_back::before {
@@ -58,32 +59,6 @@ header .header_back::before {
 	width: 10px;
     left: 10px;
     top: calc(50% - 5px);
-}
-
-header .header_back.home::before {
-    border-left: none;
-    border-right: none;
-    content: '';
-    height: 16px;
-    transform: none;
-    width: 22px;
-    left: 13px;
-    top: 23px;
-    border: 8px solid #fff;
-    border-bottom: none;
-}
-
-header .header_back.home::after {
-    border-bottom: 15px solid #fff;
-    border-left: 16px solid transparent;
-    border-right: 16px solid transparent;
-    content: '';
-    display: block;
-    height: 0;
-    left: 8px;
-    position: absolute;
-    top: 11px;
-    width: 0;
 }
 
 header .header_title {
@@ -117,8 +92,46 @@ header .header_basket {
 	font-size: 12px;
 	padding: 0 10px;
 	position: absolute;
+	pointer-events: none;
 	right:  0;
 	top:  0;
+	z-index: 1;
+}
+
+header .header_basket.header_basket_items {
+	pointer-events: all;
+}
+
+header .header_basket::after {
+	background-color: #45d0b1;
+	content: '';
+	display: block;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 0px;
+	z-index: -1;
+}
+
+header .header_basket.header_basket_items::after {
+	animation-duration: 0.5s;
+	animation-name: basketSlide;
+	animation-fill-mode: forwards;
+}
+
+@keyframes basketSlide {
+	from {
+		width: 0px;
+	}
+
+	50% {
+		width: 110%;
+	}
+
+	to {
+		width: 100%;
+	}
 }
 
 header .header_basket em {
@@ -167,6 +180,10 @@ header .header_basket em {
 .page.home h2 {
 	color: #281954;
 	font-size: 24px;
+}
+
+.page.home .spotter_tip {
+	margin-top: 0;
 }
 
 .item {

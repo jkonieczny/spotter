@@ -25086,6 +25086,8 @@ var React = require('react'),
     FluxMixin = Fluxxor.FluxMixin(React),
     StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
+var cx = require('classnames');
+
 var CONSTANTS = require('../constants/constants');
 
 module.exports = React.createClass({
@@ -25103,26 +25105,32 @@ module.exports = React.createClass({
         };
     },
     render: function() {
-        var item, discounts, displayPrice, displayCommission;
+        var item, discounts, displayPrice, displayCommission, hasDiscount;
 
         if (this.state.confirm === false) {
             var itemImage;
             var product = this.props.product;
 
-            if (product.image) {
-                itemImage = (
-                    React.createElement("span", {className: "child_item_image", style:  { backgroundImage: 'url(' + product.image + ')'}  })
-                );
-            }
-
             if (product.discount) {
                 if (product.discount && product.discount.discount_type === 'percent') {
+                    hasDiscount = true;
+
                     discounts = (
                         React.createElement("div", {className: "child_item_discounts"}, 
-                             product.discount.name
+                             product.discount.value, "%", React.createElement("br", null), 
+                            "OFF"
                         )
+
                     );
                 }
+            }
+
+            if (product.image) {
+                itemImage = (
+                    React.createElement("span", {className: "child_item_image", style:  { backgroundImage: 'url(' + product.image + ')'}  }, 
+                         discounts 
+                    )
+                );
             }
 
             displayPrice = this.props.product.price;
@@ -25141,10 +25149,9 @@ module.exports = React.createClass({
             }
 
             item = (
-                React.createElement("div", {className: "child_item"}, 
+                React.createElement("div", {className:  cx({ child_item: true, child_item_bubble: hasDiscount }) }, 
                      itemImage, 
                     React.createElement("h2", null,  this.props.product.name), 
-                     discounts, 
                     React.createElement("div", {className: "child_item_details"}, 
                         React.createElement("div", {className: "child_item_earn"}, 
                             React.createElement("small", null, "You earn:"), 
@@ -25194,7 +25201,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../constants/constants":294,"fluxxor":4,"react":273}],277:[function(require,module,exports){
+},{"../constants/constants":294,"classnames":3,"fluxxor":4,"react":273}],277:[function(require,module,exports){
 /** @jsx React.DOM */
 
 'use strict';
@@ -25426,6 +25433,8 @@ module.exports = React.createClass({
 	            React.createElement(Avatar, {person: this.state.trainer}), 
                 React.createElement("h2", {className: "center"}, this.state.trainer.name, "'s clients"), 
                 React.createElement("p", null), 
+                React.createElement("p", {className: "center purple"}, React.createElement("small", null, "Select a client to send recommendations to:")), 
+                React.createElement("p", null), 
                 React.createElement("ul", null, 
                     clients, 
                     React.createElement("li", {className: "client_list_client client_list_add_client add_icon add_icon_green", onClick:  this.proceedAddClient}, 
@@ -25560,7 +25569,7 @@ module.exports = React.createClass({
                 );  
                 total = (
                         React.createElement("div", null, 
-                            React.createElement("div", null, "TOTAL FOR CLIENT:"), React.createElement("div", null, "£",  clientCost.toFixed(2) )
+                            React.createElement("div", null, React.createElement("strong", null, "TOTAL FOR CLIENT:")), React.createElement("div", null, React.createElement("strong", null, "£",  clientCost.toFixed(2) ))
                         )
                 );  
             }
@@ -25572,7 +25581,7 @@ module.exports = React.createClass({
         return (
             React.createElement("div", {className: "page page_confirmation light_blue"}, 
                 React.createElement("div", {className: "confirmation_header"}, 
-                	"Heres what you’d like to recommend to ", this.state.selectedUser.fname, ":"
+                	"Here's what you'd like to recommend to ", this.state.selectedUser.fname, ":"
                 ), 
                 React.createElement("ul", {className: "item_list confirmation_product_results"}, 
                 	selectedProducts
@@ -25584,7 +25593,7 @@ module.exports = React.createClass({
                      saving, 
                      total, 
                     React.createElement("div", {className: "confirmation_earn"}, 
-                        React.createElement("div", null, "YOU CAN EARN:"), React.createElement("div", null, "£", commisionPrice)
+                        React.createElement("div", null, React.createElement("strong", null, "YOU CAN EARN:")), React.createElement("div", null, React.createElement("strong", null, "£", commisionPrice))
                     )
                 ), 
                 React.createElement("div", {className: "confirmation_send center"}, 
@@ -25703,11 +25712,11 @@ module.exports = React.createClass({
                     React.createElement("div", {className: "child_item_details"}, 
                         React.createElement("div", {className: "child_item_earn"}, 
                             React.createElement("small", null, "You earn"), 
-                            "£",  displayCommission 
+                            React.createElement("strong", null, "£",  displayCommission )
                         ), 
                         React.createElement("div", {className: "child_item_price"}, 
                             React.createElement("small", null, "Price"), 
-                            "£",  displayPrice 
+                            React.createElement("strong", null, "£",  displayPrice )
                         ), 
                         React.createElement("div", {className: "child_item_delete", onClick:  this.confirmDelete}, 
                             "×"
@@ -25830,10 +25839,11 @@ module.exports = React.createClass({displayName: "exports",
 	},
 	render: function() {
 		var basket;
+		var page = this.state.page;
 
-		if (this.state.selectedProducts.length > 0) {
+		if (page === 'masterProduct' || page === 'product') {
 			basket = (
-				React.createElement("div", {className: "header_basket", onClick:  this.goToBasket}, 
+				React.createElement("div", {className:  cx({ header_basket: true, header_basket_items: (this.state.selectedProducts.length > 0) }), onClick:  this.goToBasket}, 
 					React.createElement("em", null, "Basket"), " (", this.state.selectedProducts.length, ")"
 				)
 			);
@@ -25902,6 +25912,16 @@ module.exports = React.createClass({
 	                	React.createElement("button", {className: "trans_btn cog_icon", type: "submit", onClick: this.proceedProfile}, "Your Profile")
 	                )
                 ), 
+
+                React.createElement("div", {className: "spotter_tip"}, 
+                    React.createElement("em", null, "How to use SPOTTER"), React.createElement("br", null), 
+                    React.createElement("p", null, "1. Add or select a client"), 
+                    React.createElement("p", null, "2. Choose what they should take from 1000s of products"), 
+                    React.createElement("p", null, "3. Send your recommendations to your client via email or Whatsapp"), 
+
+                    React.createElement("p", null, "DONE!", React.createElement("br", null), "Earn commission when they buy")
+                ), 
+
                 React.createElement("div", {className: "lazy_load_fonts"}, "Spotter ©")
             )
         );
@@ -26301,14 +26321,14 @@ module.exports = React.createClass({
 	    	if (this.state.selectedProducts.length > 0) {
 	    		goToBasket = (
 	    			React.createElement("div", {className: "page_child_go"}, 
-	    				React.createElement("button", {onClick:  this.goToBasket}, "Go to basket")
+	    				React.createElement("button", {className: "green_btn", onClick:  this.goToBasket}, "Go to basket")
 	    			)
 	    		)
 	    	}
 
 	    	goBack = (
     			React.createElement("div", {className: "page_child_go"}, 
-    				React.createElement("button", {onClick:  this.goBack}, "Back to search")
+    				React.createElement("button", {className: "trans_btn", onClick:  this.goBack}, "Back to search")
     			)
     		);
 	    }
@@ -27266,7 +27286,7 @@ var ClientStore = Fluxxor.createStore({
 
         SpotterAPI.sendClientEmail(data, function() {
             console.log('EMAIL SENT');
-        }.bind(this));
+        });
 
         this.emit('change:clientEmailSending');
         this.emit('change');

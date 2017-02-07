@@ -80,14 +80,14 @@ module.exports = React.createClass({
 	    	if (this.state.selectedProducts.length > 0) {
 	    		goToBasket = (
 	    			<div className="page_child_go">
-	    				<button onClick={ this.goToBasket }>Go to basket</button>
+	    				<button className="green_btn" onClick={ this.goToBasket }>Go to basket</button>
 	    			</div>
 	    		)
 	    	}
 
 	    	goBack = (
     			<div className="page_child_go">
-    				<button onClick={ this.goBack }>Back to search</button>
+    				<button className="trans_btn" onClick={ this.goBack }>Back to search</button>
     			</div>
     		);
 	    }

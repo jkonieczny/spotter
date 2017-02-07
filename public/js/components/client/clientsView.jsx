@@ -75,6 +75,8 @@ module.exports = React.createClass({
 	            <Avatar person={this.state.trainer} />
                 <h2 className="center">{this.state.trainer.name}'s clients</h2>
                 <p/>
+                <p className="center purple"><small>Select a client to send recommendations to:</small></p>
+                <p/>
                 <ul>
                     {clients}
                     <li className="client_list_client client_list_add_client add_icon add_icon_green" onClick={ this.proceedAddClient }>

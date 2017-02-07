@@ -33,20 +33,6 @@
     background-size: contain;
 }
 
-.page_confirmation .item_list.confirmation_product_results .child_item .child_item_discounts {
-    background-color: #44D1B1;
-    border-radius: 100%;
-    bottom: -18px;
-    color: #fff;
-    font-size: 14px;
-    height: 50px;
-    left: 5px;
-    padding-top: 7px;
-    position: absolute;
-    text-align: center;
-    width: 50px;
-}
-
 .page_confirmation .item_list.confirmation_product_results .child_item h2 {
 	margin-bottom: 8px;
 }
@@ -57,6 +43,12 @@
 	font-family: montserratlight;
 	width: calc(50% - 5px - 25px);
 	text-align: center;
+}
+
+.page_confirmation .item_list.confirmation_product_results .child_item .child_item_earn strong,
+.page_confirmation .item_list.confirmation_product_results .child_item .child_item_price strong {
+	font-family: montserratregular;
+	font-weight: bold;
 }
 
 .page_confirmation .item_list.confirmation_product_results .child_item .child_item_earn {
@@ -95,6 +87,10 @@
 	overflow: hidden;
 }
 
+.page_confirmation .confirmation_prices > div strong {
+	font-family: montserratregular;
+}
+
 .page_confirmation .confirmation_prices > div div {
 	float: left;
 }
@@ -129,7 +125,7 @@
 	display: inline-block;
     margin: 0 auto;
     width: auto;
-    padding: 0 40px;
+    padding: 0 30px 0 20px;
 }
 
 .page_confirmation .confirmation_send .button_whatsapp {
@@ -138,4 +134,26 @@
 
 .page_confirmation .confirmation_send .button_email {
 	background-color: #FF916F;
+}
+
+.page_confirmation .confirmation_send .button_email::before,
+.page_confirmation .confirmation_send .button_whatsapp::before  {
+	background-position: 50%;
+	background-size: contain;
+	background-repeat: no-repeat;
+    content: '';
+    display: inline-block;
+    height: 26px;
+    margin-right: 10px;
+    position: relative;
+    top: 6px;
+    width: 26px;
+}
+
+.page_confirmation .confirmation_send .button_email::before {
+	background-image: url('../../images/email.png');
+}
+
+.page_confirmation .confirmation_send .button_whatsapp::before {
+	background-image: url('../../images/whatsapp.png');
 }

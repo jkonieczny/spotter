@@ -41,6 +41,16 @@ module.exports = React.createClass({
 	                	<button className="trans_btn cog_icon" type="submit" onClick={this.proceedProfile}>Your Profile</button>
 	                </label>
                 </form>
+
+                <div className="spotter_tip">
+                    <em>How to use SPOTTER</em><br/>
+                    <p>1. Add or select a client</p>
+                    <p>2. Choose what they should take from 1000s of products</p>
+                    <p>3. Send your recommendations to your client via email or Whatsapp</p>
+
+                    <p>DONE!<br/>Earn commission when they buy</p>
+                </div>
+
                 <div className="lazy_load_fonts">Spotter &copy;</div>
             </div>
         );

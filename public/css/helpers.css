@@ -1,6 +1,7 @@
 input,
 button,
 select {
+	font-family: montserratregular;
 	background-color: #fff;
 	border-radius: 12px;
 	line-height: 50px;
@@ -128,6 +129,8 @@ p {
 .center { text-align: center; }
 .right { text-align: right; }
 
+.purple { color: #281954; }
+
 .searchbar {
 	border: 1px solid #ccc;
 	position: relative;
@@ -193,7 +196,9 @@ p {
 }
 
 .spotter_loader {
-	height: 100px;
+	clear:  both;
+	height: 80px;
+	margin: 60px 0;
 	position: relative;
 	overflow: hidden;
 }
@@ -205,12 +210,12 @@ p {
 	background-position: 50%;
 	content: '';
 	display: block;
-	height: 60px;
-	left:  calc(50% - 30px);
+	height: 50px;
+	left:  calc(50% - 25px);
 	opacity: 0.6;
 	position: absolute;
-	top:  20px;
-	width: 60px;
+	top:  10px;
+	width: 50px;
 	animation-duration: 1.4s;
 	animation-name: loader;
 	animation-iteration-count: infinite;
@@ -240,4 +245,19 @@ p {
 	display: inline-block;
 	text-decoration: underline;
 	margin-bottom: 4px;
+}
+
+.child_item .child_item_discounts {
+    background-color: #44D1B1;
+    border-radius: 100%;
+    bottom: -18px;
+    color: #fff;
+    font-size: 14px;
+    height: 50px;
+    left: 50%;
+    padding-top: 7px;
+    position: absolute;
+    text-align: center;
+    transform: translateX(-50%);
+    width: 50px;
 }

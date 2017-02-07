@@ -60,7 +60,7 @@ module.exports = React.createClass({
                 );  
                 total = (
                         <div>
-                            <div>TOTAL FOR CLIENT:</div><div>&pound;{ clientCost.toFixed(2) }</div>
+                            <div><strong>TOTAL FOR CLIENT:</strong></div><div><strong>&pound;{ clientCost.toFixed(2) }</strong></div>
                         </div>
                 );  
             }
@@ -72,7 +72,7 @@ module.exports = React.createClass({
         return (
             <div className="page page_confirmation light_blue">
                 <div className="confirmation_header">
-                	Heres what you’d like to recommend to {this.state.selectedUser.fname}:
+                	Here's what you'd like to recommend to {this.state.selectedUser.fname}:
                 </div>
                 <ul className="item_list confirmation_product_results">
                 	{selectedProducts}
@@ -84,7 +84,7 @@ module.exports = React.createClass({
                     { saving }
                     { total }
                     <div className="confirmation_earn">
-                        <div>YOU CAN EARN:</div><div>&pound;{commisionPrice}</div>
+                        <div><strong>YOU CAN EARN:</strong></div><div><strong>&pound;{commisionPrice}</strong></div>
                     </div>
                 </div>
                 <div className="confirmation_send center">

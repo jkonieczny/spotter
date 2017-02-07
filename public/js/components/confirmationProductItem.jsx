@@ -67,11 +67,11 @@ module.exports = React.createClass({
                     <div className="child_item_details">
                         <div className="child_item_earn">
                             <small>You earn</small>
-                            £{ displayCommission }
+                            <strong>£{ displayCommission }</strong>
                         </div>
                         <div className="child_item_price">
                             <small>Price</small>
-                            £{ displayPrice }
+                            <strong>£{ displayPrice }</strong>
                         </div>
                         <div className="child_item_delete" onClick={ this.confirmDelete }>
                             &times;
