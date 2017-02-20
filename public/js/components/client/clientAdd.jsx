@@ -70,9 +70,10 @@ module.exports = React.createClass({
                         Phone Number
                         <input type="tel" placeholder="Phone Number" onChange={this.update.bind(this, 'phone')} value={this.state.client.phone} />
                     </label>
-                    <label>
+                    <label htmlFor="image">
                         Upload an image
-                        <input ref="file" type="file" accept="image/*" capture="camera" />
+                        <input type="text" placeholder="Upload image" className="nopointer" readOnly/>
+                        <input id="image" ref="file" type="file" accept="image/*" capture="camera" />
                     </label>
 	                <label>
 	                	<button type="submit" onClick={this.proceed}>{button}</button>

@@ -49,7 +49,7 @@ module.exports = React.createClass({
 		}
 	},
     render: function() {
-		var childProducts, loading, goToBasket, goBack;
+		var childProducts, loading, goToBasket, goBack, loadMore;
 		var productDetailsClasses = {
 			master_product_details: true
 		};
@@ -69,6 +69,14 @@ module.exports = React.createClass({
 						{ childProductsArray }
 					</ul>
 				);
+
+				if (this.state.masterProduct.deals > 10) {
+					loadMore = (
+						<div className="page_child_go">
+							<button onClick={ this.loadMore }>Load more</button>
+						</div>
+					);
+				}
 	    	} else {
 	    		loading = (
 	    			<div className="item_not_found">
@@ -117,6 +125,7 @@ module.exports = React.createClass({
     			{ loading }
     			{ childProducts }
     			<div className="go_back_container">
+    				{ loadMore }
 	    			{ goToBasket }
 	    			{ goBack }
 	    		</div>
@@ -131,6 +140,13 @@ module.exports = React.createClass({
     goBack: function() {
         this.getFlux().actions.page.update({
             page: 'masterProduct'
+        });
+    },
+    loadMore: function() {
+    	console.log('loadMore', this.state.masterProduct.deals);
+        this.getFlux().actions.childProducts.get({
+            id: this.state.masterProduct.id,
+            limit: this.state.masterProduct.deals
         });
     }
 

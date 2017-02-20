@@ -8,7 +8,7 @@
 		<script src="https://cdn.auth0.com/js/lock/10.0/lock.min.js"></script>
 		<script src="https://cdn.ravenjs.com/3.7.0/raven.min.js"></script>
 		<script>
-			Raven.config('https://e6d585ae2b254431a3869bfc906686fa@sentry.io/107746').install();
+			if (window.location.hostname !== 'localhost') { Raven.config('https://e6d585ae2b254431a3869bfc906686fa@sentry.io/107746').install(); }
 		</script>
 	</head>
 	<body>
