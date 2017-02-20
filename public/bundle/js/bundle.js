@@ -26022,6 +26022,7 @@ module.exports = React.createClass({
 	mixins: [FluxMixin, StoreWatchMixin('ClientStore', 'ProductStore')],
 	getInitialState: function() {
 		return {
+			loadMore: false,
 			image: null
 		};
 	},
@@ -26074,7 +26075,7 @@ module.exports = React.createClass({
 					)
 				);
 
-				if (this.state.masterProduct.deals > 10) {
+				if (this.state.loadMore === false && this.state.masterProduct.deals > 10) {
 					loadMore = (
 						React.createElement("div", {className: "page_child_go"}, 
 							React.createElement("button", {onClick:  this.loadMore}, "Load more")
@@ -26146,12 +26147,19 @@ module.exports = React.createClass({
             page: 'masterProduct'
         });
     },
-    loadMore: function() {
-    	console.log('loadMore', this.state.masterProduct.deals);
+    loadMore: function(e) {
+    	e.preventDefault();
+
+    	window.scrollTo(0,0);
+
         this.getFlux().actions.childProducts.get({
             id: this.state.masterProduct.id,
             limit: this.state.masterProduct.deals
         });
+
+    	this.setState({
+    		loadMore: true
+    	});
     }
 
 });
