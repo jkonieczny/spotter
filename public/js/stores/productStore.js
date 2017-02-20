@@ -89,6 +89,8 @@ var ProductStore = Fluxxor.createStore({
     childProductsGet: function(payload) {
         var query = '?master_product=' + this.state.selectedMasterProduct.id;
 
+        if (payload.limit) { query += '&limit=' + payload.limit; }
+
         this.state.loading = true;
 
         this.emit('change');

@@ -20,7 +20,7 @@ var spotterAPI = {
 		this.xhrImage('client/update-image/' + id, file, cb);
 	},
 	imageTrainer: function(file, cb) {
-		this.xhrImage('profile/update-image', file, cb);
+		this.xhrImage('update-image', file, cb);
 	},
 	getClients: function(cb) {
 		this.XHR('client/list', G, cb);

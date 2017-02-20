@@ -58,7 +58,8 @@ var actions = {
 		get: function(payload) {
 			this.dispatch(CONSTANTS.CHILDPRODUCTS.GET, {
 				id: payload.id,
-				value: payload.value
+				value: payload.value,
+				limit: payload.limit
 			});
 		}
 	},

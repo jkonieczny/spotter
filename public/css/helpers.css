@@ -12,8 +12,16 @@ select {
 	-webkit-appearance: none;
 }
 
+label {
+	display: block;
+}
+
 input {
 	border: 2px solid #8493A7;
+}
+
+input[type="file"] {
+	display: none;
 }
 
 input:focus,
@@ -122,6 +130,10 @@ a {
 
 p {
 	margin-bottom: 20px;
+}
+
+.nopointer {
+	pointer-events: none;
 }
 
 .hide { display: none; }

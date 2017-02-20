@@ -14,7 +14,7 @@ module.exports = React.createClass({
     render: function() {
         var masterProduct = this.props.masterProduct;
 
-        var discount;
+        var discount, image, commission;
 
         if (masterProduct.extra) {
             if (masterProduct.extra.discount) {
@@ -28,12 +28,28 @@ module.exports = React.createClass({
                     <span className="master_product_offer">from £{ masterProduct.extra.minPrice }</span>
                 );
             }
+
+            if (masterProduct.extra.maxCommission) {
+                commission = (
+                    <span className="master_product_earn">
+                        YOU EARN<br/>
+                        £{ masterProduct.extra.maxCommission }
+                    </span>
+                );
+            }
+        }
+
+        if (masterProduct.image) {
+            var backgroundImage = { backgroundImage : 'url(' + masterProduct.image + '?&w=60&h=120&crop=focalpoint&fit=crop&mask=corners&fm=png32)' };
+            image = (<span className="master_product_img" style={ backgroundImage } ></span>);
         }
 
     	return (
             <li key={ masterProduct.id } onClick={ this.selectedMaster }>
+                { image }
                 <strong>{ masterProduct.name } ({ masterProduct.deals })</strong>
                 { discount }
+                { commission }
             </li>
     	);
     },
