@@ -47,6 +47,8 @@
 	position: absolute;
 	top: 10px;
 	width: 40px;
+    background-color: #fff;
+    border: 2px solid #fff;
 }
 
 .page_master_product .item_list.product_results li::after {
