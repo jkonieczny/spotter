@@ -25961,7 +25961,7 @@ module.exports = React.createClass({
             if (masterProduct.extra.maxCommission) {
                 commission = (
                     React.createElement("span", {className: "master_product_earn"}, 
-                        "YOU EARN", React.createElement("br", null), 
+                        "EARN UP TO", React.createElement("br", null), 
                         "£",  masterProduct.extra.maxCommission
                     )
                 );

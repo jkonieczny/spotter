@@ -32,7 +32,7 @@ module.exports = React.createClass({
             if (masterProduct.extra.maxCommission) {
                 commission = (
                     <span className="master_product_earn">
-                        YOU EARN<br/>
+                        EARN UP TO<br/>
                         £{ masterProduct.extra.maxCommission }
                     </span>
                 );
