@@ -40,7 +40,7 @@ module.exports = React.createClass({
             totalSaving     = 0;
 
 			this.state.selectedProducts.forEach(function(product) {
-				totalPrice		+= product.price;
+				totalPrice		+= product.original_price;
 				commisionPrice	+= product.expected_commission;
                 totalSaving     += (product.original_price - product.price);
 
