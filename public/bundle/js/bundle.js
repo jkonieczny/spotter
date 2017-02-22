@@ -25022,8 +25022,8 @@ module.exports = React.createClass({
                     ), 
                     React.createElement("label", {htmlFor: "image"}, 
                         "Upload an image", 
-                        React.createElement("input", {type: "text", placeholder: "Upload image", className: "nopointer", readOnly: true}), 
-                        React.createElement("input", {id: "image", ref: "file", type: "file", accept: "image/*", capture: "camera"})
+                        React.createElement("input", {type: "text", placeholder:  this.state.imagePath || 'Upload image', className: "nopointer", readOnly: true}), 
+                        React.createElement("input", {id: "image", ref: "file", type: "file", accept: "image/*", capture: "camera", onChange:  this.imageChange})
                     ), 
 	                React.createElement("label", null, 
 	                	React.createElement("button", {type: "submit", onClick: this.proceed}, button)
@@ -25097,6 +25097,12 @@ module.exports = React.createClass({
 
         flux.actions.client[this.state.action]({
             client: client
+        });
+    },
+    imageChange: function(e) {
+        var img = e.currentTarget.value.split('\\');
+        this.setState({
+            imagePath: img[img.length - 1]
         });
     }
 
@@ -26221,8 +26227,8 @@ module.exports = React.createClass({
                     ), 
                     React.createElement("label", {htmlFor: "image"}, 
                         "Upload an image", 
-                        React.createElement("input", {type: "text", placeholder: "Upload image", className: "nopointer", readOnly: true}), 
-                        React.createElement("input", {id: "image", ref: "file", type: "file", accept: "image/*", capture: "camera"})
+                        React.createElement("input", {type: "text", placeholder:  this.state.imagePath || 'Upload image', className: "nopointer", readOnly: true}), 
+                        React.createElement("input", {id: "image", ref: "file", type: "file", accept: "image/*", capture: "camera", onChange:  this.imageChange})
                     ), 
 	                React.createElement("label", null, 
 	                	React.createElement("button", {type: "submit", onClick: this.proceed}, "Update trainer details")
@@ -26279,6 +26285,12 @@ module.exports = React.createClass({
 
         flux.actions.page.update({
             page: 'home'
+        });
+    },
+    imageChange: function(e) {
+        var img = e.currentTarget.value.split('\\');
+        this.setState({
+            imagePath: img[img.length - 1]
         });
     }
 

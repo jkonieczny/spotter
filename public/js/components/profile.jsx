@@ -56,8 +56,8 @@ module.exports = React.createClass({
                     </label>
                     <label htmlFor="image">
                         Upload an image
-                        <input type="text" placeholder="Upload image" className="nopointer" readOnly/>
-                        <input id="image" ref="file" type="file" accept="image/*" capture="camera" />
+                        <input type="text" placeholder={ this.state.imagePath || 'Upload image' } className="nopointer" readOnly/>
+                        <input id="image" ref="file" type="file" accept="image/*" capture="camera" onChange={ this.imageChange } />
                     </label>
 	                <label>
 	                	<button type="submit" onClick={this.proceed}>Update trainer details</button>
@@ -114,6 +114,12 @@ module.exports = React.createClass({
 
         flux.actions.page.update({
             page: 'home'
+        });
+    },
+    imageChange: function(e) {
+        var img = e.currentTarget.value.split('\\');
+        this.setState({
+            imagePath: img[img.length - 1]
         });
     }
 
