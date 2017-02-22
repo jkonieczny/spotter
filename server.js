@@ -9,6 +9,7 @@ var port = process.env.PORT || 8080;
 
 app.use("/spotter", express.static(__dirname + "/public/index.html"));
 // Set /public as our static content dir
+app.use("/page/*", express.static(__dirname + "/public/index.html"));
 app.use("/", express.static(__dirname + "/public/"));
 
 // Fire this bitch up (start our server)
