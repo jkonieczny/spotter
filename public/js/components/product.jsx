@@ -55,7 +55,7 @@ module.exports = React.createClass({
 			master_product_details: true
 		};
 
-		if (this.state.loading === false) {
+		if (this.state.loading === false || this.state.loadMore === true) {
 			if (this.state.childProducts && this.state.childProducts.length > 0) {
 				var childProductsArray = [];
 
@@ -123,8 +123,8 @@ module.exports = React.createClass({
     				<h2>{ masterProduct.name }</h2>
     				<p>{ masterProduct.description }</p>
     			</div>
-    			{ loading }
     			{ childProducts }
+    			{ loading }
     			<div className="go_back_container">
     				{ loadMore }
 	    			{ goToBasket }
@@ -145,8 +145,6 @@ module.exports = React.createClass({
     },
     loadMore: function(e) {
     	e.preventDefault();
-
-    	window.scrollTo(0,0);
 
         this.getFlux().actions.childProducts.get({
             id: this.state.masterProduct.id,
