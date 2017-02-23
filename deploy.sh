@@ -16,7 +16,7 @@ INDEX_FILE_BACKUP=$INDEX_FILE$INDEX_FILE_BACKUP_EXTENSION
 TS=`date +"%s"`
 echo "Updating bundle.js url in " $INDEX_FILE
 SED_RULE='s#bundle/js/bundle.js#bundle/js/bundle.js?v='$TS'#g'
-sed -i $INDEX_FILE_BACKUP_EXTENSION $SED_RULE $INDEX_FILE
+sed -i$INDEX_FILE_BACKUP_EXTENSION -e $SED_RULE $INDEX_FILE
 aws --profile=spotter s3 sync $DIST $TARGET
 echo "reverting back" $INDEX_FILE
 mv $INDEX_FILE_BACKUP $INDEX_FILE
