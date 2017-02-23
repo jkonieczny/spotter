@@ -1,4 +1,4 @@
-var CURRENT_CACHES = 'v1.0.14';
+var CURRENT_CACHES = 'v1.0.15';
 
 self.addEventListener('install', function(event) {
   console.log("SW installed", CURRENT_CACHES, self.registration.scope);
@@ -8,7 +8,12 @@ self.addEventListener('install', function(event) {
     'bundle/js/bundle.js',
     'images/fit-avatar.png',
     'images/icon.png',
-    'fonts/AvenirNext-Regular.woff2',
+    'images/header-logo.png',
+    'images/loader.png',
+    'images/light-blue-bg.jpg',
+    'images/add.png',
+    'images/view-clients.png',
+    'fonts/montserrat-light-webfont.woff2',
     'fonts/AvenirNext-Bold.woff2'
   ];
 

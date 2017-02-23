@@ -51,7 +51,7 @@ module.exports = React.createClass({
                     <p>DONE!<br/>Earn commission when they buy</p>
                 </div>
 
-                <div className="lazy_load_fonts">Spotter &copy;</div>
+                <div className="lazy_load_fonts">Spotter &copy; v1</div>
             </div>
         );
     },

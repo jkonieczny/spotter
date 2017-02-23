@@ -5,7 +5,7 @@ process.env.NODE_ENV = 'dev';
 
 var App = require('./public/js/main.js');
 App.init();
-/*
+
 if ('serviceWorker' in navigator) {
 	navigator.serviceWorker.register('./serviceWorker.js', {scope: './'}).then(function(reg) {
 		console.log('◕‿◕', reg);
@@ -13,7 +13,6 @@ if ('serviceWorker' in navigator) {
 		console.log('ಠ_ಠ', err);
 	});
 }
-*/
 
 }).call(this,require('_process'))
 },{"./public/js/main.js":300,"_process":123}],2:[function(require,module,exports){
@@ -25676,7 +25675,7 @@ module.exports = React.createClass({
                     React.createElement("p", null, "DONE!", React.createElement("br", null), "Earn commission when they buy")
                 ), 
 
-                React.createElement("div", {className: "lazy_load_fonts"}, "Spotter ©")
+                React.createElement("div", {className: "lazy_load_fonts"}, "Spotter © v1")
             )
         );
     },
