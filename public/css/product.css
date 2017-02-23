@@ -135,6 +135,7 @@
 .page.page_child_product .master_product_details p {
 	font-family: montserratlight;
 	margin-bottom: 0;
+	overflow: hidden;
 }
 
 .page.page_child_product .master_product_details p a {
