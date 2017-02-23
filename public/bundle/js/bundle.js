@@ -24886,7 +24886,7 @@ module.exports = React.createClass({
                 if (Number.isInteger(this.props.product.price) === false) {
                     displayPrice = this.props.product.price.toFixed(2);
                 }
-                if (Number.isInteger(this.props.product.price) === false) {
+                if (Number.isInteger(this.props.product.expected_commission) === false) {
                     displayCommission = this.props.product.expected_commission.toFixed(2);
                 }
             } else {
@@ -25449,7 +25449,7 @@ module.exports = React.createClass({
                 if (Number.isInteger(this.props.product.price) === false) {
                     displayPrice = this.props.product.price.toFixed(2);
                 }
-                if (Number.isInteger(this.props.product.price) === false) {
+                if (Number.isInteger(this.props.product.expected_commission) === false) {
                     displayCommission = this.props.product.expected_commission.toFixed(2);
                 }
             } else {
@@ -25965,10 +25965,18 @@ module.exports = React.createClass({
             }
 
             if (masterProduct.extra.maxCommission) {
+                var maxCommission = masterProduct.extra.maxCommission;
+
+                if (Number.isInteger && Number.isInteger(masterProduct.extra.maxCommission) === false) {
+                    maxCommission = masterProduct.extra.maxCommission.toFixed(2);
+                } else {
+                    maxCommission = masterProduct.extra.maxCommission.toFixed(2);
+                }
+
                 commission = (
                     React.createElement("span", {className: "master_product_earn"}, 
                         "EARN UP TO", React.createElement("br", null), 
-                        "£",  masterProduct.extra.maxCommission
+                        "£",  maxCommission 
                     )
                 );
             }
@@ -26029,6 +26037,7 @@ module.exports = React.createClass({
 	getInitialState: function() {
 		return {
 			loadMore: false,
+			readMore: false,
 			image: null
 		};
 	},
@@ -26060,7 +26069,7 @@ module.exports = React.createClass({
 		}
 	},
     render: function() {
-		var childProducts, loading, goToBasket, goBack, loadMore;
+		var childProducts, loading, goToBasket, goBack, loadMore, description;
 		var productDetailsClasses = {
 			master_product_details: true
 		};
@@ -26126,12 +26135,29 @@ module.exports = React.createClass({
     		productDetailsClasses.img_loaded = true;
     	}
 
+    	if (masterProduct.description) {
+    		var readMore;
+    		var text = masterProduct.description;
+
+    		if (masterProduct.description.length > 160 && this.state.readMore === false) {
+    			text = masterProduct.description.slice(0, 160) + '...';
+
+    			readMore = (React.createElement("a", {href: "#", onClick:  this.readMore}, "Read more"));
+    		}
+    		description = (
+    			React.createElement("p", null, 
+    				 text, 
+    				 readMore 
+    			)
+    		);
+    	}
+
     	return (
     		React.createElement("div", {className: "page page_child_product light_blue"}, 
     			React.createElement("div", {className: cx(productDetailsClasses)}, 
     				React.createElement("div", {className: "page_child_product_image", style:  productImage }), 
     				React.createElement("h2", null,  masterProduct.name), 
-    				React.createElement("p", null,  masterProduct.description)
+    				 description 
     			), 
     			 childProducts, 
     			 loading, 
@@ -26163,6 +26189,13 @@ module.exports = React.createClass({
 
     	this.setState({
     		loadMore: true
+    	});
+    },
+    readMore: function(e) {
+    	e.preventDefault();
+
+    	this.setState({
+    		readMore: true
     	});
     }
 

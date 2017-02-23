@@ -137,6 +137,10 @@
 	margin-bottom: 0;
 }
 
+.page.page_child_product .master_product_details p a {
+	float: right;
+}
+
 .page.page_child_product .page_child_product_image::before,
 .page.page_child_product .page_child_product_image::after {
 	background-position: 50%;

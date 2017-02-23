@@ -30,10 +30,18 @@ module.exports = React.createClass({
             }
 
             if (masterProduct.extra.maxCommission) {
+                var maxCommission = masterProduct.extra.maxCommission;
+
+                if (Number.isInteger && Number.isInteger(masterProduct.extra.maxCommission) === false) {
+                    maxCommission = masterProduct.extra.maxCommission.toFixed(2);
+                } else {
+                    maxCommission = masterProduct.extra.maxCommission.toFixed(2);
+                }
+
                 commission = (
                     <span className="master_product_earn">
                         EARN UP TO<br/>
-                        £{ masterProduct.extra.maxCommission }
+                        £{ maxCommission }
                     </span>
                 );
             }

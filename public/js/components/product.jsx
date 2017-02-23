@@ -19,6 +19,7 @@ module.exports = React.createClass({
 	getInitialState: function() {
 		return {
 			loadMore: false,
+			readMore: false,
 			image: null
 		};
 	},
@@ -50,7 +51,7 @@ module.exports = React.createClass({
 		}
 	},
     render: function() {
-		var childProducts, loading, goToBasket, goBack, loadMore;
+		var childProducts, loading, goToBasket, goBack, loadMore, description;
 		var productDetailsClasses = {
 			master_product_details: true
 		};
@@ -116,12 +117,29 @@ module.exports = React.createClass({
     		productDetailsClasses.img_loaded = true;
     	}
 
+    	if (masterProduct.description) {
+    		var readMore;
+    		var text = masterProduct.description;
+
+    		if (masterProduct.description.length > 160 && this.state.readMore === false) {
+    			text = masterProduct.description.slice(0, 160) + '...';
+
+    			readMore = (<a href="#" onClick={ this.readMore }>Read more</a>);
+    		}
+    		description = (
+    			<p>
+    				{ text }
+    				{ readMore }
+    			</p>
+    		);
+    	}
+
     	return (
     		<div className="page page_child_product light_blue">
     			<div className={cx(productDetailsClasses)}>
     				<div className="page_child_product_image" style={ productImage }></div>
     				<h2>{ masterProduct.name }</h2>
-    				<p>{ masterProduct.description }</p>
+    				{ description }
     			</div>
     			{ childProducts }
     			{ loading }
@@ -153,6 +171,13 @@ module.exports = React.createClass({
 
     	this.setState({
     		loadMore: true
+    	});
+    },
+    readMore: function(e) {
+    	e.preventDefault();
+
+    	this.setState({
+    		readMore: true
     	});
     }
 

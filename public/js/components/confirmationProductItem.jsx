@@ -51,7 +51,7 @@ module.exports = React.createClass({
                 if (Number.isInteger(this.props.product.price) === false) {
                     displayPrice = this.props.product.price.toFixed(2);
                 }
-                if (Number.isInteger(this.props.product.price) === false) {
+                if (Number.isInteger(this.props.product.expected_commission) === false) {
                     displayCommission = this.props.product.expected_commission.toFixed(2);
                 }
             } else {
