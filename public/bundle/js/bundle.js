@@ -27128,12 +27128,14 @@ var PageStore = Fluxxor.createStore({
             CONSTANTS.PAGE.UPDATE, this.updatePage
         );
 
-        window.history.replaceState(this.state, null, '/');
+        window.history.replaceState(this.state, null, '/' + window.location.hash);
 
         window.onpopstate = function(event) {
-            this.state = event.state;
+            if (event.state) {
+                this.state = event.state;
 
-            this.emit('change');
+                this.emit('change');
+            }
         }.bind(this);
     },
     getState: function(){
