@@ -121,8 +121,8 @@ module.exports = React.createClass({
     		var readMore;
     		var text = masterProduct.description;
 
-    		if (masterProduct.description.length > 160 && this.state.readMore === false) {
-    			text = masterProduct.description.slice(0, 160) + '...';
+    		if (masterProduct.description.length > 100 && this.state.readMore === false) {
+    			text = masterProduct.description.slice(0, 100) + '...';
 
     			readMore = (<a href="#" onClick={ this.readMore }>Read more</a>);
     		}

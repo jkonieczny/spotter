@@ -25364,6 +25364,7 @@ module.exports = React.createClass({
         if (e.currentTarget.innerText === 'WhatsApp') {
             var trainer = this.getFlux().store('AuthStore').getState().trainer;
             var message = 'Hi ' + this.state.selectedUser.fname + ',\nYour trainer ' +trainer.name + ' has recommended you these products.\n\nThanks,\nSPOTTER\n\n';
+            message += 'https://www.spotter.online\n\n';
 
             this.state.selectedProducts.forEach(function(value) {
                 var price           = value.price
@@ -26139,8 +26140,8 @@ module.exports = React.createClass({
     		var readMore;
     		var text = masterProduct.description;
 
-    		if (masterProduct.description.length > 160 && this.state.readMore === false) {
-    			text = masterProduct.description.slice(0, 160) + '...';
+    		if (masterProduct.description.length > 100 && this.state.readMore === false) {
+    			text = masterProduct.description.slice(0, 100) + '...';
 
     			readMore = (React.createElement("a", {href: "#", onClick:  this.readMore}, "Read more"));
     		}

@@ -102,6 +102,7 @@ module.exports = React.createClass({
         if (e.currentTarget.innerText === 'WhatsApp') {
             var trainer = this.getFlux().store('AuthStore').getState().trainer;
             var message = 'Hi ' + this.state.selectedUser.fname + ',\nYour trainer ' +trainer.name + ' has recommended you these products.\n\nThanks,\nSPOTTER\n\n';
+            message += 'https://www.spotter.online\n\n';
 
             this.state.selectedProducts.forEach(function(value) {
                 var price           = value.price
