@@ -7,6 +7,7 @@ DIST=$DIR/public
 REGION="eu-west-1"
 BUCKET="app.spotter.online"
 TARGET="s3://$BUCKET/"
+CLOUDFRONT_DIST_ID=E3LMETTWTDO9HQ
 
 echo "Deploying from: '$DIR' to $TARGET"
 INDEX_FILE=public/index.html
@@ -20,3 +21,5 @@ aws --profile=spotter s3 sync $DIST $TARGET
 echo "reverting back" $INDEX_FILE
 mv $INDEX_FILE_BACKUP $INDEX_FILE
 
+echo "Invalidating cloudfront distribution E3LMETTWTDO9HQ"
+aws --profile=spotter cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIST_ID --paths '/*'
