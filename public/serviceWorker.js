@@ -8,6 +8,7 @@ self.addEventListener('install', function(event) {
     'bundle/css/bundle.css',
     'bundle/js/bundle.js',
     'images/header-logo.png',
+    'images/splash.jpg',
     'images/loader.png',
     'images/light-blue-bg.jpg',
     'images/add.png',
@@ -51,6 +52,14 @@ self.addEventListener('fetch', function(event) {
 
         return fetch(event.request);
       }
-    )
+    ).then(function(response) {
+      // Cache the version controlled bundle
+      if (event.request.url.search('bundle/js/bundle.js') > -1) {
+        caches.open(CURRENT_CACHES).then(function(cache) {
+          cache.put(event.request, response);
+        });
+      }
+      return response.clone();
+    })
   );
 });
