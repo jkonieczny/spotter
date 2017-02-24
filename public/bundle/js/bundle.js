@@ -25692,7 +25692,8 @@ module.exports = React.createClass({
                     )
                 ), 
 
-                React.createElement("div", {className: "lazy_load_fonts"}, "Spotter © v1")
+                React.createElement("div", {className: "lazy_load_fonts"}, "Spotter © v1"), 
+                React.createElement("div", {id: "auth"})
             )
         );
     },

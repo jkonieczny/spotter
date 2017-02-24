@@ -58,6 +58,7 @@ module.exports = React.createClass({
                 </form>
 
                 <div className="lazy_load_fonts">Spotter &copy; v1</div>
+                <div id="auth"></div>
             </div>
         );
     },

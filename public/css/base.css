@@ -3,6 +3,10 @@ body {
 	font-family: 'montserratregular', Lato, Arial;
 }
 
+body {
+	opacity: 1;
+}
+
 *, *::before, *::after {
 	box-sizing: border-box;
 }
