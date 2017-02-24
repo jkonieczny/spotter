@@ -4,7 +4,7 @@
 process.env.NODE_ENV = 'dev';
 
 if ('serviceWorker' in navigator) {
-	if (window.location.search.search('debug=true') > -1) {
+	if (window.location.search.search('refresh=true') > -1) {
 		navigator.serviceWorker.getRegistrations().then(function(registrations) {
 			for(let registration of registrations) {
 				registration.unregister();
