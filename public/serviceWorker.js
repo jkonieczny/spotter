@@ -1,20 +1,20 @@
-var CURRENT_CACHES = 'v1.0.15';
+var CURRENT_CACHES = 'v1.1.0';
 
 self.addEventListener('install', function(event) {
   console.log("SW installed", CURRENT_CACHES, self.registration.scope);
   var cachedAssests = [
+    '/',
     'index.html',
     'bundle/css/bundle.css',
     'bundle/js/bundle.js',
-    'images/fit-avatar.png',
-    'images/icon.png',
     'images/header-logo.png',
     'images/loader.png',
     'images/light-blue-bg.jpg',
     'images/add.png',
     'images/view-clients.png',
     'fonts/montserrat-light-webfont.woff2',
-    'fonts/AvenirNext-Bold.woff2'
+    'fonts/AvenirNext-Bold.woff2',
+    'https://cdn.auth0.com/js/lock/10.0/lock.min.js'
   ];
 
   // Node removes trailing slashes, Apache addes them!
@@ -45,9 +45,7 @@ self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request)
       .then(function(response) {
-        console.log('event.request', event.request.url);
         if (response) {
-          console.log('event.request.match', event.request.url);
           return response;
         }
 
