@@ -17,6 +17,7 @@ var AuthStore = Fluxxor.createStore({
             CONSTANTS.AUTH.AUTHO.GET,           this.autho.getTrainer,
             CONSTANTS.AUTH.AUTHO.LOCK,          this.autho.createLock,
             CONSTANTS.AUTH.AUTHO.SHOW,          this.autho.show,
+            CONSTANTS.AUTH.AUTHO.LOGOUT,        this.autho.logout,
 
             CONSTANTS.AUTH.SPOTTER.GET,         this.spotter.getTrainer,
 
@@ -122,6 +123,15 @@ var AuthStore = Fluxxor.createStore({
                     this.flux.actions.auth.spotter.get();
                 }.bind(this), 0);
             }
+        },
+        logout: function() {
+            try {
+                localStorage.clear();
+            } catch(e) {
+
+            }
+
+            window.location.href = 'https://fitflow.eu.auth0.com/v2/logout?returnTo=' + encodeURI(window.location.origin) + '&client_id=YDvRFV8XQoX3fuF1X65l8RqMSmCKHGOg';
         }
     },
     spotter: {

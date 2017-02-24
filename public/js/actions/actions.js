@@ -16,6 +16,9 @@ var actions = {
 			},
 			show: function() {
 				this.dispatch(CONSTANTS.AUTH.AUTHO.SHOW, {});
+			},
+			logout: function() {
+				this.dispatch(CONSTANTS.AUTH.AUTHO.LOGOUT, {});
 			}
 		},
 		spotter: {

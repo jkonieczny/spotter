@@ -51,6 +51,12 @@ module.exports = React.createClass({
                     <p>DONE!<br/>Earn commission when they buy</p>
                 </div>
 
+                <form>
+                    <label>
+                        <button type="submit" onClick={ this.logOut }>Log Out</button>
+                    </label>
+                </form>
+
                 <div className="lazy_load_fonts">Spotter &copy; v1</div>
             </div>
         );
@@ -73,5 +79,9 @@ module.exports = React.createClass({
             page: 'profile'
         });
     },
+    logOut: function(e) {
+        e.preventDefault();
+        this.getFlux().actions.auth.autho.logout();
+    }
 
 });

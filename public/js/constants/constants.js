@@ -4,7 +4,8 @@ var constants = {
         AUTHO: {
             GET: 'AUTHO_GET',
             LOCK: 'AUTHO_LOCK',
-            SHOW: 'AUTHO_SHOW'
+            SHOW: 'AUTHO_SHOW',
+            LOGOUT: 'AUTHO_LOGOUT'
         },
         SPOTTER: {
             GET: 'SPOTTER_TRAINER_GET'

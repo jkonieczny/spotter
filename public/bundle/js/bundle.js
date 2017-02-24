@@ -24693,6 +24693,9 @@ var actions = {
 			},
 			show: function() {
 				this.dispatch(CONSTANTS.AUTH.AUTHO.SHOW, {});
+			},
+			logout: function() {
+				this.dispatch(CONSTANTS.AUTH.AUTHO.LOGOUT, {});
 			}
 		},
 		spotter: {
@@ -25683,6 +25686,12 @@ module.exports = React.createClass({
                     React.createElement("p", null, "DONE!", React.createElement("br", null), "Earn commission when they buy")
                 ), 
 
+                React.createElement("form", null, 
+                    React.createElement("label", null, 
+                        React.createElement("button", {type: "submit", onClick:  this.logOut}, "Log Out")
+                    )
+                ), 
+
                 React.createElement("div", {className: "lazy_load_fonts"}, "Spotter © v1")
             )
         );
@@ -25705,6 +25714,10 @@ module.exports = React.createClass({
             page: 'profile'
         });
     },
+    logOut: function(e) {
+        e.preventDefault();
+        this.getFlux().actions.auth.autho.logout();
+    }
 
 });
 
@@ -26576,7 +26589,8 @@ var constants = {
         AUTHO: {
             GET: 'AUTHO_GET',
             LOCK: 'AUTHO_LOCK',
-            SHOW: 'AUTHO_SHOW'
+            SHOW: 'AUTHO_SHOW',
+            LOGOUT: 'AUTHO_LOGOUT'
         },
         SPOTTER: {
             GET: 'SPOTTER_TRAINER_GET'
@@ -26809,6 +26823,7 @@ var AuthStore = Fluxxor.createStore({
             CONSTANTS.AUTH.AUTHO.GET,           this.autho.getTrainer,
             CONSTANTS.AUTH.AUTHO.LOCK,          this.autho.createLock,
             CONSTANTS.AUTH.AUTHO.SHOW,          this.autho.show,
+            CONSTANTS.AUTH.AUTHO.LOGOUT,        this.autho.logout,
 
             CONSTANTS.AUTH.SPOTTER.GET,         this.spotter.getTrainer,
 
@@ -26914,6 +26929,15 @@ var AuthStore = Fluxxor.createStore({
                     this.flux.actions.auth.spotter.get();
                 }.bind(this), 0);
             }
+        },
+        logout: function() {
+            try {
+                localStorage.clear();
+            } catch(e) {
+
+            }
+
+            window.location.href = 'https://fitflow.eu.auth0.com/v2/logout?returnTo=' + encodeURI(window.location.origin) + '&client_id=YDvRFV8XQoX3fuF1X65l8RqMSmCKHGOg';
         }
     },
     spotter: {
