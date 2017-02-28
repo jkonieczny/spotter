@@ -38,7 +38,7 @@ module.exports = React.createClass({
                 <p>Your recommendations have been sent to { this.state.selectedUser.fname }</p>
                 <p>We’ll let you know if { this.state.selectedUser.fname } buys the stuff and you make some cash</p>
                 <p/>
-                <button onClick={ this.home }>Back to home</button>
+                <button className="home_icon" onClick={ this.home }>Back to home</button>
             </div>
         );
     },

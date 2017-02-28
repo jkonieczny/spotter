@@ -1,6 +1,6 @@
 html,
 body {
-	font-family: 'montserratregular', Lato, Arial;
+	font-family: 'montserratregular', verdana, Lato, Arial;
 }
 
 body {
@@ -50,9 +50,13 @@ header .header_back {
     font-size: 12px;
     padding-left: 22px;
     padding-right: 10px;
+    -webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
-header .header_back::before {
+header .header_back:not([data-location="success"])::before {
 	border-left: 2px solid #fff;
 	border-top: 2px solid #fff;
 	content: '';
@@ -63,6 +67,24 @@ header .header_back::before {
 	width: 10px;
     left: 10px;
     top: calc(50% - 5px);
+}
+
+header .header_back[data-location="success"] {
+	padding-left: 10px;
+}
+
+header .header_back[data-location="success"]::before {
+    background-image: url('../../images/home.png');
+    background-position: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    content: '';
+    display: inline-block;
+    height: 18px;
+    margin-right: 10px;
+    position: relative;
+    top: 3px;
+    width: 18px;
 }
 
 header .header_title {
@@ -162,12 +184,29 @@ header .header_basket em {
 	background-size: cover;
 }
 
-.auth0-lock.auth0-lock img.auth0-lock-header-logo {
-	width: calc(100% + 28px);
-	height: calc(100% + 28px);
-	position: relative;
-	left:  -14px;
-	top: -14px;
+.auth0-lock.auth0-lock .auth0-lock-header {
+	display: none;
+}
+
+.page.signin .signin_header {
+    left: -10px;
+    padding-bottom: 55%;
+    position: relative;
+    top: -20px;
+    width: calc(100% + 20px);
+}
+
+.page.signin .signin_header img {
+	left: 0;
+	position: absolute;
+	top: 0;
+	opacity: 0;
+	width: 100%;
+	transition: opacity 0.2s linear;
+}
+
+.page.signin h1 {
+	font-weight: bold;
 }
 
 .page {

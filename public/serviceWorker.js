@@ -1,4 +1,4 @@
-var CURRENT_CACHES = 'v1.1.0';
+var CURRENT_CACHES = 'v1.1.1';
 
 self.addEventListener('install', function(event) {
   console.log("SW installed", CURRENT_CACHES, self.registration.scope);
@@ -14,6 +14,7 @@ self.addEventListener('install', function(event) {
     'images/add.png',
     'images/view-clients.png',
     'fonts/montserrat-light-webfont.woff2',
+    '/fonts/montserrat-regular-webfont.woff2',
     'fonts/AvenirNext-Bold.woff2',
     'https://cdn.auth0.com/js/lock/10.0/lock.min.js'
   ];

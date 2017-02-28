@@ -65,7 +65,7 @@ var AuthStore = Fluxxor.createStore({
                     title: 'Log in'
                 },
                 theme: {
-                    logo: window.location.pathname + 'images/splash.jpg',
+                    logo: window.location.pathname + 'images/loader.png',
                     primaryColor: 'white'
                 },
                 auth: {
@@ -98,27 +98,6 @@ var AuthStore = Fluxxor.createStore({
             this.state.token = authResult.idToken;
 
             if (this.state.token) {
-                setTimeout(function() {
-                    this.flux.actions.auth.spotter.get();
-                }.bind(this), 0);
-            }
-            return;
-            var tokens = localStorage.getItem('tokens');
-
-            if (this.state.lock && this.state.lock.parseHash && window.location.hash.length > 0) {
-                this.state.tokens = this.state.lock.parseHash(window.location.hash);
-
-                // Safari Porno mode will break localStorage
-                try {
-                    localStorage.setItem('tokens' , JSON.stringify(this.state.tokens));
-                } catch (e) {}
-            } else if (tokens) {
-                this.state.tokens = JSON.parse(tokens);
-            } else {
-                this.signOut();
-            }
-
-            if (this.state.tokens) {
                 setTimeout(function() {
                     this.flux.actions.auth.spotter.get();
                 }.bind(this), 0);

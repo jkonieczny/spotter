@@ -40,7 +40,7 @@ module.exports = React.createClass({
 
 		return (
 			<header>
-				<div className={cx( 'header_back', { 'hide' : (this.state.back === false) } )} onClick={this.goBack}>{ this.state.userNames[this.state.page] || 'Home' }</div>
+				<div className={cx( 'header_back', { 'hide' : (this.state.back === false) } )} data-location={ this.state.page } onClick={this.goBack}>{ this.state.userNames[this.state.page] || 'Home' }</div>
 				<h1 className="header_title">spotter</h1>
 				{ basket }
 			</header>

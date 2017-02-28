@@ -25615,7 +25615,7 @@ module.exports = React.createClass({displayName: "exports",
 
 		return (
 			React.createElement("header", null, 
-				React.createElement("div", {className: cx( 'header_back', { 'hide' : (this.state.back === false) }), onClick: this.goBack},  this.state.userNames[this.state.page] || 'Home'), 
+				React.createElement("div", {className: cx( 'header_back', { 'hide' : (this.state.back === false) }), "data-location":  this.state.page, onClick: this.goBack},  this.state.userNames[this.state.page] || 'Home'), 
 				React.createElement("h1", {className: "header_title"}, "spotter"), 
 				 basket 
 			)
@@ -26422,6 +26422,11 @@ var CONSTANTS = require('../constants/constants');
 module.exports = React.createClass({
 	displayName: 'signIn.jsx',
 	mixins: [FluxMixin],
+    getInitialState: function() {
+        return {
+            opacity: 0
+        };
+    },
 	componentDidMount: function() {
 		window.scrollTo(0,0);
 
@@ -26431,11 +26436,24 @@ module.exports = React.createClass({
 	},
     render: function() {
         return (
-            React.createElement("div", {className: "page signin"}, 
-	            React.createElement("div", {className: "user_avatar"}), 
+            React.createElement("div", {className: "page signin light_blue"}, 
+                React.createElement("div", {className: "signin_header"}, 
+                    React.createElement("picture", null, 
+                        React.createElement("source", {srcSet: "images/signin_splash.webp", type: "image/webp"}), 
+                        React.createElement("source", {srcSet: "images/signin_splash.jpg", type: "image/jpeg"}), 
+                        React.createElement("img", {src: "images/signin_splash.jpg", onLoad:  this.splashLoad, style:  { opacity: this.state.opacity} })
+                    )
+                ), 
+                React.createElement("h1", {className: "center"}, "Log In"), 
+                React.createElement("p", null), 
                 React.createElement("div", {id: "auth"})
             )
         );
+    },
+    splashLoad: function() {
+        this.setState({
+            opacity: 1
+        });
     }
 
 });
@@ -26571,7 +26589,7 @@ module.exports = React.createClass({
                 React.createElement("p", null, "Your recommendations have been sent to ",  this.state.selectedUser.fname), 
                 React.createElement("p", null, "We’ll let you know if ",  this.state.selectedUser.fname, " buys the stuff and you make some cash"), 
                 React.createElement("p", null), 
-                React.createElement("button", {onClick:  this.home}, "Back to home")
+                React.createElement("button", {className: "home_icon", onClick:  this.home}, "Back to home")
             )
         );
     },
@@ -26871,7 +26889,7 @@ var AuthStore = Fluxxor.createStore({
                     title: 'Log in'
                 },
                 theme: {
-                    logo: window.location.pathname + 'images/splash.jpg',
+                    logo: window.location.pathname + 'images/loader.png',
                     primaryColor: 'white'
                 },
                 auth: {
@@ -26904,27 +26922,6 @@ var AuthStore = Fluxxor.createStore({
             this.state.token = authResult.idToken;
 
             if (this.state.token) {
-                setTimeout(function() {
-                    this.flux.actions.auth.spotter.get();
-                }.bind(this), 0);
-            }
-            return;
-            var tokens = localStorage.getItem('tokens');
-
-            if (this.state.lock && this.state.lock.parseHash && window.location.hash.length > 0) {
-                this.state.tokens = this.state.lock.parseHash(window.location.hash);
-
-                // Safari Porno mode will break localStorage
-                try {
-                    localStorage.setItem('tokens' , JSON.stringify(this.state.tokens));
-                } catch (e) {}
-            } else if (tokens) {
-                this.state.tokens = JSON.parse(tokens);
-            } else {
-                this.signOut();
-            }
-
-            if (this.state.tokens) {
                 setTimeout(function() {
                     this.flux.actions.auth.spotter.get();
                 }.bind(this), 0);
