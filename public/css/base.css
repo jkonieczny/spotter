@@ -80,6 +80,7 @@ header .header_back[data-location="success"]::before {
     background-repeat: no-repeat;
     content: '';
     display: inline-block;
+    left: 2px;
     height: 18px;
     margin-right: 10px;
     position: relative;
@@ -206,7 +207,9 @@ header .header_basket em {
 }
 
 .page.signin h1 {
+	font-size: 24px;
 	font-weight: bold;
+    color: #281954;
 }
 
 .page {
