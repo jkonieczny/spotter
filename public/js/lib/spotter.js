@@ -23,7 +23,7 @@ var spotterAPI = {
 		this.xhrImage('update-image', file, cb);
 	},
 	getClients: function(cb) {
-		this.XHR('client/list', G, cb);
+		this.XHR('client/list?limit=500', G, cb);
 	},
 	getProducts: function(query, cb) {
 		productQueue.forEach(function(xhr) {

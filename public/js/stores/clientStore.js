@@ -103,7 +103,11 @@ var ClientStore = Fluxxor.createStore({
     clientsGet: function() {
         SpotterAPI.getClients(function(data) {
             if (data.total && data.total > 0) {
-                this.state.clients = data.data;
+                this.state.clients = data.data.sort(function(a, b) {
+                    if(a.name < b.name) return -1;
+                    if(a.name > b.name) return 1;
+                    return 0;
+                });
             }
             this.emit('change:clientsGot');
             this.emit('change');
